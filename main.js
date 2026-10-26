@@ -8,31 +8,41 @@ gsap.registerPlugin(ScrollTrigger);
 const BASE_WIDTH = 1920;
 const BASE_HEIGHT = 3120;
 
-/* 철학 문장이 다 검정이 될 때까지 화면을 붙잡아 두는 스크롤 거리(px) */
-const PHILOSOPHY_HOLD = 1400;
+/* 위쪽 종이(철학 페이지)의 크기 */
+const SHEET_WIDTH = 1920;
+const SHEET_HEIGHT = 2040;
+
+/* 종이 뒤에 숨어 있다가 종이가 뜯기면 드러나는 책장 페이지의 높이 */
+const SHELF_HEIGHT = 1080;
+
+/* 글씨가 검정으로 바뀌는 동안 화면을 붙잡아 두는 스크롤 거리(px) */
+const COLOR_HOLD = 1400;
 
 const viewport = document.getElementById('viewport');
 const stageSticky = document.getElementById('stageSticky');
 const stage = document.getElementById('stage');
-
-/* 철학 첫 문장(.phil-1)이 화면 위에서 30% 지점에 올 때까지 내려간 스크롤 거리 */
-const PHILOSOPHY_TOP = 1320;
-const PHILOSOPHY_ANCHOR = 0.3;
+const sheet = document.getElementById('sheet');
+const shelf = document.getElementById('shelf');
+const foldFlap = document.getElementById('foldFlap');
 
 let scale = 1;
-let holdStart = 0;
+let holdStart = 0; /* 화면 고정이 시작되는 스크롤 위치(px) */
 
 function fitStage() {
   scale = viewport.clientWidth / BASE_WIDTH;
   gsap.set(stage, { scale, transformOrigin: '0 0' });
 
-  /* 화면 폭에 맞춰 줄어든 캔버스 높이만큼 sticky 막대 높이를 잡음 */
-  stageSticky.style.height = `${BASE_HEIGHT * scale}px`;
-  viewport.style.height = `${BASE_HEIGHT * scale + PHILOSOPHY_HOLD}px`;
+  /* 철학 페이지(종이)의 아래쪽 끝이 화면 아래 끝에 오도록 맞춤 */
+  const visibleTop = Math.max(0, SHEET_HEIGHT - window.innerHeight / scale);
+  holdStart = visibleTop * scale;
 
-  /* 이 지점까지는 정상 스크롤, 이후 PHILOSOPHY_HOLD 동안 화면 고정 */
-  holdStart = Math.max(0, PHILOSOPHY_TOP * scale - window.innerHeight * PHILOSOPHY_ANCHOR);
+  /* 책장 페이지를 종이 뒤, 같은 화면 위치에 겹쳐 둠 */
+  gsap.set(shelf, { y: -(SHEET_HEIGHT - visibleTop) });
+
+  const stickyHeight = (visibleTop + Math.max(SHELF_HEIGHT, window.innerHeight / scale)) * scale;
+  stageSticky.style.height = `${stickyHeight}px`;
   stageSticky.style.top = `${-holdStart}px`;
+  viewport.style.height = `${stickyHeight + COLOR_HOLD}px`;
 
   ScrollTrigger.refresh();
 }
@@ -40,7 +50,7 @@ function fitStage() {
 window.addEventListener('resize', fitStage);
 
 /* --------------------------------------------------------------------------
-   스크롤 인터랙션
+   1단계: 철학 문장이 회색에서 검정으로 (스크롤)
    -------------------------------------------------------------------------- */
 const TEXT_GRAY = '#efefef';
 const TEXT_BLACK = '#0c0c0c';
@@ -65,34 +75,266 @@ function splitChars(el) {
 }
 
 /*
-  철학 문장: 스크롤을 내리면 회색 글씨가 앞에서부터 차례로 검정색으로 바뀜.
-  글씨가 다 검정이 될 때까지는 화면이 아래로 넘어가지 않도록,
-  CSS sticky로 브라우저가 직접 화면을 붙잡아 둠 (스크롤과 어긋나는 덜컹거림이 없음).
+  스크롤을 내리면 회색 글씨가 앞에서부터 차례로 검정색으로 바뀜.
+  다 검정이 될 때까지는 CSS sticky로 브라우저가 화면을 붙잡아 둠.
+  다 검정이 되면 종이 모서리가 접히며 나타남(2단계).
 */
 function initPhilosophyColor() {
   const chars = gsap.utils.toArray('.phil').flatMap(splitChars);
 
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: viewport,
-      start: () => holdStart,
-      end: () => holdStart + PHILOSOPHY_HOLD,
-      scrub: true,
-      invalidateOnRefresh: true,
-    },
-  });
-
-  tl.fromTo(
+  gsap.fromTo(
     chars,
     { color: TEXT_GRAY },
-    { color: TEXT_BLACK, duration: 0.1, stagger: { amount: 0.9 } },
-    0
+    {
+      color: TEXT_BLACK,
+      ease: 'none',
+      duration: 0.1,
+      stagger: { amount: 0.9 },
+      scrollTrigger: {
+        trigger: viewport,
+        start: () => holdStart,
+        end: () => holdStart + COLOR_HOLD,
+        scrub: true,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => onColorProgress(self.progress),
+      },
+    }
   );
+}
+
+/* --------------------------------------------------------------------------
+   2단계: 접힌 종이 모서리 (클릭 / 드래그로 페이지 넘기기)
+
+   종이의 오른쪽 아래 꼭짓점 C를 점 P로 끌어온다고 보고,
+   C와 P의 수직이등분선을 접히는 선으로 삼음.
+   - 접히는 선 안쪽(원점 쪽)은 종이가 그대로 보임
+   - 바깥쪽은 선을 기준으로 뒤집혀서 뒷면(연두색)으로 보임
+   - 종이가 있던 자리에는 뒤 배경(회색)이 드러남
+   -------------------------------------------------------------------------- */
+const CORNER = { x: SHEET_WIDTH, y: SHEET_HEIGHT }; /* 종이 오른쪽 아래 꼭짓점 */
+const FOLD_REST = { x: 1883.8, y: 1795.4 }; /* 처음 접혀 있는 모양 (디자인의 연두색 삼각형) */
+const FOLD_END = { x: -SHEET_WIDTH, y: -SHEET_HEIGHT }; /* 종이가 완전히 넘어간 상태 */
+const TURN_DISTANCE = 900; /* 이만큼 이상 끌어야 놓았을 때 페이지가 넘어감 */
+
+const fold = {
+  p: { x: CORNER.x, y: CORNER.y }, /* 끌고 있는 점 P */
+  shown: false, /* 접힌 모서리가 나타난 상태인지 */
+  turned: false, /* 페이지가 넘어간 상태인지 */
+  tween: null,
+};
+
+/* 다각형을 직선 한쪽만 남기고 자름. 남기는 쪽: (X - M)·n >= 0 */
+function clipByLine(poly, m, n) {
+  const side = (q) => (q.x - m.x) * n.x + (q.y - m.y) * n.y;
+  const out = [];
+  for (let i = 0; i < poly.length; i++) {
+    const a = poly[i];
+    const b = poly[(i + 1) % poly.length];
+    const sa = side(a);
+    const sb = side(b);
+    if (sa >= 0) out.push(a);
+    if ((sa >= 0) !== (sb >= 0)) {
+      const t = sa / (sa - sb);
+      out.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
+    }
+  }
+  return out;
+}
+
+const toClip = (poly) =>
+  poly.length < 3 ? 'polygon(0 0, 0 0, 0 0)' : `polygon(${poly.map((q) => `${q.x}px ${q.y}px`).join(',')})`;
+
+function renderFold() {
+  const { p } = fold;
+  const dx = p.x - CORNER.x;
+  const dy = p.y - CORNER.y;
+  const dist = Math.hypot(dx, dy);
+
+  /* 접힘이 없으면 종이 전체를 보여주고 모서리는 숨김 */
+  if (dist < 0.5) {
+    sheet.style.clipPath = 'none';
+    foldFlap.style.clipPath = toClip([]);
+    return;
+  }
+
+  const m = { x: (CORNER.x + p.x) / 2, y: (CORNER.y + p.y) / 2 };
+  const n = { x: dx / dist, y: dy / dist }; /* C → P 방향 (접히는 선의 수직 방향) */
+
+  const rect = [
+    { x: 0, y: 0 },
+    { x: SHEET_WIDTH, y: 0 },
+    { x: SHEET_WIDTH, y: SHEET_HEIGHT },
+    { x: 0, y: SHEET_HEIGHT },
+  ];
+
+  /* 보이는 종이: P 쪽 (X - M)·n >= 0 */
+  const visible = clipByLine(rect, m, n);
+  /* 접혀 넘어가는 부분: C 쪽 → 선 기준으로 뒤집은 것이 뒷면 */
+  const removed = clipByLine(rect, m, { x: -n.x, y: -n.y });
+  const flapRaw = removed.map((q) => {
+    const d = (q.x - m.x) * n.x + (q.y - m.y) * n.y;
+    return { x: q.x - 2 * d * n.x, y: q.y - 2 * d * n.y };
+  });
+  /* 뒷면은 종이 영역 안에서만 보임 */
+  let flap = flapRaw;
+  [
+    [{ x: 0, y: 0 }, { x: 1, y: 0 }],
+    [{ x: SHEET_WIDTH, y: 0 }, { x: -1, y: 0 }],
+    [{ x: 0, y: 0 }, { x: 0, y: 1 }],
+    [{ x: 0, y: SHEET_HEIGHT }, { x: 0, y: -1 }],
+  ].forEach(([pt, nn]) => {
+    flap = clipByLine(flap, pt, nn);
+  });
+
+  sheet.style.clipPath = toClip(visible);
+  foldFlap.style.clipPath = toClip(flap);
+}
+
+function setFold(x, y) {
+  fold.p.x = x;
+  fold.p.y = y;
+  renderFold();
+}
+
+function animateFold(to, duration, ease, onComplete) {
+  if (fold.tween) fold.tween.kill();
+  fold.tween = gsap.to(fold.p, {
+    x: to.x,
+    y: to.y,
+    duration,
+    ease,
+    onUpdate: renderFold,
+    onComplete,
+  });
+}
+
+/*
+  스크롤 잠금: 접힌 모서리가 보이는 동안은 아래로 스크롤되지 않게 함.
+  휠, 키보드, 터치는 이벤트를 막고, 스크롤바를 끌어서 내려가면 제자리로 되돌림.
+  위로 스크롤하려고 하면 잠금을 풀어 줌.
+*/
+let locked = false;
+let touchY = 0;
+const DOWN_KEYS = ['ArrowDown', 'PageDown', 'End', ' ', 'Spacebar'];
+const lockY = () => holdStart + COLOR_HOLD;
+
+function lockScroll(on) {
+  locked = on;
+  if (on) window.scrollTo(0, lockY());
+}
+
+window.addEventListener(
+  'wheel',
+  (e) => {
+    if (!locked) return;
+    if (e.deltaY > 0) e.preventDefault();
+    else if (e.deltaY < 0) lockScroll(false);
+  },
+  { passive: false }
+);
+
+window.addEventListener('keydown', (e) => {
+  if (locked && DOWN_KEYS.includes(e.key)) e.preventDefault();
+});
+
+window.addEventListener('touchstart', (e) => {
+  touchY = e.touches[0].clientY;
+});
+
+window.addEventListener(
+  'touchmove',
+  (e) => {
+    if (!locked || foldFlap.classList.contains('dragging')) return;
+    const y = e.touches[0].clientY;
+    if (y < touchY) e.preventDefault(); /* 손가락을 위로 밀면 아래로 스크롤 */
+    else lockScroll(false);
+  },
+  { passive: false }
+);
+
+window.addEventListener('scroll', () => {
+  if (locked && window.scrollY > lockY() + 1) window.scrollTo(0, lockY());
+});
+
+/* 글씨가 다 검정이 되면 모서리가 접히며 나타남 */
+function showFold() {
+  fold.shown = true;
+  lockScroll(true);
+  animateFold(FOLD_REST, 1.1, 'power3.out');
+}
+
+/* 스크롤을 되돌리면 접힌 모서리와 넘어간 페이지를 원래대로 */
+function resetFold() {
+  fold.shown = false;
+  fold.turned = false;
+  lockScroll(false);
+  sheet.style.visibility = '';
+  foldFlap.style.visibility = '';
+  animateFold(CORNER, 0.5, 'power2.inOut');
+}
+
+function onColorProgress(progress) {
+  if (progress >= 0.999 && !fold.shown && !fold.turned) showFold();
+  else if (progress >= 0.999 && fold.shown && !fold.turned && !locked) lockScroll(true);
+  else if (progress < 0.98 && (fold.shown || fold.turned)) resetFold();
+}
+
+/* 페이지 넘김: 종이가 완전히 넘어가고 스크롤이 풀림 */
+function turnPage() {
+  animateFold(FOLD_END, 0.9, 'power2.inOut', () => {
+    fold.turned = true;
+    sheet.style.visibility = 'hidden';
+    foldFlap.style.visibility = 'hidden';
+    lockScroll(false);
+  });
+}
+
+/* 마우스/터치로 모서리 끌기 */
+function pointerToStage(e) {
+  const rect = stage.getBoundingClientRect();
+  return { x: (e.clientX - rect.left) / scale, y: (e.clientY - rect.top) / scale };
+}
+
+function initFoldInteraction() {
+  let start = null;
+  let moved = false;
+
+  foldFlap.addEventListener('pointerdown', (e) => {
+    if (!fold.shown || fold.turned) return;
+    if (fold.tween) fold.tween.kill();
+    foldFlap.setPointerCapture(e.pointerId);
+    foldFlap.classList.add('dragging');
+    start = pointerToStage(e);
+    moved = false;
+  });
+
+  foldFlap.addEventListener('pointermove', (e) => {
+    if (!start) return;
+    const q = pointerToStage(e);
+    if (Math.hypot(q.x - start.x, q.y - start.y) > 6) moved = true;
+    if (!moved) return;
+    /* 점 P는 종이 오른쪽 아래 꼭짓점보다 오른쪽/아래로는 못 감 */
+    setFold(Math.min(q.x, CORNER.x), Math.min(q.y, CORNER.y));
+  });
+
+  const release = (e) => {
+    if (!start) return;
+    start = null;
+    foldFlap.classList.remove('dragging');
+    if (foldFlap.hasPointerCapture(e.pointerId)) foldFlap.releasePointerCapture(e.pointerId);
+
+    const dragged = Math.hypot(fold.p.x - CORNER.x, fold.p.y - CORNER.y);
+    if (!moved || dragged > TURN_DISTANCE) turnPage(); /* 클릭하거나 충분히 끌었으면 넘김 */
+    else animateFold(FOLD_REST, 0.7, 'elastic.out(1, 0.6)'); /* 아니면 원래 모양으로 */
+  };
+  foldFlap.addEventListener('pointerup', release);
+  foldFlap.addEventListener('pointercancel', release);
 }
 
 function initScrollAnimations() {
   initPhilosophyColor();
+  initFoldInteraction();
+  renderFold();
 }
 
 fitStage();

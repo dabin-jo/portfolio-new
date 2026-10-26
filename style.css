@@ -93,6 +93,10 @@ body {
   background: #fdfdfd;
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   font-family: 'A2z', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
   color: #0c0c0c;
@@ -135,6 +139,61 @@ a {
   overflow: hidden;
   background: #fdfdfd;
   transform-origin: 0 0;
+}
+
+/* 철학 페이지(종이)와 그 뒤 배경, 접힌 모서리 */
+.sheet {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 2040px;
+  background: #fdfdfd;
+  z-index: 2;
+}
+
+.sheet-back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 2040px;
+  background: #eef0f2;
+  z-index: -1;
+}
+
+.shelf {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 3120px;
+  z-index: 0;
+}
+
+.fold {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 2040px;
+  z-index: 3;
+  pointer-events: none;
+  filter: var(--grain) drop-shadow(-6px 8px 14px rgba(0, 0, 0, .25));
+}
+
+.fold-flap {
+  position: absolute;
+  inset: 0;
+  background: #e5ff7f;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  clip-path: polygon(0 0, 0 0, 0 0);
+}
+
+.fold-flap.dragging {
+  cursor: grabbing;
 }
 
 /* Common */
@@ -385,23 +444,6 @@ a {
   top: 1716px;
   width: 1800px;
   white-space: normal;
-}
-
-.deco-a {
-  position: absolute;
-  left: 1076.5px;
-  top: 1915px;
-  width: 843.5px;
-  height: 125px;
-}
-
-.deco-b {
-  position: absolute;
-  left: 1083.5px;
-  top: 1743.5px;
-  width: 836.5px;
-  height: 295.5px;
-  transform: scaleX(-1);
 }
 
 /* Project shelf */
@@ -1161,6 +1203,7 @@ a {
 
 /* Paper texture overlay */
 .paper {
+  z-index: 5;
   position: absolute;
   left: -39px;
   top: -45px;
