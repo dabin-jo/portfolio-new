@@ -93,14 +93,9 @@ body {
   background: #fdfdfd;
 }
 
-html {
-  scrollbar-gutter: stable;
-}
-
 body {
   font-family: 'A2z', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
   color: #0c0c0c;
-  overflow-x: hidden;
 }
 
 img {
@@ -179,7 +174,7 @@ a {
   height: 2040px;
   z-index: 3;
   pointer-events: none;
-  filter: var(--grain) drop-shadow(-6px 8px 14px rgba(0, 0, 0, .25));
+  filter: var(--grain);
 }
 
 .fold-flap {

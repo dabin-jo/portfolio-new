@@ -12,9 +12,6 @@ const BASE_HEIGHT = 3120;
 const SHEET_WIDTH = 1920;
 const SHEET_HEIGHT = 2040;
 
-/* 종이 뒤에 숨어 있다가 종이가 뜯기면 드러나는 책장 페이지의 높이 */
-const SHELF_HEIGHT = 1080;
-
 /* 글씨가 검정으로 바뀌는 동안 화면을 붙잡아 두는 스크롤 거리(px) */
 const COLOR_HOLD = 1400;
 
@@ -39,7 +36,12 @@ function fitStage() {
   /* 책장 페이지를 종이 뒤, 같은 화면 위치에 겹쳐 둠 */
   gsap.set(shelf, { y: -(SHEET_HEIGHT - visibleTop) });
 
-  const stickyHeight = (visibleTop + Math.max(SHELF_HEIGHT, window.innerHeight / scale)) * scale;
+  /*
+    화면에 고정되는 영역의 높이 = 고정 시작 위치 + 화면 높이.
+    이렇게 하면 문서의 맨 끝이 곧 글씨가 다 검정이 되는 지점이라,
+    접힌 모서리가 나타난 뒤에는 브라우저가 아래로 더 내려가지 못하게 함 (잠금 코드 불필요).
+  */
+  const stickyHeight = holdStart + window.innerHeight;
   stageSticky.style.height = `${stickyHeight}px`;
   stageSticky.style.top = `${-holdStart}px`;
   viewport.style.height = `${stickyHeight + COLOR_HOLD}px`;
@@ -208,58 +210,9 @@ function animateFold(to, duration, ease, onComplete) {
   });
 }
 
-/*
-  스크롤 잠금: 접힌 모서리가 보이는 동안은 아래로 스크롤되지 않게 함.
-  휠, 키보드, 터치는 이벤트를 막고, 스크롤바를 끌어서 내려가면 제자리로 되돌림.
-  위로 스크롤하려고 하면 잠금을 풀어 줌.
-*/
-let locked = false;
-let touchY = 0;
-const DOWN_KEYS = ['ArrowDown', 'PageDown', 'End', ' ', 'Spacebar'];
-const lockY = () => holdStart + COLOR_HOLD;
-
-function lockScroll(on) {
-  locked = on;
-  if (on) window.scrollTo(0, lockY());
-}
-
-window.addEventListener(
-  'wheel',
-  (e) => {
-    if (!locked) return;
-    if (e.deltaY > 0) e.preventDefault();
-    else if (e.deltaY < 0) lockScroll(false);
-  },
-  { passive: false }
-);
-
-window.addEventListener('keydown', (e) => {
-  if (locked && DOWN_KEYS.includes(e.key)) e.preventDefault();
-});
-
-window.addEventListener('touchstart', (e) => {
-  touchY = e.touches[0].clientY;
-});
-
-window.addEventListener(
-  'touchmove',
-  (e) => {
-    if (!locked || foldFlap.classList.contains('dragging')) return;
-    const y = e.touches[0].clientY;
-    if (y < touchY) e.preventDefault(); /* 손가락을 위로 밀면 아래로 스크롤 */
-    else lockScroll(false);
-  },
-  { passive: false }
-);
-
-window.addEventListener('scroll', () => {
-  if (locked && window.scrollY > lockY() + 1) window.scrollTo(0, lockY());
-});
-
 /* 글씨가 다 검정이 되면 모서리가 접히며 나타남 */
 function showFold() {
   fold.shown = true;
-  lockScroll(true);
   animateFold(FOLD_REST, 1.1, 'power3.out');
 }
 
@@ -267,25 +220,28 @@ function showFold() {
 function resetFold() {
   fold.shown = false;
   fold.turned = false;
-  lockScroll(false);
   sheet.style.visibility = '';
   foldFlap.style.visibility = '';
   animateFold(CORNER, 0.5, 'power2.inOut');
 }
 
+/* 페이지를 넘긴 뒤에는 이만큼 이상 위로 스크롤해야 철학 페이지로 돌아감 (1 = 맨 끝, 0.5 = 절반 거리) */
+const RETURN_PROGRESS = 0.5;
+/* 접힌 모서리만 보이는 상태에서 되돌아가는 기준 */
+const UNFOLD_PROGRESS = 0.9;
+
 function onColorProgress(progress) {
   if (progress >= 0.999 && !fold.shown && !fold.turned) showFold();
-  else if (progress >= 0.999 && fold.shown && !fold.turned && !locked) lockScroll(true);
-  else if (progress < 0.98 && (fold.shown || fold.turned)) resetFold();
+  else if (fold.turned && progress < RETURN_PROGRESS) resetFold();
+  else if (fold.shown && !fold.turned && progress < UNFOLD_PROGRESS) resetFold();
 }
 
-/* 페이지 넘김: 종이가 완전히 넘어가고 스크롤이 풀림 */
+/* 페이지 넘김: 종이가 완전히 넘어감 */
 function turnPage() {
   animateFold(FOLD_END, 0.9, 'power2.inOut', () => {
     fold.turned = true;
     sheet.style.visibility = 'hidden';
     foldFlap.style.visibility = 'hidden';
-    lockScroll(false);
   });
 }
 
