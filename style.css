@@ -115,6 +115,14 @@ a {
 .viewport {
   width: 100%;
   position: relative;
+  overflow-x: clip;
+}
+
+/* 철학 문장 구간에서 브라우저가 직접 화면을 붙잡아 두는(sticky) 막대. top 값은 main.js가 계산 */
+.stage-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
   overflow: hidden;
 }
 
