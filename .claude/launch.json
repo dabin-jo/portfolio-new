@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "static",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Users/arome/AppData/Local/Temp/claude/C--Users-arome-Desktop------------portfolio-portfolio-new/80a85967-3347-4cf4-a5ce-ca70ee718734/scratchpad/serve.js", "C:/Users/arome/Desktop/이젠 아카데미 파일/portfolio/portfolio-new", "5180"],
+      "port": 5180
+    }
+  ]
+}

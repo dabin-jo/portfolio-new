@@ -1,0 +1,1198 @@
+/* Fonts */
+@font-face {
+  font-family: 'KkuBulLim';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2410-1@1.0/BMkkubulimTTF-Regular.woff2') format('woff2');
+  font-weight: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-1Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-2ExtraLight.woff2') format('woff2');
+  font-weight: 200;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-3Light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-4Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-5Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-6SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-7Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-8ExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-9Black.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
+
+/* Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: #fdfdfd;
+}
+
+body {
+  font-family: 'A2z', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  color: #0c0c0c;
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 1920px 기준 캔버스 (JS가 화면 폭에 맞춰 scale) */
+.viewport {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 3120px;
+  overflow: hidden;
+  background: #fdfdfd;
+  transform-origin: 0 0;
+}
+
+/* Common */
+.t {
+  position: absolute;
+  white-space: nowrap;
+}
+
+/* Figma GRAIN 효과: 모든 텍스트에 적용 (필터 정의: assets/filters.svg) */
+:where(.stage p, .stage a.t, .sticky__paper) {
+  filter: url(assets/filters.svg?v=4#grain);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.card {
+  display: flex;
+  flex: none;
+}
+
+.rot-box {
+  position: absolute;
+  mix-blend-mode: multiply;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rot {
+  flex: none;
+}
+
+.w2 {
+  font-weight: 200;
+}
+
+.w6 {
+  font-weight: 600;
+}
+
+.label {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.8px;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  text-align: center;
+  line-height: 1.5;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.meta.white {
+  color: #fff;
+}
+
+.m20 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  font-size: 20px;
+  letter-spacing: -.8px;
+}
+
+.m16 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  font-size: 16px;
+  letter-spacing: -.64px;
+}
+
+/* Header */
+.logo {
+  position: absolute;
+  left: 60px;
+  top: 13px;
+  width: 100px;
+  height: 50px;
+  background: #d9d9d9;
+}
+
+.nav {
+  top: 20px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.8px;
+}
+
+.nav-project {
+  left: 1560px;
+}
+
+.nav-about {
+  left: 1660px;
+}
+
+.nav-contact {
+  left: 1788px;
+}
+
+/* Hero */
+.bg-word {
+  position: absolute;
+  font-size: 120px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -4.8px;
+  color: rgba(148, 148, 148, .3);
+  filter: url(assets/filters.svg?v=4#grain) blur(2.5px);
+  white-space: nowrap;
+}
+
+.bg-ux {
+  left: 60px;
+  top: 120px;
+}
+
+.bg-web {
+  left: 360px;
+  top: 240px;
+}
+
+.bg-interaction {
+  left: 360px;
+  top: 360px;
+}
+
+.bg-designer {
+  left: 586px;
+  top: 480px;
+}
+
+.bg-graphic {
+  left: 60px;
+  top: 600px;
+}
+
+.bg-amp {
+  left: 558px;
+  top: 720px;
+}
+
+.bg-branding {
+  left: 549px;
+  top: 840px;
+}
+
+.bg-copy {
+  left: 1454px;
+  top: 720px;
+  font-weight: 500;
+}
+
+.bg-research {
+  right: 60px;
+  top: 240px;
+  font-weight: 600;
+}
+
+.bg-thinking {
+  left: 960px;
+  top: 120px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.hero {
+  position: absolute;
+  top: 120px;
+  text-align: right;
+  font-size: 150px;
+  font-weight: 700;
+  letter-spacing: -6px;
+  white-space: nowrap;
+}
+
+.hero p {
+  line-height: .9;
+}
+
+.hero-main {
+  right: 60px;
+}
+
+.hero-punct {
+  right: 32px;
+}
+
+/* Philosophy */
+.label-philosophy {
+  left: 60px;
+  top: 1320px;
+}
+
+.phil {
+  position: absolute;
+  font-size: 52px;
+  font-weight: 300;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.phil-1 {
+  left: 1022px;
+  top: 1320px;
+}
+
+.phil-2 {
+  left: 60px;
+  top: 1398px;
+}
+
+.phil-3 {
+  left: 770px;
+  top: 1398px;
+}
+
+.phil-4 {
+  left: 60px;
+  top: 1476px;
+}
+
+.phil-5 {
+  left: 60px;
+  top: 1560px;
+}
+
+.phil-6 {
+  left: 344px;
+  top: 1638px;
+}
+
+.phil-7 {
+  left: 60px;
+  top: 1716px;
+  width: 1800px;
+  white-space: normal;
+}
+
+.deco-a {
+  position: absolute;
+  left: 1076.5px;
+  top: 1915px;
+  width: 843.5px;
+  height: 125px;
+}
+
+.deco-b {
+  position: absolute;
+  left: 1083.5px;
+  top: 1743.5px;
+  width: 836.5px;
+  height: 295.5px;
+  transform: scaleX(-1);
+}
+
+/* Project shelf */
+.shelf-bg {
+  position: absolute;
+  left: 0;
+  top: 2040px;
+  width: 1920px;
+  height: 1080px;
+  background: #f0f2f5;
+}
+
+.hairline {
+  position: absolute;
+  left: 0;
+  top: 2039px;
+  width: 1092px;
+  height: 1px;
+  background: #e1e3e6;
+}
+
+.lime {
+  position: absolute;
+  background: #e5ff7f;
+  mix-blend-mode: multiply;
+}
+
+.lime-left {
+  left: 60px;
+  top: 2040px;
+  width: 60px;
+  height: 1080px;
+}
+
+.lime-right {
+  left: 1800px;
+  top: 2040px;
+  width: 60px;
+  height: 1080px;
+}
+
+.lime-top {
+  left: 60px;
+  top: 2160px;
+  width: 1800px;
+  height: 60px;
+}
+
+.lime-bottom {
+  left: 60px;
+  top: 2940px;
+  width: 1800px;
+  height: 60px;
+}
+
+.label-project {
+  left: 60px;
+  top: 2160px;
+}
+
+.shelf-gray {
+  position: absolute;
+  left: 454px;
+  top: 2919px;
+  width: 594px;
+  height: 34px;
+  background: #a9a9a9;
+  border-radius: 2px;
+  mix-blend-mode: multiply;
+}
+
+.shelf-beige {
+  position: absolute;
+  left: 474px;
+  top: 2805px;
+  width: 567px;
+  height: 63px;
+  background: #cfceca;
+  border-radius: 2px;
+  mix-blend-mode: multiply;
+}
+
+.shelf-plant {
+  position: absolute;
+  left: 671px;
+  top: 2367px;
+  width: 370.463px;
+  height: 445.46px;
+  mix-blend-mode: multiply;
+}
+
+.shelf-plant img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100.32%;
+  height: 100.17%;
+  max-width: none;
+}
+
+.shelf-books {
+  position: absolute;
+  left: 491px;
+  top: 2863px;
+  width: 573px;
+  height: 59px;
+  mix-blend-mode: multiply;
+}
+
+.shelf-books img {
+  position: absolute;
+  left: -.21%;
+  top: -2.04%;
+  width: 100.42%;
+  height: 104.08%;
+  max-width: none;
+}
+
+/* --- 국순당 (orange) --- */
+.book-orange {
+  position: absolute;
+  left: 1291px;
+  top: 2470px;
+  width: 212px;
+  height: 500px;
+  isolation: isolate;
+  border-radius: 2px;
+  mix-blend-mode: multiply;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-orange__col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  width: 185px;
+}
+
+.book-orange__logo {
+  width: 117px;
+  height: 75.726px;
+}
+
+.book-orange__mid {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+  align-items: center;
+  width: 100%;
+}
+
+.book-orange .line {
+  width: 100%;
+  height: 0;
+  margin: 3.2px 0 1.2px;
+  overflow: visible;
+}
+
+.glyphs {
+  position: relative;
+  width: 170px;
+  height: 93.5px;
+}
+
+.glyphs img {
+  position: absolute;
+}
+
+.glyph-1 {
+  left: 0;
+  top: .06px;
+  width: 30.855px;
+  height: 92.823px;
+}
+
+.glyph-2 {
+  left: 35.29px;
+  top: .06px;
+  width: 30.855px;
+  height: 92.823px;
+}
+
+.glyph-3 {
+  left: 70.82px;
+  top: 0;
+  width: 42.208px;
+  height: 93.397px;
+}
+
+.glyph-4 {
+  left: 116.45px;
+  top: .02px;
+  width: 53.55px;
+  height: 93.121px;
+}
+
+.book-orange__meta {
+  width: 172px;
+}
+
+/* --- HAEIT (green) --- */
+.book-green {
+  left: 1063px;
+  top: 2391px;
+  width: 248.801px;
+  height: 581.057px;
+}
+
+.book-green__rot {
+  transform: rotate(14.51deg);
+}
+
+.book-green__card {
+  width: 108.967px;
+  height: 572px;
+  position: relative;
+  isolation: isolate;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+.book-green__col {
+  gap: 128px;
+  align-items: center;
+  width: 76px;
+}
+
+.book-green__top {
+  gap: 36px;
+  align-items: center;
+}
+
+.book-green__icon {
+  width: 56px;
+  height: 58.725px;
+}
+
+.frame-white {
+  border: 1px solid #fff;
+  padding: 6px;
+  border-radius: 1px;
+}
+
+.haeit-box {
+  width: 76px;
+  height: 195.896px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.haeit-rot {
+  transform: rotate(90deg);
+  background: #fff;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  flex: none;
+}
+
+.haeit {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -1.6px;
+  color: #0acd8f;
+  text-transform: capitalize;
+  white-space: nowrap;
+  mix-blend-mode: multiply;
+}
+
+.haeit-union {
+  width: 36.896px;
+  height: 43.834px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mix-blend-mode: multiply;
+}
+
+.haeit-union img {
+  width: 20.071px;
+  height: 39.027px;
+  transform: rotate(30deg);
+}
+
+.book-green__meta {
+  width: 63px;
+}
+
+/* --- Rebranding (blue) --- */
+.book-blue {
+  left: 1529px;
+  top: 2347px;
+  width: 275.272px;
+  height: 624.187px;
+}
+
+.book-blue__rot {
+  transform: rotate(-17.2deg);
+}
+
+.book-blue__card {
+  position: relative;
+  width: 95px;
+  padding: 24px 0;
+  isolation: isolate;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.book-blue__col {
+  gap: 180px;
+  align-items: center;
+  width: 85px;
+}
+
+.book-blue__top {
+  gap: 32px;
+  width: 49px;
+}
+
+.book-blue__icon-a {
+  width: 49px;
+  height: 49px;
+  transform: rotate(90deg);
+}
+
+.book-blue__icon-b {
+  width: 49.001px;
+  height: 227.001px;
+}
+
+.book-blue__wave {
+  position: absolute;
+  left: -31.19px;
+  top: 410.4px;
+  width: 157.044px;
+  height: 191.003px;
+}
+
+.book-blue__meta {
+  width: 100%;
+}
+
+/* --- AI와 디자인 (dark green) --- */
+.book-dark {
+  left: 1480px;
+  top: 2270px;
+  width: 109.193px;
+  height: 701.718px;
+}
+
+.book-dark__rot {
+  transform: rotate(-4.87deg);
+}
+
+.book-dark__card {
+  width: 50px;
+  height: 700px;
+  position: relative;
+  isolation: isolate;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+.book-dark__col {
+  gap: 160px;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+}
+
+.ai-title {
+  width: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 28px;
+  letter-spacing: -1.12px;
+  text-align: center;
+  color: #fff;
+  line-height: 1;
+}
+
+.book-dark__label-wrap {
+  width: 30px;
+  height: 168px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-dark__label {
+  transform: rotate(90deg);
+  width: 168px;
+  height: 30px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+  color: #fff;
+  white-space: nowrap;
+  text-transform: capitalize;
+  line-height: 1.5;
+}
+
+.book-dark__label-main {
+  display: flex;
+  gap: 4px;
+  font-size: 16px;
+  letter-spacing: -.64px;
+}
+
+.book-dark__label-year {
+  font-size: 14px;
+  letter-spacing: -.56px;
+}
+
+/* --- 소소복담 (peach) --- */
+.book-peach {
+  left: 231px;
+  top: 2435px;
+  width: 219.963px;
+  height: 537.172px;
+}
+
+.book-peach__rot {
+  transform: rotate(-16.36deg);
+}
+
+.book-peach__card {
+  position: relative;
+  width: 71px;
+  height: 539px;
+  isolation: isolate;
+  border: 1px solid #ff954d;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.book-peach__col {
+  gap: 66px;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.book-peach__bar-wrap {
+  width: 35px;
+  height: 287px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-peach__bar {
+  width: 287px;
+  height: 35px;
+  transform: rotate(90deg);
+  flex: none;
+}
+
+.book-peach__bottle-wrap {
+  position: absolute;
+  left: -12.76px;
+  top: 302.63px;
+  width: 70px;
+  height: 226.869px;
+}
+
+.book-peach__bottle {
+  position: absolute;
+  left: -1.72%;
+  top: -.53%;
+  width: 103.44%;
+  height: 101.06%;
+  max-width: none;
+}
+
+.book-peach__label-wrap {
+  width: 45px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-peach__label {
+  transform: rotate(90deg);
+  width: 140px;
+  height: 45px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #ff954d;
+  text-transform: capitalize;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.book-peach__label-main {
+  display: flex;
+  gap: 5px;
+  width: 100%;
+  font-size: 16px;
+  letter-spacing: -.64px;
+}
+
+.book-peach__label-year {
+  width: 100%;
+  text-align: right;
+  font-size: 14px;
+  letter-spacing: -.56px;
+}
+
+/* --- 집메이트 (yellow) --- */
+.book-yellow {
+  left: 100px;
+  top: 2352px;
+  width: 232.224px;
+  height: 617.937px;
+}
+
+.book-yellow__rot {
+  transform: rotate(-10.78deg);
+}
+
+.book-yellow__card {
+  position: relative;
+  flex-direction: row;
+  gap: 10px;
+  height: 606px;
+  padding: 16px 10px;
+  isolation: isolate;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.book-yellow__col {
+  height: 489px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.book-yellow__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.book-yellow__title-wrap {
+  width: 82px;
+  height: 224px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zip {
+  width: 224px;
+  height: 82px;
+  flex: none;
+  transform: rotate(90deg);
+  font-family: 'KIMWildgag', 'Black Han Sans', sans-serif;
+  font-size: 60px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -3px;
+  color: #674a3c;
+  white-space: nowrap;
+}
+
+.book-yellow__star-wrap {
+  width: 74.597px;
+  height: 74.597px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-yellow__star {
+  width: 84.541px;
+  height: 20.955px;
+  transform: rotate(45deg);
+  flex: none;
+}
+
+.book-yellow__meta {
+  width: 101px;
+  color: #674a3c;
+}
+
+.book-yellow__tape-wrap {
+  position: absolute;
+  left: -6px;
+  top: -66.85px;
+  width: 133px;
+  height: 189px;
+}
+
+.book-yellow__tape {
+  position: absolute;
+  left: 0;
+  top: -7.41%;
+  width: 100%;
+  height: 107.41%;
+  max-width: none;
+}
+
+/* --- sticky note --- */
+.note {
+  left: 383px;
+  top: 2171px;
+  width: 255.915px;
+  height: 236.102px;
+}
+
+.note__rot {
+  transform: rotate(-3.09deg);
+}
+
+.sticky {
+  position: relative;
+  width: 244.22px;
+  height: 223.244px;
+  overflow: hidden;
+}
+
+.sticky__paper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 244.22px;
+  height: 223.244px;
+}
+
+.sticky__tape {
+  position: absolute;
+  left: -1.78px;
+  top: -3.26px;
+  width: 248px;
+  height: 34px;
+  background: #ffd83d;
+  opacity: .4;
+  border-radius: 2px;
+  mix-blend-mode: multiply;
+}
+
+.sticky__scribble {
+  position: absolute;
+  left: 176.72px;
+  top: 177.29px;
+  width: 67.5px;
+  height: 45.954px;
+  mix-blend-mode: overlay;
+}
+
+.sticky__line {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sticky__line-1 {
+  left: 20.78px;
+  top: 44.82px;
+  width: 165.902px;
+  height: 43.247px;
+}
+
+.sticky__line-2 {
+  left: 86.21px;
+  top: 81.67px;
+  width: 139.325px;
+  height: 35.505px;
+}
+
+.hand {
+  font-family: 'KkuBulLim', 'Jua', cursive;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -1.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hand-1 {
+  transform: rotate(-5.38deg);
+}
+
+.hand-2 {
+  transform: rotate(3.13deg);
+}
+
+.sticky__underline-wrap {
+  position: absolute;
+  left: 81.68px;
+  top: 104.06px;
+  width: 58.698px;
+  height: 8.715px;
+}
+
+.sticky__underline {
+  position: absolute;
+  left: -1.7%;
+  top: -11.47%;
+  width: 103.4%;
+  height: 122.95%;
+  max-width: none;
+}
+
+.sticky__face-wrap {
+  position: absolute;
+  left: 22.01px;
+  top: 121.42px;
+  width: 88.809px;
+  height: 89.678px;
+}
+
+.sticky__face {
+  position: absolute;
+  left: -1.13%;
+  top: -1.12%;
+  width: 102.26%;
+  height: 102.24%;
+  max-width: none;
+}
+
+.book-orange::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #ff7612;
+  border-radius: 2px;
+  filter: url(assets/filters.svg?v=4#grain);
+}
+
+.book-green__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #0acd8f;
+  border-radius: 2px;
+  filter: url(assets/filters.svg?v=4#grain);
+}
+
+.book-blue__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #61dafb;
+  border-radius: 2px;
+  filter: url(assets/filters.svg?v=4#grain);
+}
+
+.book-dark__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #07422f;
+  border-radius: 2px;
+  filter: url(assets/filters.svg?v=4#grain);
+}
+
+.book-peach__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #ff954d;
+  border-radius: 2px;
+  filter: url(assets/filters.svg?v=4#grain);
+}
+
+.book-yellow__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: #fed967;
+  border-radius: 2px;
+  filter: url(assets/filters.svg?v=4#grain);
+}
+
+/* Paper texture overlay */
+.paper {
+  position: absolute;
+  left: -39px;
+  top: -45px;
+  width: 1998px;
+  height: 6129px;
+  opacity: .5;
+  background: url(assets/paper.png) top left/158px 158px;
+  pointer-events: none;
+}
