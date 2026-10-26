@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
-  <!-- Figma GRAIN 효과: 가장자리를 부드러운 물결로 일렁이게 만드는 필터 -->
+  <!-- Figma GRAIN 효과. 값은 Figma가 내보낸 SVG 안의 필터와 같습니다 (반경 1.2 x 2 = scale 2.4059) -->
   <filter id="grain" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
-    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="1" seed="7" result="noise"/>
-    <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.1348" numOctaves="3" seed="3146" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.4059" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 </svg>

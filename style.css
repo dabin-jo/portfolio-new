@@ -1,5 +1,12 @@
 /* Fonts */
 @font-face {
+  font-family: 'KIMWildgag';
+  src: url('assets/%5BKIM%5DWILDgag-BOLD.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'KkuBulLim';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2410-1@1.0/BMkkubulimTTF-Regular.woff2') format('woff2');
   font-weight: normal;
@@ -70,6 +77,11 @@
 }
 
 /* Base */
+:root {
+  /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
+  --grain: url(assets/filters.svg?v=24#grain);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -89,6 +101,9 @@ body {
 
 img {
   display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
 }
 
 a {
@@ -120,9 +135,9 @@ a {
   white-space: nowrap;
 }
 
-/* Figma GRAIN 효과: 모든 텍스트에 적용 (필터 정의: assets/filters.svg) */
-:where(.stage p, .stage a.t, .sticky__paper) {
-  filter: url(assets/filters.svg?v=4#grain);
+/* 찌그러지는 Figma GRAIN 효과: 적용할 요소에 class="grain"을 붙이면 됩니다 */
+.grain {
+  filter: var(--grain);
 }
 
 .col {
@@ -233,7 +248,7 @@ a {
   line-height: 1;
   letter-spacing: -4.8px;
   color: rgba(148, 148, 148, .3);
-  filter: url(assets/filters.svg?v=4#grain) blur(2.5px);
+  filter: var(--grain) blur(2.5px);
   white-space: nowrap;
 }
 
@@ -388,7 +403,7 @@ a {
   top: 2040px;
   width: 1920px;
   height: 1080px;
-  background: #f0f2f5;
+  background: #eef0f2;
 }
 
 .hairline {
@@ -504,7 +519,7 @@ a {
   top: 2470px;
   width: 212px;
   height: 500px;
-  isolation: isolate;
+  background: #ff7612;
   border-radius: 2px;
   mix-blend-mode: multiply;
   display: flex;
@@ -533,11 +548,19 @@ a {
   width: 100%;
 }
 
-.book-orange .line {
+.line {
+  position: relative;
   width: 100%;
   height: 0;
-  margin: 3.2px 0 1.2px;
-  overflow: visible;
+}
+
+.line img {
+  position: absolute;
+  left: -.65%;
+  top: -3.2px;
+  width: 101.3%;
+  height: 4.4px;
+  max-width: none;
 }
 
 .glyphs {
@@ -598,7 +621,7 @@ a {
   width: 108.967px;
   height: 572px;
   position: relative;
-  isolation: isolate;
+  background: #0acd8f;
   align-items: center;
   justify-content: center;
   border-radius: 2px;
@@ -689,7 +712,7 @@ a {
   position: relative;
   width: 95px;
   padding: 24px 0;
-  isolation: isolate;
+  background: #61dafb;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -697,6 +720,7 @@ a {
 }
 
 .book-blue__col {
+  position: relative;
   gap: 180px;
   align-items: center;
   width: 85px;
@@ -727,6 +751,7 @@ a {
 }
 
 .book-blue__meta {
+  position: relative;
   width: 100%;
 }
 
@@ -746,7 +771,7 @@ a {
   width: 50px;
   height: 700px;
   position: relative;
-  isolation: isolate;
+  background: #07422f;
   align-items: center;
   justify-content: center;
   border-radius: 2px;
@@ -822,7 +847,7 @@ a {
   position: relative;
   width: 71px;
   height: 539px;
-  isolation: isolate;
+  background: #ff954d;
   border: 1px solid #ff954d;
   align-items: center;
   justify-content: center;
@@ -831,6 +856,7 @@ a {
 }
 
 .book-peach__col {
+  position: relative;
   gap: 66px;
   align-items: flex-end;
   justify-content: center;
@@ -923,7 +949,7 @@ a {
   gap: 10px;
   height: 606px;
   padding: 16px 10px;
-  isolation: isolate;
+  background: #fed967;
   align-items: flex-end;
   justify-content: center;
   overflow: hidden;
@@ -959,9 +985,9 @@ a {
   height: 82px;
   flex: none;
   transform: rotate(90deg);
-  font-family: 'KIMWildgag', 'Black Han Sans', sans-serif;
+  font-family: 'KIMWildgag', sans-serif;
   font-size: 60px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.2;
   letter-spacing: -3px;
   color: #674a3c;
@@ -1123,66 +1149,6 @@ a {
   width: 102.26%;
   height: 102.24%;
   max-width: none;
-}
-
-.book-orange::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: #ff7612;
-  border-radius: 2px;
-  filter: url(assets/filters.svg?v=4#grain);
-}
-
-.book-green__card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: #0acd8f;
-  border-radius: 2px;
-  filter: url(assets/filters.svg?v=4#grain);
-}
-
-.book-blue__card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: #61dafb;
-  border-radius: 2px;
-  filter: url(assets/filters.svg?v=4#grain);
-}
-
-.book-dark__card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: #07422f;
-  border-radius: 2px;
-  filter: url(assets/filters.svg?v=4#grain);
-}
-
-.book-peach__card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: #ff954d;
-  border-radius: 2px;
-  filter: url(assets/filters.svg?v=4#grain);
-}
-
-.book-yellow__card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: #fed967;
-  border-radius: 2px;
-  filter: url(assets/filters.svg?v=4#grain);
 }
 
 /* Paper texture overlay */

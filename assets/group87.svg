@@ -1,17 +1,17 @@
 <svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="575.406" height="61.4059" viewBox="0 0 575.406 61.4059" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Group 87" style="mix-blend-mode:multiply">
-<g id="Union" filter="url(#filter0_g_0_36)">
+<g id="Union" filter="url(#filter0_g_0_74)">
 <path d="M571.203 1.20296C572.014 1.20296 572.71 1.68673 573.024 2.38069C573.719 2.69424 574.203 3.39137 574.203 4.20296V7.20296C574.203 7.94271 573.8 8.58646 573.203 8.93245V53.4725C573.8 53.8184 574.203 54.463 574.203 55.203V58.203C574.203 59.3075 573.308 60.203 572.203 60.203H3.20296C2.09839 60.203 1.20296 59.3075 1.20296 58.203V55.203C1.20296 54.0984 2.09839 53.203 3.20296 53.203H567.203V9.20296H3.20296C2.09839 9.20296 1.20296 8.30753 1.20296 7.20296V4.20296C1.20296 3.09839 2.09839 2.20296 3.20296 2.20296H567.472C567.818 1.60563 568.463 1.20296 569.203 1.20296H571.203Z" fill="#ADADAD"/>
 </g>
-<g id="Rectangle 35" filter="url(#filter1_g_0_36)">
+<g id="Rectangle 35" filter="url(#filter1_g_0_74)">
 <rect x="2.20296" y="6.20296" width="567" height="50" rx="2" fill="#EDEDED"/>
 </g>
 <g id="Mask group">
-<mask id="mask0_0_36" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="6" width="568" height="51">
+<mask id="mask0_0_74" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="6" width="568" height="51">
 <rect id="Rectangle 34" x="2.20296" y="6.20296" width="567" height="50" rx="2" fill="#EDEDED"/>
 </mask>
-<g mask="url(#mask0_0_36)">
-<g id="Vector" filter="url(#filter2_g_0_36)">
+<g mask="url(#mask0_0_74)">
+<g id="Vector" filter="url(#filter2_g_0_74)">
 <path d="M585.203 11.203V12.203H-11.797V11.203H585.203Z" fill="white"/>
 <path d="M576.203 14.203V15.203H-20.797V14.203H576.203Z" fill="white"/>
 <path d="M589.203 17.203V18.203H-7.79704V17.203H589.203Z" fill="white"/>
@@ -31,30 +31,30 @@
 </g>
 </g>
 <defs>
-<filter id="filter0_g_0_36" x="0" y="0" width="575.406" height="61.4059" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter0_g_0_74" x="0" y="0" width="575.406" height="61.4059" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
 <feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
 <feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
-<feMerge result="effect1_texture_0_36">
+<feMerge result="effect1_texture_0_74">
 <feMergeNode in="displacedImage"/>
 </feMerge>
 </filter>
-<filter id="filter1_g_0_36" x="1" y="5" width="569.406" height="52.4059" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter1_g_0_74" x="1" y="5" width="569.406" height="52.4059" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
 <feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
 <feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
-<feMerge result="effect1_texture_0_36">
+<feMerge result="effect1_texture_0_74">
 <feMergeNode in="displacedImage"/>
 </feMerge>
 </filter>
-<filter id="filter2_g_0_36" x="-25" y="10" width="616.406" height="42.4059" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<filter id="filter2_g_0_74" x="-25" y="10" width="616.406" height="42.4059" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
 <feFlood flood-opacity="0" result="BackgroundImageFix"/>
 <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
 <feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
 <feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
-<feMerge result="effect1_texture_0_36">
+<feMerge result="effect1_texture_0_74">
 <feMergeNode in="displacedImage"/>
 </feMerge>
 </filter>
