@@ -379,7 +379,39 @@ a {
 }
 
 .hero p {
+  position: relative;
+  width: fit-content;
+  margin-left: auto;
   line-height: .9;
+}
+
+/*
+  마우스를 올리면 그 줄 뒤에 형광펜이 왼쪽에서 오른쪽으로 칠해짐 (블렌드 모드: 곱하기).
+  곱하기가 뒤쪽 글자와 배경에 실제로 먹히려면 형광펜이 필터가 걸린 요소 안에 있으면 안 되므로,
+  필터(grain)는 p가 아니라 안쪽 span에 걸어 둠.
+*/
+.hero-main p .grain {
+  position: relative;
+  display: inline-block;
+}
+
+.hero-main p::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  right: -12px;
+  top: 8px;
+  bottom: 4px;
+  background: #e5ff7f;
+  mix-blend-mode: multiply;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform .45s cubic-bezier(.2, .7, .2, 1);
+  pointer-events: none;
+}
+
+.hero-main p:hover::before {
+  transform: scaleX(1);
 }
 
 .hero-main {
@@ -388,6 +420,7 @@ a {
 
 .hero-punct {
   right: 32px;
+  pointer-events: none; /* 글자 위에 겹친 쉼표/마침표가 마우스 호버를 가로채지 않게 */
 }
 
 /* Philosophy */
@@ -402,6 +435,27 @@ a {
   font-weight: 300;
   line-height: 1.5;
   white-space: nowrap;
+}
+
+/* 형광펜: 글자가 검정으로 바뀌는 동안 왼쪽에서 오른쪽으로 칠해짐 (--hl 값은 main.js가 0 → 1로 바꿈) */
+.hl {
+  position: relative;
+  --hl: 0;
+}
+
+.hl::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: 3px;
+  bottom: 1px;
+  z-index: -1;
+  background: #e5ff7f;
+  mix-blend-mode: multiply;
+  transform-origin: left center;
+  transform: scaleX(var(--hl));
+  pointer-events: none;
 }
 
 .phil-1 {

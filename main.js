@@ -59,20 +59,27 @@ const TEXT_BLACK = '#0c0c0c';
 
 /* 글자 하나하나를 <span class="char">로 감쌈 (공백은 그대로 둠) */
 function splitChars(el) {
-  const text = el.textContent;
-  el.textContent = '';
   const chars = [];
-  for (const ch of text) {
-    if (ch === ' ') {
-      el.appendChild(document.createTextNode(ch));
-      continue;
+  /* 형광펜 <span class="hl"> 같은 안쪽 태그는 그대로 두고, 글자(텍스트 노드)만 쪼갬 */
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+  textNodes.forEach((node) => {
+    const frag = document.createDocumentFragment();
+    for (const ch of node.textContent) {
+      if (ch === ' ') {
+        frag.appendChild(document.createTextNode(ch));
+        continue;
+      }
+      const span = document.createElement('span');
+      span.className = 'char';
+      span.textContent = ch;
+      frag.appendChild(span);
+      chars.push(span);
     }
-    const span = document.createElement('span');
-    span.className = 'char';
-    span.textContent = ch;
-    el.appendChild(span);
-    chars.push(span);
-  }
+    node.replaceWith(frag);
+  });
   return chars;
 }
 
@@ -84,24 +91,56 @@ function splitChars(el) {
 function initPhilosophyColor() {
   const chars = gsap.utils.toArray('.phil').flatMap(splitChars);
 
-  gsap.fromTo(
-    chars,
-    { color: TEXT_GRAY },
-    {
-      color: TEXT_BLACK,
-      ease: 'none',
-      duration: 0.1,
-      stagger: { amount: 0.9 },
-      scrollTrigger: {
-        trigger: viewport,
-        start: () => holdStart,
-        end: () => holdStart + COLOR_HOLD,
-        scrub: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => onColorProgress(self.progress),
+  /* 처음에는 모든 글자가 회색 (스크롤 전에 검정으로 보이지 않게 먼저 칠해 둠) */
+  gsap.set(chars, { color: TEXT_GRAY });
+
+  /* 글자가 앞에서부터 차례로 검정색으로: 전체 길이 1 = 글자 하나당 간격 step + 색이 바뀌는 시간 CHAR_TIME */
+  const CHAR_TIME = 0.1;
+  const step = (1 - CHAR_TIME) / (chars.length - 1);
+
+  /*
+    형광펜: 그 구절이 전부 검정이 된 뒤 HL_DELAY만큼 더 스크롤했을 때,
+    스크롤 속도와 상관없이 정해진 시간(HL_DURATION초) 동안 왼쪽에서 오른쪽으로 칠해짐.
+    그 지점보다 위로 되돌리면 다시 지워짐.
+  */
+  const HL_DELAY = 0.04; /* 글씨가 검정이 된 뒤 이만큼(스크롤 진행도) 더 내려가면 칠하기 시작 */
+  const HL_DURATION = 0.7; /* 칠해지는 시간(초) */
+  const highlights = gsap.utils.toArray('.hl').map((el) => {
+    const inside = el.querySelectorAll('.char');
+    const last = chars.indexOf(inside[inside.length - 1]);
+    return { el, at: last * step + CHAR_TIME + HL_DELAY, painted: false, tween: null };
+  });
+
+  function updateHighlights(progress) {
+    highlights.forEach((h) => {
+      const shouldPaint = progress >= h.at;
+      if (shouldPaint === h.painted) return;
+      h.painted = shouldPaint;
+      if (h.tween) h.tween.kill();
+      h.tween = gsap.to(h.el, {
+        '--hl': shouldPaint ? 1 : 0,
+        duration: shouldPaint ? HL_DURATION : 0.3,
+        ease: shouldPaint ? 'power2.out' : 'power1.in',
+      });
+    });
+  }
+
+  const tl = gsap.timeline({
+    defaults: { ease: 'none' },
+    scrollTrigger: {
+      trigger: viewport,
+      start: () => holdStart,
+      end: () => holdStart + COLOR_HOLD,
+      scrub: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        updateHighlights(self.progress);
+        onColorProgress(self.progress);
       },
-    }
-  );
+    },
+  });
+
+  tl.fromTo(chars, { color: TEXT_GRAY }, { color: TEXT_BLACK, duration: CHAR_TIME, stagger: step, immediateRender: true }, 0);
 }
 
 /* --------------------------------------------------------------------------
@@ -211,13 +250,20 @@ function animateFold(to, duration, ease, onComplete) {
 }
 
 /* 글씨가 다 검정이 되면 모서리가 접히며 나타남 */
+/* 글씨가 다 검정이 된 뒤, 이 시간(초)이 지나야 접힌 모서리가 올라오기 시작함 (올라오는 데 1.1초 더 걸려서 합계 약 1.5초) */
+const FOLD_DELAY = 0.4;
+let foldTimer = null;
+
 function showFold() {
+  foldTimer = null;
   fold.shown = true;
   animateFold(FOLD_REST, 1.1, 'power3.out');
 }
 
 /* 스크롤을 되돌리면 접힌 모서리와 넘어간 페이지를 원래대로 */
 function resetFold() {
+  if (foldTimer) foldTimer.kill();
+  foldTimer = null;
   fold.shown = false;
   fold.turned = false;
   sheet.style.visibility = '';
@@ -231,8 +277,14 @@ const RETURN_PROGRESS = 0.5;
 const UNFOLD_PROGRESS = 0.9;
 
 function onColorProgress(progress) {
-  if (progress >= 0.999 && !fold.shown && !fold.turned) showFold();
-  else if (fold.turned && progress < RETURN_PROGRESS) resetFold();
+  if (progress >= 0.999 && !fold.shown && !fold.turned) {
+    /* 도착하고 잠깐 기다린 뒤에 올라옴 (그 사이에 위로 되돌리면 취소) */
+    if (!foldTimer) foldTimer = gsap.delayedCall(FOLD_DELAY, showFold);
+  } else if (progress < 0.98 && foldTimer && !fold.shown) {
+    foldTimer.kill();
+    foldTimer = null;
+  }
+  if (fold.turned && progress < RETURN_PROGRESS) resetFold();
   else if (fold.shown && !fold.turned && progress < UNFOLD_PROGRESS) resetFold();
 }
 
