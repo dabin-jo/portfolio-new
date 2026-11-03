@@ -1,0 +1,101 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="378.768" height="534.483" viewBox="0 0 378.768 534.483" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="Group 111">
+<g id="Rectangle 1318" filter="url(#filter0_g_0_32)">
+<path d="M365.978 3.82729C366.243 2.73805 367.33 2.06096 368.424 2.30473C369.518 2.5485 370.216 3.62337 369.993 4.72177L279.884 448.212C279.621 449.504 279.119 450.735 278.404 451.842C273.082 460.074 260.392 457.246 259.069 447.534C258.891 446.228 258.96 444.9 259.271 443.619L365.978 3.82729Z" fill="#E0DFD7"/>
+</g>
+<g id="Union" filter="url(#filter1_g_0_32)">
+<path d="M44.0323 103.79C67.4548 93.2658 102.608 116.36 118.384 151.464C132.701 183.323 138.384 212.48 112.001 229.873L237.304 491.16C239.135 494.979 239.52 499.333 238.386 503.413C235.455 513.966 223.663 519.266 213.826 514.451C210.022 512.589 207.022 509.411 205.382 505.506L93.1884 238.328C62.6655 246.508 44.6357 222.9 30.3184 191.041C14.5425 155.938 20.6101 114.314 44.0323 103.79Z" fill="#E0DFD7"/>
+</g>
+<g id="Rectangle 1319" filter="url(#filter2_g_0_32)">
+<use xlink:href="#stroke0_0_32" fill="#E0DFD7"/>
+<mask id="stroke1_0_32" maskUnits="userSpaceOnUse" x="160.382" y="33.4782" width="195.778" height="447.056" fill="black">
+<rect fill="white" x="160.382" y="33.4782" width="195.778" height="447.056"/>
+<use xlink:href="#stroke0_0_32"/>
+</mask>
+<path d="M184.851 470.278C178.327 477.593 166.223 472.847 166.41 463.047C166.435 461.729 166.706 460.427 167.211 459.209L340.3 41.0669C340.729 40.0312 341.908 39.5295 342.951 39.9387C343.995 40.3479 344.519 41.5172 344.129 42.5682L186.872 466.918C186.414 468.155 185.728 469.294 184.851 470.278Z" stroke-width="4" stroke="#0C0C0C" mask="url(#stroke1_0_32)"/>
+</g>
+<g id="Ellipse 35" filter="url(#filter3_g_0_32)">
+<path d="M77 122.778C77 127.073 75.433 129 73.5 129C71.567 129 70 127.073 70 122.778C70 118.482 71.75 115 73.5 115C75.25 115 77 118.482 77 122.778Z" fill="#0C0C0C"/>
+</g>
+<g id="Ellipse 36" filter="url(#filter4_g_0_32)">
+<path d="M82.8065 135.424C79.578 137.893 77.1843 137.765 76.0178 136.24C74.8514 134.715 75.3539 132.371 78.5824 129.901C81.811 127.432 85.4843 126.81 86.5403 128.191C87.5963 129.571 86.0351 132.954 82.8065 135.424Z" fill="#0C0C0C"/>
+</g>
+<g id="Ellipse 38" filter="url(#filter5_g_0_32)">
+<path d="M90.0783 136.519C93.2862 139.016 93.7692 141.364 92.5902 142.879C91.4111 144.394 89.0164 144.503 85.8085 142.006C82.6005 139.51 81.0675 136.115 82.1349 134.743C83.2024 133.371 86.8704 134.023 90.0783 136.519Z" fill="#0C0C0C"/>
+</g>
+<g id="Ellipse 37" filter="url(#filter6_g_0_32)">
+<use xlink:href="#stroke2_0_32" fill="#0C0C0C"/>
+<mask id="stroke3_0_32" fill="white">
+<use xlink:href="#stroke2_0_32"/>
+</mask>
+<path d="M93.2028 115.343C94.6765 119.398 93.8747 121.748 92.0703 122.404C90.2659 123.06 88.1421 121.773 86.6684 117.718C85.1947 113.662 85.6336 109.781 87.2672 109.188C88.9008 108.594 91.7291 111.288 93.2028 115.343Z" stroke-width="2" stroke="#E0DFD7" mask="url(#stroke3_0_32)"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_g_0_32" x="257.77" y="1.05212" width="113.467" height="456.83" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
+<feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_0_32">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+<filter id="filter1_g_0_32" x="20.346" y="100.026" width="219.882" height="417.419" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
+<feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_0_32">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+<filter id="filter2_g_0_32" x="163.204" y="36.5928" width="184.257" height="440.447" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
+<feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_0_32">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+<filter id="filter3_g_0_32" x="68.797" y="113.797" width="9.40592" height="16.4059" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
+<feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_0_32">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+<filter id="filter4_g_0_32" x="74.2424" y="126.267" width="13.8287" height="12.2764" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
+<feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_0_32">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+<filter id="filter5_g_0_32" x="80.5949" y="132.835" width="13.7848" height="12.3283" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
+<feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_0_32">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+<filter id="filter6_g_0_32" x="84.5675" y="107.903" width="10.6045" height="15.8665" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="0.1348026841878891 0.1348026841878891" numOctaves="3" seed="3146" />
+<feDisplacementMap in="shape" scale="2.4059185981750488" xChannelSelector="R" yChannelSelector="G" result="displacedImage" width="100%" height="100%" />
+<feMerge result="effect1_texture_0_32">
+<feMergeNode in="displacedImage"/>
+</feMerge>
+</filter>
+<path id="stroke0_0_32" d="M340.3 41.0669C340.729 40.0312 341.908 39.5295 342.951 39.9387C343.995 40.3479 344.519 41.5172 344.129 42.5682L186.872 466.918C186.414 468.155 185.728 469.294 184.851 470.278C178.327 477.593 166.223 472.847 166.41 463.047C166.435 461.729 166.706 460.427 167.211 459.209L340.3 41.0669Z"/>
+<path id="stroke2_0_32" d="M93.2028 115.343C94.6765 119.398 93.8747 121.748 92.0703 122.404C90.2659 123.06 88.1421 121.773 86.6684 117.718C85.1947 113.662 85.6336 109.781 87.2672 109.188C88.9008 108.594 91.7291 111.288 93.2028 115.343Z"/>
+</defs>
+</svg>
