@@ -719,3 +719,8 @@ a {
   background: url(assets/paper.png) top left/158px 158px;
   pointer-events: none;
 }
+/* 프로젝트 오브제 위에 마우스를 올리면 손가락 포인터로 바뀜 (img는 전역에서 pointer-events: none이라 여기서만 켬) */
+.project-img img {
+  pointer-events: auto;
+  cursor: pointer;
+}
