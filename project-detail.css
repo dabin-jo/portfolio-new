@@ -1,0 +1,529 @@
+/* Fonts */
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-3Light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-4Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-7Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
+  --grain: url(assets/filters.svg?v=24#grain);
+  --lime: #e5ff7f;
+  --black: #0c0c0c;
+}
+
+/* Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: #fff;
+}
+
+body {
+  font-family: 'A2z', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  color: var(--black);
+}
+
+img {
+  display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 1920px 기준 캔버스 (project-detail.js가 화면 폭에 맞춰 scale) */
+.viewport {
+  width: 100%;
+  position: relative;
+  overflow-x: clip;
+}
+
+.stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 3655px;
+  overflow: hidden;
+  background: #fff;
+  transform-origin: 0 0;
+}
+
+/* 찌그러지는 Figma GRAIN 효과: 적용할 요소에 class="grain"을 붙이면 됩니다 */
+.grain {
+  filter: var(--grain);
+}
+
+/* Header */
+.header {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 1920px;
+  padding: 20px 60px;
+}
+
+.header__logo {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 31px;
+}
+
+.header__logo img {
+  position: absolute;
+  left: -3.34%;
+  top: -3.88%;
+  width: 106.68%;
+  height: 107.76%;
+  max-width: none;
+}
+
+.header__menu {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.8px;
+  white-space: nowrap;
+}
+
+/* Title */
+.pd-title {
+  position: absolute;
+  left: 60px;
+  top: 120px;
+  font-size: 40px;
+  font-weight: 300;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.pd-tags {
+  position: absolute;
+  left: 60px;
+  top: 173px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+/* Main visual */
+.pd-visual {
+  position: absolute;
+  left: 660px;
+  top: 720px;
+  width: 1200px;
+  height: 674px;
+}
+
+.pd-visual__image {
+  position: absolute;
+  inset: 0;
+  background: #d9d9d9;
+}
+
+.pd-visual__corner {
+  position: absolute;
+  left: 1063.5px;
+  top: 626.02px;
+  width: 136.501px;
+  height: 47.982px;
+}
+
+/* 투명 테이프 (곱하기) */
+.pd-tape {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mix-blend-mode: multiply;
+}
+
+.pd-tape__rot {
+  position: relative;
+  flex: none;
+}
+
+.pd-tape__rot img {
+  position: absolute;
+  max-width: none;
+}
+
+.pd-tape-left {
+  left: 609px;
+  top: 653px;
+  width: 295.274px;
+  height: 164.809px;
+}
+
+.pd-tape-left .pd-tape__rot {
+  width: 294px;
+  height: 60px;
+  transform: rotate(-21.78deg);
+}
+
+.pd-tape-left .pd-tape__rot img {
+  left: -.41%;
+  top: -2%;
+  width: 100.82%;
+  height: 104%;
+}
+
+.pd-tape-right {
+  left: 1685px;
+  top: 677px;
+  width: 214.417px;
+  height: 139.52px;
+}
+
+.pd-tape-right .pd-tape__rot {
+  width: 206.446px;
+  height: 62.79px;
+  transform: rotate(23.37deg);
+}
+
+.pd-tape-right .pd-tape__rot img {
+  left: -.58%;
+  top: -1.91%;
+  width: 101.16%;
+  height: 103.83%;
+}
+
+/* Headings */
+.pd-heading {
+  position: absolute;
+  left: 660px;
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.pd-heading-overview {
+  top: 1560px;
+}
+
+.pd-heading-info {
+  top: 1800px;
+}
+
+.pd-heading-details {
+  top: 2160px;
+}
+
+/* Overview */
+.pd-overview {
+  position: absolute;
+  left: 960px;
+  top: 1560px;
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: justify;
+  word-break: break-word;
+}
+
+/* Info */
+.pd-info {
+  position: absolute;
+  left: 960px;
+  top: 1800px;
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.pd-info__row {
+  display: flex;
+  align-items: center;
+  gap: 160px;
+  width: 100%;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #000;
+}
+
+.pd-info dt {
+  flex: none;
+  width: 95px;
+  font-weight: 300;
+}
+
+.pd-info dd {
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.pd-info__list {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.pd-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 14px;
+  background: var(--lime);
+  letter-spacing: -.64px;
+  white-space: nowrap;
+}
+
+/* Details (가로로 이어지는 이미지 목록, 인터랙션은 project-detail.js에서) */
+.pd-details {
+  position: absolute;
+  left: 660px;
+  top: 2280px;
+  width: 1260px;
+  height: 480px;
+}
+
+.pd-details__track {
+  display: flex;
+  gap: 20px;
+  width: max-content;
+}
+
+.pd-details__item {
+  flex: none;
+  width: 856px;
+  height: 480px;
+  background: #d9d9d9;
+}
+
+/* 이전 / 다음 프로젝트 */
+.pd-move {
+  position: absolute;
+  top: 2880px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.pd-move-prev {
+  left: 660px;
+}
+
+.pd-move-next {
+  left: 1676px;
+}
+
+/* Footer */
+.pd-footer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.pd-footer a {
+  pointer-events: auto;
+}
+
+.pd-footer__shape {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pd-footer__rot {
+  position: relative;
+  flex: none;
+}
+
+.pd-footer__rot img {
+  position: absolute;
+  left: -.13%;
+  top: -.1%;
+  width: 100.26%;
+  height: 100.2%;
+  max-width: none;
+}
+
+.pd-footer__shape-left {
+  left: -152px;
+  top: 3210.04px;
+  width: 1023.413px;
+  height: 1234.995px;
+}
+
+.pd-footer__shape-left .pd-footer__rot {
+  width: 922.056px;
+  height: 1155.886px;
+  transform: rotate(-5.22deg);
+}
+
+.pd-footer__shape-center {
+  left: 641px;
+  top: 3252.04px;
+  width: 918.87px;
+  height: 1126.061px;
+}
+
+.pd-footer__shape-center .pd-footer__rot {
+  width: 846.822px;
+  height: 1070px;
+  background: #1b1b1b;
+  transform: rotate(3.97deg);
+}
+
+.pd-footer__shape-right {
+  left: 1237px;
+  top: 3210.04px;
+  width: 1142.435px;
+  height: 1322.479px;
+}
+
+.pd-footer__shape-right .pd-footer__rot {
+  width: 922.056px;
+  height: 1155.886px;
+  transform: rotate(-12.01deg);
+}
+
+.pd-footer__menu {
+  position: absolute;
+  left: 1727px;
+  top: 3360.02px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: right;
+  white-space: nowrap;
+  color: #fdfdfd;
+}
+
+.pd-footer__menu p {
+  font-size: 16px;
+  color: #969696;
+}
+
+.pd-footer__brand-box {
+  position: absolute;
+  left: 72.66px;
+  top: 3360.38px;
+  width: 457.101px;
+  height: 185.941px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pd-footer__brand-rot {
+  flex: none;
+  transform: rotate(-5.22deg);
+}
+
+.pd-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 445.666px;
+}
+
+.pd-footer__name {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.pd-footer__name p {
+  font-size: 91.913px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -5.5148px;
+  color: var(--lime);
+  white-space: nowrap;
+}
+
+.pd-footer__name p:first-child {
+  margin-right: -2.44px;
+}
+
+.pd-footer__name img {
+  flex: none;
+  width: 97.428px;
+  height: 80.271px;
+  margin-right: -7.321px;
+}
+
+.pd-footer__slogan {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.56px;
+  color: #fdfdfd;
+}
+
+.pd-footer__mail {
+  display: block;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -1.2px;
+  color: var(--lime);
+}
+
+/* Paper texture overlay */
+.paper {
+  position: absolute;
+  left: -39px;
+  top: -45px;
+  width: 1998px;
+  height: 6129px;
+  opacity: .5;
+  background: url(assets/paper.png) top left/158px 158px;
+  pointer-events: none;
+  z-index: 10;
+}

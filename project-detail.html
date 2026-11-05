@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kooksoondang | Project Detail</title>
+  <link rel="stylesheet" href="project-detail.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="project-detail.js" defer></script>
+</head>
+
+<body>
+  <div class="viewport" id="viewport">
+    <main class="stage" id="stage">
+
+      <!-- header -->
+      <header class="header">
+        <a class="header__logo" href="index.html" aria-label="Home"><img src="assets/logo.svg" alt=""></a>
+        <div class="grain header__menu">
+          <a href="index.html">Project</a>
+          <a href="index.html">About Me</a>
+          <a href="#footer">Contact</a>
+        </div>
+      </header>
+
+      <!-- title -->
+      <h1 class="grain pd-title">Kooksoondang</h1>
+      <div class="grain pd-tags">
+        <p>web design</p>
+        <p>·</p>
+        <p>uXUI design</p>
+      </div>
+
+      <!-- main visual -->
+      <div class="pd-visual" id="visual">
+        <div class="pd-visual__image"></div>
+        <img class="pd-visual__corner" src="assets/pd-corner.svg" alt="">
+      </div>
+      <div class="pd-tape pd-tape-left"><div class="pd-tape__rot"><img src="assets/pd-tape-left.svg" alt=""></div></div>
+      <div class="pd-tape pd-tape-right"><div class="pd-tape__rot"><img src="assets/pd-tape-right.svg" alt=""></div></div>
+
+      <!-- overview -->
+      <h2 class="grain pd-heading pd-heading-overview">Overview</h2>
+      <div class="grain pd-overview">
+        <p>100년 전통주 브랜드 국순당의 웹사이트는 2009년에 멈춰 있어 모바일에서도 해외에서도 사용자에게 닿지 못했습니다. 저희는 'Tradition Meets Interactive Experience'를 콘셉트로 주막 문화를 유쾌한 2D 손그림 캐릭터로 풀어내고, 모든 조합에 결과를 설계한 페어링 게임과 언어 전환에 대응하는 컴포넌트를 더해 7개 페이지를 반응형으로 구현하고 배포했습니다.</p>
+        <p>팀으로 작업하며 사소한 것까지 처음부터 세세하게 정해야 기획이 흔들리지 않는다는 것을 배웠고, 일정이 밀리지 않게 팀 프로젝트를 이끄는 방식을 익혔습니다. 다만 시간이 부족해 기획한 내용을 모두 담지 못했고 페이지 간 디자인 무드를 완전히 통일하지 못한 점이 아쉬워, 제품 상세·테스트 페이지를 다시 디자인하고 반응형을 완성하는 디벨롭을 이어가고자 합니다.</p>
+      </div>
+
+      <!-- info -->
+      <h2 class="grain pd-heading pd-heading-info">Info</h2>
+      <dl class="grain pd-info">
+        <div class="pd-info__row">
+          <dt>Period</dt>
+          <dd>2026. 5 - 2026. 8</dd>
+        </div>
+        <div class="pd-info__row">
+          <dt>Team</dt>
+          <dd>5인 프로젝트</dd>
+        </div>
+        <div class="pd-info__row">
+          <dt>Role</dt>
+          <dd>UX 기획, UI 디자인, 퍼블리싱</dd>
+        </div>
+        <div class="pd-info__row">
+          <dt>Contribution</dt>
+          <dd class="pd-info__list">
+            <span>기획 30%</span>
+            <span>디자인 40%</span>
+            <span>일러스트 85%</span>
+            <span>개발 20%</span>
+          </dd>
+        </div>
+        <div class="pd-info__row">
+          <dt>Tools</dt>
+          <dd class="pd-info__list">
+            <span>Figma ·</span>
+            <span>Adobe Illustrator ·</span>
+            <span>Clip Studio ·</span>
+            <span>VS Code ·</span>
+            <span>Claude Code</span>
+          </dd>
+        </div>
+        <div class="pd-info__row">
+          <dt>Link</dt>
+          <dd><a class="pd-link" href="#" target="_blank" rel="noopener">Project Link<span>↗</span></a></dd>
+        </div>
+      </dl>
+
+      <!-- details -->
+      <h2 class="grain pd-heading pd-heading-details">Details</h2>
+      <div class="pd-details" id="details">
+        <div class="pd-details__track" id="detailsTrack">
+          <div class="pd-details__item"></div>
+          <div class="pd-details__item"></div>
+          <div class="pd-details__item"></div>
+        </div>
+      </div>
+
+      <!-- prev / next -->
+      <a class="grain pd-move pd-move-prev" href="#"><span>←</span><span>before project</span></a>
+      <a class="grain pd-move pd-move-next" href="#"><span>next project</span><span>→</span></a>
+
+      <!-- footer -->
+      <footer class="pd-footer" id="footer">
+        <div class="pd-footer__shape pd-footer__shape-left"><div class="pd-footer__rot"><img src="assets/pd-footer-left.svg" alt=""></div></div>
+        <div class="pd-footer__shape pd-footer__shape-center"><div class="pd-footer__rot"></div></div>
+        <div class="pd-footer__shape pd-footer__shape-right"><div class="pd-footer__rot"><img src="assets/pd-footer-right.svg" alt=""></div></div>
+
+        <nav class="grain pd-footer__menu">
+          <a href="index.html">Home</a>
+          <a href="index.html">Projects</a>
+          <a href="index.html">About Me</a>
+          <a href="#footer">Contact</a>
+          <p>©2026 JODABIN</p>
+        </nav>
+
+        <div class="pd-footer__brand-box"><div class="pd-footer__brand-rot">
+          <div class="grain pd-footer__brand">
+            <div class="pd-footer__name">
+              <p>JO</p>
+              <img src="assets/pd-footer-d.svg" alt="">
+              <p>ABIN</p>
+            </div>
+            <p class="pd-footer__slogan">I find value in the overlooked, and make what matters matter more.</p>
+            <a class="pd-footer__mail" href="mailto:jodabin9098@gmail.com" target="_blank" rel="noopener">jodabin9098@gmail.com</a>
+          </div>
+        </div></div>
+      </footer>
+
+      <div class="paper"></div>
+    </main>
+  </div>
+</body>
+
+</html>
