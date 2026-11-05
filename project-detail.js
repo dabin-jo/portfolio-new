@@ -24,6 +24,14 @@ function fitStage() {
 
 window.addEventListener('resize', fitStage);
 
+/*
+  페이지 높이를 정하고 나면 세로 스크롤바가 생겨서 화면 폭이 줄어듦 (resize 이벤트는 안 뜸).
+  그 변화를 감지해서 다시 맞춰야 오른쪽 여백(헤더 등)이 어긋나지 않음.
+*/
+new ResizeObserver(() => {
+  if (viewport.clientWidth / BASE_WIDTH !== scale) fitStage();
+}).observe(viewport);
+
 /* --------------------------------------------------------------------------
    인터랙션 (여기에 gsap / ScrollTrigger 코드를 추가)
    - #visual     : 메인 이미지

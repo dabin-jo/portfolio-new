@@ -4,9 +4,9 @@
     <feTurbulence type="fractalNoise" baseFrequency="0.1348" numOctaves="3" seed="3146" result="noise"/>
     <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.4059" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
-  <!-- 작은 글씨(프로젝트 상세 본문)용: 같은 모양에 흔들림만 절반으로 줄임 -->
+  <!-- 작은 글씨(프로젝트 상세 본문)용: 같은 모양에 흔들림만 줄임 (원래 2.4059의 약 3/4) -->
   <filter id="grain-soft" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
     <feTurbulence type="fractalNoise" baseFrequency="0.1348" numOctaves="3" seed="3146" result="noise"/>
-    <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.2" xChannelSelector="R" yChannelSelector="G"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 </svg>
