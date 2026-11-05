@@ -12,21 +12,22 @@
 </head>
 
 <body>
+  <!-- header: 스크롤해도 화면 위에 고정 (캔버스 밖, 크기는 JS가 맞춤) -->
+  <header class="header">
+    <a class="header__logo" href="index.html" aria-label="Home"><img class="header__logo-dark" src="assets/logo.svg" alt=""><img class="header__logo-light" src="assets/logo-light.svg" alt=""></a>
+    <div class="grain header__menu">
+      <a href="#">Project</a>
+      <a href="#">About Me</a>
+      <a href="#">Contact</a>
+    </div>
+  </header>
+
   <div class="viewport" id="viewport">
     <div class="stage-sticky" id="stageSticky">
     <main class="stage" id="stage">
 
       <!-- 위쪽 종이: 철학 문장이 다 검정이 되면 말려 올라가며 아래 책장이 드러남 -->
       <div class="sheet" id="sheet">
-      <!-- header -->
-      <header class="header">
-        <a class="header__logo" href="index.html" aria-label="Home"><img src="assets/logo.svg" alt=""></a>
-        <div class="grain header__menu">
-          <a href="#">Project</a>
-          <a href="#">About Me</a>
-          <a href="#">Contact</a>
-        </div>
-      </header>
 
       <!-- hero -->
       <p class="grain bg-word bg-ux">UX/UI</p>

@@ -18,6 +18,7 @@ const COLOR_HOLD = 1400;
 const viewport = document.getElementById('viewport');
 const stageSticky = document.getElementById('stageSticky');
 const stage = document.getElementById('stage');
+const header = document.querySelector('.header');
 const sheet = document.getElementById('sheet');
 const shelf = document.getElementById('shelf');
 const foldFlap = document.getElementById('foldFlap');
@@ -28,6 +29,7 @@ let holdStart = 0; /* 화면 고정이 시작되는 스크롤 위치(px) */
 function fitStage() {
   scale = viewport.clientWidth / BASE_WIDTH;
   gsap.set(stage, { scale, transformOrigin: '0 0' });
+  gsap.set(header, { scale, transformOrigin: '0 0' }); /* 고정 헤더도 같은 비율로 */
 
   /* 철학 페이지(종이)의 아래쪽 끝이 화면 아래 끝에 오도록 맞춤 */
   const visibleTop = Math.max(0, SHEET_HEIGHT - window.innerHeight / scale);
@@ -266,6 +268,8 @@ function resetFold() {
   foldTimer = null;
   fold.shown = false;
   fold.turned = false;
+  header.classList.remove('is-light');
+  shelf.classList.remove('is-open');
   sheet.style.visibility = '';
   foldFlap.style.visibility = '';
   animateFold(CORNER, 0.5, 'power2.inOut');
@@ -292,6 +296,8 @@ function onColorProgress(progress) {
 function turnPage() {
   animateFold(FOLD_END, 0.9, 'power2.inOut', () => {
     fold.turned = true;
+    header.classList.add('is-light'); /* 검은 프로젝트 페이지 위에서는 흰색 헤더 */
+    shelf.classList.add('is-open'); /* 이제부터 프로젝트 그림을 누를 수 있음 */
     sheet.style.visibility = 'hidden';
     foldFlap.style.visibility = 'hidden';
   });

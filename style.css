@@ -78,6 +78,8 @@
 
 /* Base */
 :root {
+  --white: #fdfdfd;
+  --black: #0c0c0c;
   /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
   --grain: url(assets/filters.svg?v=24#grain);
 }
@@ -274,15 +276,28 @@ a {
 
 /* Header */
 .header {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
-  z-index: 5;
+  z-index: 100;
+  transform-origin: 0 0;
+  pointer-events: none;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   width: 1920px;
   padding: 20px 60px;
+  color: var(--black);
+  transition: color .3s;
+}
+
+/* 어두운 배경 위에서는 글씨와 로고가 흰색 (main js가 is-light 클래스를 붙임) */
+.header.is-light {
+  color: var(--white);
+}
+
+.header a {
+  pointer-events: auto;
 }
 
 .header__logo {
@@ -293,12 +308,22 @@ a {
 }
 
 .header__logo img {
+  transition: opacity .3s;
   position: absolute;
   left: -3.34%;
   top: -3.88%;
   width: 106.68%;
   height: 107.76%;
   max-width: none;
+}
+
+.header__logo-light,
+.header.is-light .header__logo-dark {
+  opacity: 0;
+}
+
+.header.is-light .header__logo-light {
+  opacity: 1;
 }
 
 .header__menu {
@@ -729,8 +754,15 @@ a {
   background: url(assets/paper.png) top left/158px 158px;
   pointer-events: none;
 }
-/* 프로젝트 오브제 위에 마우스를 올리면 손가락 포인터로 바뀜 (img는 전역에서 pointer-events: none이라 여기서만 켬) */
-.project-img img {
+/*
+  프로젝트 오브제는 종이를 넘겨서 프로젝트 페이지가 완전히 열린 뒤(#shelf.is-open)에만 눌림.
+  (종이를 뜯다가 뒤에 보이는 그림이 잘못 눌려서 상세 페이지로 넘어가는 것을 막음)
+*/
+.project-img {
+  pointer-events: none;
+}
+
+.shelf.is-open .project-img img {
   pointer-events: auto;
   cursor: pointer;
 }

@@ -21,10 +21,12 @@
 }
 
 :root {
-  /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
-  --grain: url(assets/filters.svg?v=24#grain);
-  --lime: #e5ff7f;
+  --white: #fdfdfd;
   --black: #0c0c0c;
+  /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
+  --grain: url(assets/filters.svg?v=25#grain);
+  --grain-soft: url(assets/filters.svg?v=25#grain-soft);
+  --lime: #e5ff7f;
 }
 
 /* Base */
@@ -81,15 +83,28 @@ a {
 
 /* Header */
 .header {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
-  z-index: 5;
+  z-index: 100;
+  transform-origin: 0 0;
+  pointer-events: none;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   width: 1920px;
   padding: 20px 60px;
+  color: var(--black);
+  transition: color .3s;
+}
+
+/* 어두운 배경 위에서는 글씨와 로고가 흰색 (main js가 is-light 클래스를 붙임) */
+.header.is-light {
+  color: var(--white);
+}
+
+.header a {
+  pointer-events: auto;
 }
 
 .header__logo {
@@ -100,12 +115,22 @@ a {
 }
 
 .header__logo img {
+  transition: opacity .3s;
   position: absolute;
   left: -3.34%;
   top: -3.88%;
   width: 106.68%;
   height: 107.76%;
   max-width: none;
+}
+
+.header__logo-light,
+.header.is-light .header__logo-dark {
+  opacity: 0;
+}
+
+.header.is-light .header__logo-light {
+  opacity: 1;
 }
 
 .header__menu {
@@ -153,16 +178,40 @@ a {
   height: 674px;
 }
 
+/*
+  사진은 그대로 두고 가장자리만 자글자글하게:
+  박스를 사방 6px 키우고, 같은 모양의 "찌그러진 사각형"(SVG)을 마스크로 씌워 사진을 오려 냄.
+  (필터를 사진에 직접 걸면 안쪽 그림까지 흔들려서 이 방식을 씀. 박스 크기를 바꾸면 아래 마스크의 숫자도 바꿔야 함)
+*/
 .pd-visual__image {
   position: absolute;
-  inset: 0;
-  background: #d9d9d9;
+  inset: -6px;
+  padding: 6px;
+  background: #d9d9d9 content-box;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221212%22%20height%3D%22686%22%20viewBox%3D%220%200%201212%20686%22%3E%3Cfilter%20id%3D%22g%22%20filterUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%221212%22%20height%3D%22686%22%20color-interpolation-filters%3D%22sRGB%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.1348%22%20numOctaves%3D%223%22%20seed%3D%223146%22%20result%3D%22n%22%2F%3E%3CfeDisplacementMap%20in%3D%22SourceGraphic%22%20in2%3D%22n%22%20scale%3D%222.4059%22%20xChannelSelector%3D%22R%22%20yChannelSelector%3D%22G%22%2F%3E%3C%2Ffilter%3E%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%221200%22%20height%3D%22674%22%20fill%3D%22%23000%22%20filter%3D%22url%28%23g%29%22%2F%3E%3C%2Fsvg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221212%22%20height%3D%22686%22%20viewBox%3D%220%200%201212%20686%22%3E%3Cfilter%20id%3D%22g%22%20filterUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%221212%22%20height%3D%22686%22%20color-interpolation-filters%3D%22sRGB%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.1348%22%20numOctaves%3D%223%22%20seed%3D%223146%22%20result%3D%22n%22%2F%3E%3CfeDisplacementMap%20in%3D%22SourceGraphic%22%20in2%3D%22n%22%20scale%3D%222.4059%22%20xChannelSelector%3D%22R%22%20yChannelSelector%3D%22G%22%2F%3E%3C%2Ffilter%3E%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%221200%22%20height%3D%22674%22%20fill%3D%22%23000%22%20filter%3D%22url%28%23g%29%22%2F%3E%3C%2Fsvg%3E") center / 100% 100% no-repeat;
 }
 
+/*
+  모서리 그림 아래에 깔아 두는 연두색 받침.
+  모서리 그림 가장자리가 자글자글하게 흔들릴 때 뒤의 사진(주황색)이 틈으로 비쳐 보이는 것을 막음.
+  사진 가장자리 밖으로 나가는 부분은 마스크가 잘라 줌.
+*/
+.pd-visual__corner-fill {
+  position: absolute;
+  left: 1069.5px;
+  top: 632.02px;
+  width: 150px;
+  height: 56px;
+  background: var(--lime);
+  clip-path: polygon(0 47.98px, 136.5px 27.75px, 150px 26px, 150px 56px, 0 56px);
+}
+
+/* 사진과 같은 마스크 안에 있어서 사진 가장자리 밖으로 튀어나오지 않음 (좌표에 +6px는 마스크용 여백) */
 .pd-visual__corner {
   position: absolute;
-  left: 1063.5px;
-  top: 626.02px;
+  left: 1069.5px;
+  top: 632.02px;
   width: 136.501px;
   height: 47.982px;
 }
@@ -250,6 +299,7 @@ a {
 
 /* Overview */
 .pd-overview {
+  filter: var(--grain-soft); /* 작은 글씨라 흔들림을 줄임 */
   position: absolute;
   left: 960px;
   top: 1560px;
@@ -266,6 +316,7 @@ a {
 
 /* Info */
 .pd-info {
+  filter: var(--grain-soft); /* 작은 글씨라 흔들림을 줄임 */
   position: absolute;
   left: 960px;
   top: 1800px;
@@ -316,16 +367,25 @@ a {
 /* Details (가로로 이어지는 이미지 목록, 인터랙션은 project-detail.js에서) */
 .pd-details {
   position: absolute;
-  left: 660px;
+  left: 0;
   top: 2280px;
-  width: 1260px;
+  width: 1920px;
   height: 480px;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+
+.pd-details.dragging {
+  cursor: grabbing;
 }
 
 .pd-details__track {
   display: flex;
   gap: 20px;
   width: max-content;
+  margin-left: 660px;
+  will-change: transform;
 }
 
 .pd-details__item {
@@ -526,4 +586,11 @@ a {
   background: url(assets/paper.png) top left/158px 158px;
   pointer-events: none;
   z-index: 10;
+}
+
+/* 메인 이미지 안의 사진: 회색 박스를 꽉 채움 */
+.pd-visual__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
