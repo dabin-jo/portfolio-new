@@ -17,6 +17,7 @@ let scale = 1;
 function fitStage() {
   scale = viewport.clientWidth / BASE_WIDTH;
   gsap.set(stage, { scale, transformOrigin: '0 0' });
+  document.documentElement.style.setProperty('--s', scale); /* 캔버스 밖 요소(확대 보기 닫기 버튼)도 같은 비율로 */
   gsap.set(header, { scale, transformOrigin: '0 0' }); /* 고정 헤더도 같은 비율로 */
   viewport.style.height = `${BASE_HEIGHT * scale}px`;
   ScrollTrigger.refresh();
@@ -61,6 +62,57 @@ const DETAILS_ITEM_WIDTH = 856;
 const DETAILS_GAP = 20;
 const DETAILS_END_RIGHT = 1860; /* 마지막 이미지의 오른쪽 끝이 닿는 위치 (오른쪽 여백 60px) */
 
+/*
+  Details 이미지 확대 보기
+  - 이미지를 클릭하면 화면 가운데에 크게 뜸
+  - 닫기: 바깥(어두운 곳) 클릭, 오른쪽 위 × 버튼, Esc 키
+  - 이미지가 들어가면(<img>) 그 이미지가, 아직 회색 상자면 회색 상자가 커짐
+*/
+const lightbox = document.createElement('div');
+lightbox.className = 'lightbox';
+lightbox.innerHTML = '<button class="lightbox__close" type="button" aria-label="닫기"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M0.4 0.4L19.6 19.6M19.6 0.4L0.4 19.6"/></svg></button><div class="lightbox__frame"></div>';
+document.body.append(lightbox);
+const lightboxFrame = lightbox.querySelector('.lightbox__frame');
+let lightboxOpen = false;
+
+function openLightbox(item) {
+  const img = item.querySelector('img');
+  lightboxFrame.replaceChildren();
+  if (img) {
+    const big = new Image();
+    big.src = img.currentSrc || img.src;
+    big.alt = img.alt;
+    lightboxFrame.append(big);
+  }
+  lightboxOpen = true;
+  lightbox.classList.add('is-open');
+  gsap.fromTo(lightbox, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power1.out' });
+  gsap.fromTo(lightboxFrame, { scale: 0.92, y: 20 }, { scale: 1, y: 0, duration: 0.4, ease: 'power3.out' });
+}
+
+function closeLightbox() {
+  if (!lightboxOpen) return;
+  lightboxOpen = false;
+  gsap.to(lightbox, {
+    opacity: 0,
+    duration: 0.2,
+    ease: 'power1.in',
+    onComplete: () => lightbox.classList.remove('is-open'),
+  });
+}
+
+lightbox.addEventListener('click', (e) => {
+  if (e.target === lightboxFrame || lightboxFrame.contains(e.target)) return;
+  closeLightbox();
+});
+lightbox.querySelector('.lightbox__close').addEventListener('click', closeLightbox);
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLightbox();
+});
+/* 열려 있는 동안 뒤 페이지가 스크롤되지 않게 */
+lightbox.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+lightbox.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+
 function initDetailsSlider() {
   const items = detailsTrack.children;
   const step = DETAILS_ITEM_WIDTH + DETAILS_GAP;
@@ -84,6 +136,7 @@ function initDetailsSlider() {
   let lastPointer = 0;
   let lastTime = 0;
   let active = false;
+  let dragDistance = 0; /* 이만큼 움직였으면 클릭이 아니라 드래그 */
 
   const set = (v) => {
     x = v;
@@ -99,6 +152,7 @@ function initDetailsSlider() {
     startPointer = lastPointer = e.clientX;
     startX = x;
     velocity = 0;
+    dragDistance = 0;
     lastTime = performance.now();
     details.classList.add('dragging');
     details.setPointerCapture(e.pointerId);
@@ -106,6 +160,7 @@ function initDetailsSlider() {
 
   details.addEventListener('pointermove', (e) => {
     if (!active) return;
+    dragDistance = Math.max(dragDistance, Math.abs(e.clientX - startPointer));
     const now = performance.now();
     const dt = Math.max(1, now - lastTime);
     velocity = (e.clientX - lastPointer) / scale / dt; /* 캔버스 px / ms */
@@ -125,6 +180,12 @@ function initDetailsSlider() {
     if (details.hasPointerCapture(e.pointerId)) details.releasePointerCapture(e.pointerId);
     /* 던지듯 놓으면 그 방향으로 더 나아가서 멈춤 */
     snapTo(nearest(clamp(x + velocity * 350)));
+
+    /* 거의 움직이지 않고 놓았다면 클릭: 그 위치의 이미지를 크게 보여줌 */
+    if (dragDistance < 6) {
+      const item = document.elementFromPoint(e.clientX, e.clientY)?.closest('.pd-details__item');
+      if (item) openLightbox(item);
+    }
   };
   details.addEventListener('pointerup', release);
   details.addEventListener('pointercancel', release);
