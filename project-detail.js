@@ -437,12 +437,89 @@ function applyLayoutShift() {
   fitStage();
 }
 
+/*
+  푸터 종이 흔들기 (마우스 리펠 효과)
+  - 종이는 각자 아래쪽(페이지 바닥 조금 아래)에 있는 한 점을 축으로 좌우로 흔들리는 추처럼 움직임
+  - 마우스를 종이 가까이 가져가면 종이 위쪽이 마우스 반대쪽으로 기울고, 멀어지면 출렁이며 제자리로 돌아옴
+  - 푸터가 보일 때만 반응함. 되돌리려면 이 함수와 initInteractions 안의 호출을 지우면 됨
+  숫자는 캔버스(1920px 기준) 단위
+*/
+const REPEL_RADIUS = 750; /* 이 거리 안으로 마우스가 들어오면 반응 */
+const REPEL_ROTATE = 2.4; /* 가장 세게 기울어질 때 각도(deg). 축이 아래에 있어서 종이 위쪽이 좌우로 움직임 */
+const REPEL_PIVOT_BELOW = 100; /* 흔들림의 축: 페이지 맨 아래에서 이만큼 더 아래 */
+
+function initFooterRepel() {
+  const footer = document.getElementById('footer');
+  const shapes = [...footer.querySelectorAll('.pd-footer__shape')];
+  let frame = 0;
+  let mouse = null;
+
+  /* 축 위치: 각 종이의 가로 가운데, 세로는 페이지 맨 아래보다 조금 아래 */
+  shapes.forEach((shape) => {
+    const pivotY = BASE_HEIGHT - shape.offsetTop + REPEL_PIVOT_BELOW;
+    gsap.set(shape, { transformOrigin: `50% ${pivotY}px` });
+  });
+
+  const settle = (shape) =>
+    gsap.to(shape, { rotation: 0, duration: 1.4, ease: 'elastic.out(1, 0.3)', overwrite: true });
+
+  function update() {
+    frame = 0;
+    if (!mouse) return;
+    shapes.forEach((shape) => {
+      /* 기준점: 종이의 가로 가운데, 세로는 눈에 보이는 종이 부분의 가운데쯤 (페이지 바닥에서 250px 위) */
+      const r = shape.getBoundingClientRect();
+      const cx = r.left + r.width / 2;
+      const cy = stage.getBoundingClientRect().bottom - 250 * scale;
+      const vx = (cx - mouse.x) / scale;
+      const vy = (cy - mouse.y) / scale;
+      const dist = Math.hypot(vx, vy);
+      const influence = Math.max(0, 1 - dist / REPEL_RADIUS); /* 가까울수록 세게 */
+      const side = Math.max(-1, Math.min(1, vx / 300)); /* 마우스가 종이 가운데 바로 위·아래면 0, 좌우로 멀어질수록 ±1 */
+      if (influence <= 0) {
+        if (shape._repelled) {
+          shape._repelled = false;
+          settle(shape);
+        }
+        return;
+      }
+      shape._repelled = true;
+      /* 마우스가 종이 왼쪽에 있으면 시계 방향(위쪽이 오른쪽으로), 오른쪽에 있으면 반시계 방향 */
+      gsap.to(shape, {
+        rotation: side * REPEL_ROTATE * influence,
+        duration: 0.5,
+        ease: 'power3.out',
+        overwrite: true,
+      });
+    });
+  }
+
+  window.addEventListener(
+    'mousemove',
+    (e) => {
+      mouse = { x: e.clientX, y: e.clientY };
+      if (!frame) frame = requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+
+  /* 마우스가 창 밖으로 나가면 모두 제자리로 */
+  document.documentElement.addEventListener('mouseleave', () => {
+    mouse = null;
+    shapes.forEach((shape) => {
+      shape._repelled = false;
+      settle(shape);
+    });
+  });
+}
+
 function initInteractions() {
   initProjectTitle();
   applyLayoutShift();
   document.fonts.ready.then(applyLayoutShift);
   updateHeaderColor();
   initDetailsSlider();
+  initFooterRepel();
 }
 
 fitStage();

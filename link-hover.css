@@ -1,0 +1,26 @@
+/*
+  링크 호버 형광펜 (link-hover.js)
+  헤더·푸터 메뉴의 링크 안에 그려짐
+*/
+.hover-host {
+  position: relative;
+  transition: color 0.2s;
+}
+
+.hover-highlight {
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  top: 4%;
+  bottom: 6%;
+  background: #e5ff7f;
+  z-index: -1; /* 글자 뒤로 */
+  pointer-events: none;
+  transform: scaleX(0);
+}
+
+/* 연두색 위에서도 읽히도록, 어두운 배경(푸터, 프로젝트 페이지 위의 흰색 헤더)에서는 호버 중 글자를 검정으로 */
+.header.is-light .hover-host:hover,
+.pd-footer__menu .hover-host:hover {
+  color: var(--black, #0c0c0c);
+}
