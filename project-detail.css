@@ -649,3 +649,19 @@ a {
   stroke: currentColor;
   stroke-width: 1.2;
 }
+
+/*
+  Overview 가 길어진 만큼(--shift) Info 를, Info 줄 수에 따라(--shift-below) Details 이하를 내리거나 올림.
+  값은 project-detail.js 가 계산함
+*/
+.pd-heading-info,
+.pd-info {
+  transform: translateY(var(--shift, 0px));
+}
+
+.pd-heading-details,
+.pd-details,
+.pd-move,
+.pd-footer {
+  transform: translateY(var(--shift-below, 0px));
+}
