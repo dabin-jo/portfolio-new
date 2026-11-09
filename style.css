@@ -759,8 +759,8 @@ a {
   top: -45px;
   width: 1998px;
   height: 6129px;
-  opacity: .5;
-  background: url(assets/paper.png) top left/158px 158px;
+  opacity: .35;
+  background: url(assets/paper.png) top left/480px 480px;
   pointer-events: none;
 }
 /*
