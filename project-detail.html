@@ -6,17 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kooksoondang | Project Detail</title>
   <link rel="stylesheet" href="project-detail.css">
+  <link rel="stylesheet" href="transition.css">
+  <script>
+    /* 페이지 전환으로 들어온 경우, 첫 화면부터 연두색으로 덮인 상태로 시작 (깜빡임 방지). 문제가 생겨도 5초 뒤엔 풀림 */
+    try {
+      if (sessionStorage.getItem('pageTransition')) {
+        document.documentElement.classList.add('is-transition-in');
+        setTimeout(function () { document.documentElement.classList.remove('is-transition-in'); }, 5000);
+      }
+    } catch (e) {}
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="project-detail.js" defer></script>
+  <script src="transition.js" defer></script>
 </head>
 
 <body>
+  <!-- 페이지 전환용 연두색 펜 선 (transition.js) -->
+  <div class="transition" aria-hidden="true">
+    <svg class="transition__svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <path class="transition__path" pathLength="1" d="M -150 40 C 250 10 700 70 1150 40 C 1320 40 1320 240 1150 240 C 700 270 250 210 -150 240 C -320 240 -320 440 -150 440 C 250 410 700 470 1150 440 C 1320 440 1320 640 1150 640 C 700 670 250 610 -150 640 C -320 640 -320 840 -150 840 C 250 810 700 870 1150 840 C 1320 840 1320 970 1150 970 C 700 990 250 950 -150 970"></path>
+    </svg>
+  </div>
+
   <!-- header: 스크롤해도 화면 위에 고정 (캔버스 밖, 크기는 JS가 맞춤) -->
   <header class="header">
     <a class="header__logo" href="index.html" aria-label="Home"><img class="header__logo-dark" src="assets/logo.svg" alt=""><img class="header__logo-light" src="assets/logo-light.svg" alt=""></a>
     <div class="grain header__menu">
-      <a href="index.html#project">Project</a>
+      <a href="index.html#project" data-transition>Project</a>
       <a href="index.html">About Me</a>
       <a href="#footer">Contact</a>
     </div>
@@ -103,8 +121,8 @@
       </div>
 
       <!-- prev / next -->
-      <a class="grain pd-move pd-move-prev" id="prevProject" href="#"><span>←</span><span>before project</span></a>
-      <a class="grain pd-move pd-move-next" id="nextProject" href="#"><span>next project</span><span>→</span></a>
+      <a data-transition class="grain pd-move pd-move-prev" id="prevProject" href="#"><span>←</span><span>before project</span></a>
+      <a data-transition class="grain pd-move pd-move-next" id="nextProject" href="#"><span>next project</span><span>→</span></a>
 
       <!-- footer -->
       <footer class="pd-footer" id="footer">
