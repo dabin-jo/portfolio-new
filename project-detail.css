@@ -323,6 +323,15 @@ a {
   word-break: break-word;
 }
 
+/*
+  Overview 형광펜: 문단이 스크롤로 화면에 등장하면 그 문단의 .pd-bold 구절 뒤에 형광펜이 칠해짐 (project-detail.js)
+  구절이 여러 줄에 걸쳐도 줄을 따라 이어서 칠해지도록 배경(background)으로 칠함. --hl 은 0 → 1
+*/
+.pd-bold {
+  --hl: 0;
+  background: linear-gradient(var(--lime), var(--lime)) no-repeat left center / calc(var(--hl) * 100%) 100%;
+}
+
 /* Info */
 .pd-info {
   filter: var(--grain-soft); /* 작은 글씨라 흔들림을 줄임 */
