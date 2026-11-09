@@ -150,21 +150,57 @@ function initDetailsSlider() {
   프로젝트별 제목: 메인 페이지에서 그림을 누르면 주소 뒤에 ?project=번호 가 붙어서 넘어옴.
   번호는 프로젝트 페이지의 01~06 번호와 같음.
 */
+/*
+  각 프로젝트 정보
+  - title : 제목
+  - tags  : 제목 아래 작은 분류 (없으면 HTML 기본값)
+  - image : 맨 위 큰 이미지 경로 (파일이 아직 없으면 기본 이미지가 그대로 보임)
+  이미지는 assets/pdf/main-번호.jpg 로 넣으면 바로 나옴 (Kooksoondang 은 지금 쓰는 01.jpg 유지)
+*/
 const PROJECTS = {
-  '01': { title: '집메이트', tags: ['UXUI Design', 'App Design'] },
-  '02': { title: 'Kooksoondang' },
-  '03': { title: 'Haeit!', tags: ['UXUI Design', 'App Design'] },
-  '04': { title: '소소복담', tags: ['Branding Design', 'Graphic Design'] },
-  '05': { title: 'AI와 디자인의 상관관계', tags: ['Editorial Design'] },
-  '06': { title: '삼토 페스티벌', tags: ['Rebranding Design', 'Graphic Design'] },
+  '01': { title: '집메이트', tags: ['UXUI Design', 'App Design'], image: 'assets/pdf/main-01.jpg' },
+  '02': { title: 'Kooksoondang', image: 'assets/pdf/01.jpg' },
+  '03': { title: 'Haeit!', tags: ['UXUI Design', 'App Design'], image: 'assets/pdf/main-03.jpg' },
+  '04': { title: '소소복담', tags: ['Branding Design', 'Graphic Design'], image: 'assets/pdf/main-04.jpg' },
+  '05': { title: 'AI와 디자인의 상관관계', tags: ['Editorial Design'], image: 'assets/pdf/main-05.jpg' },
+  '06': { title: '삼토 페스티벌', tags: ['Rebranding Design', 'Graphic Design'], image: 'assets/pdf/main-06.jpg' },
 };
 
+/* 이전 / 다음 프로젝트: 01 → 06 순서로 돌고, 맨 끝에서는 처음으로 (순환). 글씨는 프로젝트 이름 */
+function initProjectNav(key) {
+  const keys = Object.keys(PROJECTS);
+  const i = keys.indexOf(key);
+  const prevKey = keys[(i - 1 + keys.length) % keys.length];
+  const nextKey = keys[(i + 1) % keys.length];
+  const prev = document.getElementById('prevProject');
+  const next = document.getElementById('nextProject');
+
+  prev.href = `project-detail.html?project=${prevKey}`;
+  prev.lastElementChild.textContent = PROJECTS[prevKey].title;
+  next.href = `project-detail.html?project=${nextKey}`;
+  next.firstElementChild.textContent = PROJECTS[nextKey].title;
+}
+
 function initProjectTitle() {
-  const key = new URLSearchParams(location.search).get('project');
+  /* 번호가 없거나 잘못되면 기본 프로젝트(Kooksoondang, 02) */
+  let key = new URLSearchParams(location.search).get('project');
+  if (!PROJECTS[key]) key = '02';
+  initProjectNav(key);
   const project = PROJECTS[key];
-  if (!project) return; /* 번호가 없거나 잘못되면 HTML에 적힌 기본 제목 그대로 */
+  if (key === '02' && !new URLSearchParams(location.search).get('project')) return; /* 기본 화면은 HTML 그대로 */ /* 번호가 없거나 잘못되면 HTML에 적힌 기본 제목 그대로 */
   document.querySelector('.pd-title').textContent = project.title;
   document.title = project.title + ' | Project Detail';
+
+  /* 맨 위 큰 이미지: 파일이 실제로 있을 때만 바꿈 (없으면 기존 이미지 유지) */
+  const photo = document.querySelector('.pd-visual__photo');
+  photo.alt = project.title;
+  if (project.image) {
+    const probe = new Image();
+    probe.onload = () => {
+      photo.src = project.image;
+    };
+    probe.src = project.image;
+  }
 
   /* 제목 아래 작은 분류: 항목 사이에 · 를 끼워 넣음. tags 가 없으면(Kooksoondang) HTML 기본값 유지 */
   if (project.tags) {
