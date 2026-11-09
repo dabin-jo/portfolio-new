@@ -334,12 +334,17 @@ function openProject() {
 }
 
 function initProjectShortcut() {
-  /* 메인 페이지에서 Project 메뉴를 누르면 새로고침 없이 바로 이동 */
+  /* 메인 페이지에서 Project 메뉴를 누르면 새로고침 없이 이동 (펜 전환 효과와 함께) */
   document.querySelectorAll('[data-open-project]').forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
-      openProject();
-      history.replaceState(null, '', '#project');
+      const go = () => {
+        openProject();
+        history.replaceState(null, '', '#project');
+      };
+      /* 연두색 펜 전환이 화면을 덮은 순간에 프로젝트 페이지로 바꿈 (transition.js 가 없으면 바로 바꿈) */
+      if (window.pageTransition) window.pageTransition.run(go);
+      else go();
     });
   });
 

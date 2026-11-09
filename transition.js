@@ -41,6 +41,41 @@ function revealPage() {
   });
 }
 
+/*
+  같은 페이지 안에서 하는 전환: 선이 화면을 덮으면 onCovered 를 실행하고(예: 화면 상태 바꾸기), 곧바로 걷힘
+  다른 스크립트에서 window.pageTransition.run(함수) 로 부름
+*/
+function runInPage(onCovered) {
+  if (transitioning) return;
+  transitioning = true;
+  stroke.offset = 1;
+  applyOffset();
+  gsap.to(stroke, {
+    offset: 0,
+    duration: TRANSITION_COVER,
+    ease: 'power2.inOut',
+    onUpdate: applyOffset,
+    onComplete: () => {
+      onCovered();
+      /* 바뀐 화면이 그려진 다음 프레임부터 걷음 */
+      requestAnimationFrame(() => {
+        gsap.to(stroke, {
+          offset: -1,
+          duration: TRANSITION_REVEAL,
+          ease: 'power2.inOut',
+          delay: 0.1,
+          onUpdate: applyOffset,
+          onComplete: () => {
+            resetOffset();
+            transitioning = false;
+          },
+        });
+      });
+    },
+  });
+}
+window.pageTransition = { run: runInPage };
+
 function coverAndGo(url) {
   if (transitioning) return;
   transitioning = true;

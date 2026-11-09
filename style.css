@@ -77,6 +77,12 @@
 }
 
 /* Base */
+/* 마우스로 드래그해서 글자를 선택했을 때의 색 (기본 파란색 대신 회색) */
+::selection {
+  background: #dedede;
+  color: #0c0c0c;
+}
+
 /* 스크롤바 숨기기 (스크롤은 그대로 됨). 되돌리려면 이 블록(html { ... } 두 개)을 지우면 됨 */
 html {
   scrollbar-width: none; /* Firefox */
