@@ -771,7 +771,63 @@ a {
   pointer-events: none;
 }
 
-.shelf.is-open .project-img img {
+/*
+  마우스에 반응하는 범위: 그림 전체 상자가 아니라, 가장자리를 안쪽으로 줄인 상자(::after)만 반응함
+  (그림 상자에는 빈 공간이 많아서 전체가 반응하면 너무 예민하게 반짝거림)
+  --hit-inset 을 키우면 범위가 더 좁아짐
+*/
+.project-img {
+  --hit-inset: 14%;
+}
+
+.shelf.is-open .project-img::after {
+  content: '';
+  position: absolute;
+  inset: var(--hit-inset);
   pointer-events: auto;
   cursor: pointer;
+}
+
+/*
+  프로젝트 그림 호버: 마우스를 올린 그림만 밝게 남고 나머지는 어두워짐 (main.js 가 is-dim 클래스를 붙임)
+  - 나머지 그림: 불투명도를 낮춰서 어둡게
+  - 나머지 번호표: 테두리·글자가 어두운 회색(#2f2f2f)이 되고 숫자 대신 ··· 로 바뀜
+*/
+.project-img {
+  transition: opacity 0.35s;
+}
+
+.project-img.is-dim {
+  opacity: 0.28;
+}
+
+.project-num {
+  transition: border-color 0.35s;
+}
+
+.project-num p {
+  position: relative;
+  transition: color 0.35s;
+}
+
+.project-num p::after {
+  content: '···';
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  color: #2f2f2f;
+  opacity: 0;
+  transition: opacity 0.35s;
+}
+
+.project-num.is-dim {
+  border-color: #2f2f2f;
+}
+
+.project-num.is-dim p {
+  color: transparent;
+}
+
+.project-num.is-dim p::after {
+  opacity: 1;
 }

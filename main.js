@@ -394,10 +394,41 @@ function initFoldInteraction() {
   foldFlap.addEventListener('pointercancel', release);
 }
 
+/*
+  프로젝트 그림에 마우스를 올리면 나머지 그림과 번호표가 어두워짐 (스타일은 style.css 의 .is-dim)
+  번호는 링크 주소의 ?project=번호 와 번호표 클래스(project-num-번호)로 짝지음
+*/
+function initProjectHover() {
+  const items = [...document.querySelectorAll('a.project-img')];
+  const nums = [...document.querySelectorAll('.project-num')];
+  const numberOf = (a) => new URL(a.href).searchParams.get('project');
+  const LEAVE_DELAY = 140; /* 그림 사이 빈틈을 지나갈 때 잠깐 밝아졌다 어두워지는 반짝임을 막으려고, 내리고 이 시간(ms) 동안 기다림 */
+  let leaveTimer = 0;
+
+  const clear = () => {
+    items.forEach((other) => other.classList.remove('is-dim'));
+    nums.forEach((num) => num.classList.remove('is-dim'));
+  };
+
+  items.forEach((a) => {
+    a.addEventListener('mouseenter', () => {
+      clearTimeout(leaveTimer);
+      const n = numberOf(a);
+      items.forEach((other) => other.classList.toggle('is-dim', other !== a));
+      nums.forEach((num) => num.classList.toggle('is-dim', !num.classList.contains('project-num-' + n)));
+    });
+    a.addEventListener('mouseleave', () => {
+      clearTimeout(leaveTimer);
+      leaveTimer = setTimeout(clear, LEAVE_DELAY);
+    });
+  });
+}
+
 function initScrollAnimations() {
   initPhilosophyColor();
   initFoldInteraction();
   initProjectShortcut();
+  initProjectHover();
   renderFold();
 }
 
