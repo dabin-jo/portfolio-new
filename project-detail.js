@@ -146,7 +146,39 @@ function initDetailsSlider() {
   );
 }
 
+/*
+  프로젝트별 제목: 메인 페이지에서 그림을 누르면 주소 뒤에 ?project=번호 가 붙어서 넘어옴.
+  번호는 프로젝트 페이지의 01~06 번호와 같음.
+*/
+const PROJECTS = {
+  '01': { title: '집메이트', tags: ['UXUI Design', 'App Design'] },
+  '02': { title: 'Kooksoondang' },
+  '03': { title: 'Haeit!', tags: ['UXUI Design', 'App Design'] },
+  '04': { title: '소소복담', tags: ['Branding Design', 'Graphic Design'] },
+  '05': { title: 'AI와 디자인의 상관관계', tags: ['Editorial Design'] },
+  '06': { title: '삼토 페스티벌', tags: ['Rebranding Design', 'Graphic Design'] },
+};
+
+function initProjectTitle() {
+  const key = new URLSearchParams(location.search).get('project');
+  const project = PROJECTS[key];
+  if (!project) return; /* 번호가 없거나 잘못되면 HTML에 적힌 기본 제목 그대로 */
+  document.querySelector('.pd-title').textContent = project.title;
+  document.title = project.title + ' | Project Detail';
+
+  /* 제목 아래 작은 분류: 항목 사이에 · 를 끼워 넣음. tags 가 없으면(Kooksoondang) HTML 기본값 유지 */
+  if (project.tags) {
+    const box = document.querySelector('.pd-tags');
+    box.replaceChildren();
+    project.tags.forEach((tag, i) => {
+      if (i > 0) box.append(Object.assign(document.createElement('p'), { textContent: '·' }));
+      box.append(Object.assign(document.createElement('p'), { textContent: tag }));
+    });
+  }
+}
+
 function initInteractions() {
+  initProjectTitle();
   updateHeaderColor();
   initDetailsSlider();
 }

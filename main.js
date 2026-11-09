@@ -311,6 +311,47 @@ function turnPage() {
   });
 }
 
+/*
+  프로젝트 페이지로 바로 이동 (헤더의 Project 메뉴, 주소 끝의 #project)
+  철학 문장과 종이 넘기기를 건너뛰고, 종이가 이미 넘어간 상태로 만든 뒤 맨 아래로 이동함.
+*/
+function openProject() {
+  if (foldTimer) foldTimer.kill();
+  foldTimer = null;
+  if (fold.tween) fold.tween.kill();
+
+  fold.shown = true;
+  fold.turned = true;
+  fold.p.x = FOLD_END.x;
+  fold.p.y = FOLD_END.y;
+  renderFold();
+  header.classList.add('is-light');
+  shelf.classList.add('is-open');
+  sheet.style.visibility = 'hidden';
+  foldFlap.style.visibility = 'hidden';
+
+  window.scrollTo({ top: holdStart + COLOR_HOLD, behavior: 'instant' });
+}
+
+function initProjectShortcut() {
+  /* 메인 페이지에서 Project 메뉴를 누르면 새로고침 없이 바로 이동 */
+  document.querySelectorAll('[data-open-project]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      openProject();
+      history.replaceState(null, '', '#project');
+    });
+  });
+
+  /* 다른 페이지에서 index.html#project 로 들어온 경우 */
+  const openFromHash = () => {
+    if (location.hash === '#project') openProject();
+  };
+  window.addEventListener('hashchange', openFromHash);
+  if (document.readyState === 'complete') requestAnimationFrame(openFromHash);
+  else window.addEventListener('load', () => requestAnimationFrame(openFromHash));
+}
+
 /* 마우스/터치로 모서리 끌기 */
 function pointerToStage(e) {
   const rect = stage.getBoundingClientRect();
@@ -356,6 +397,7 @@ function initFoldInteraction() {
 function initScrollAnimations() {
   initPhilosophyColor();
   initFoldInteraction();
+  initProjectShortcut();
   renderFold();
 }
 
