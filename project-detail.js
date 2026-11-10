@@ -72,6 +72,7 @@ const DETAILS_END_RIGHT = 1860; /* 마지막 이미지의 오른쪽 끝이 닿�
 const lightbox = document.createElement('div');
 lightbox.className = 'lightbox';
 lightbox.innerHTML = '<button class="lightbox__close" type="button" aria-label="닫기"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M0.4 0.4L19.6 19.6M19.6 0.4L0.4 19.6"/></svg></button><div class="lightbox__frame"></div>';
+lightbox.setAttribute('data-lenis-prevent', '');
 document.body.append(lightbox);
 const lightboxFrame = lightbox.querySelector('.lightbox__frame');
 let lightboxOpen = false;
