@@ -342,6 +342,15 @@ a {
   opacity: 1;
 }
 
+/* 흰 종이 위로 올라갔을 때는 검정 로고 (main.js updateHeaderTone) */
+.header.is-logo-dark .header__logo-dark {
+  opacity: 1;
+}
+
+.header.is-logo-dark .header__logo-light {
+  opacity: 0;
+}
+
 .header__menu {
   display: flex;
   align-items: center;
@@ -840,7 +849,7 @@ a {
 }
 
 /* ==========================================================================
-   About Me + 푸터 (.after): 디자인 좌표(1920px 기준, 메인 페이지 전체 높이 4687px (피그마 4547 + 푸터 간격 140)) 그대로 배치.
+   About Me + 푸터 (.after): 디자인 좌표(1920px 기준, 메인 페이지 전체 높이 4577px (피그마 4547 + 푸터 간격 30)) 그대로 배치.
    위치와 크기는 main.js 가 화면 폭·높이에 맞춰 줄이고 밀어 줌
    ========================================================================== */
 .after {
@@ -860,7 +869,7 @@ a {
   left: 0;
   top: 0;
   width: 1920px;
-  height: 4687px;
+  height: 4577px;
   transform-origin: 0 0;
 }
 
@@ -884,24 +893,83 @@ a {
   font-size: 52px;
   font-weight: 300;
   line-height: 1;
-  color: #f5f6f9;
+  color: #0c0c0c;
 }
 
-.about-sub {
+.about-head .about-sub {
   font-size: 20px;
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -.8px;
-  color: #fdfdfd;
+  color: #0c0c0c;
+}
+
+/* 뒤에 깔린 종이 두 장: 왼쪽 흰 종이(제목이 놓임), 오른쪽 크림색 노트 종이(이력 표가 놓임) */
+.about-paper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.about-paper__rot {
+  position: relative;
+  flex: none;
+}
+
+.about-paper__rot img {
+  position: absolute;
+  max-width: none;
+}
+
+.about-paper-white {
+  left: -177px;
+  top: 3063.6px;
+  width: 1023.413px;
+  height: 1264.995px; /* 푸터를 30 내린 만큼 늘림 */
+}
+
+.about-paper-white .about-paper__rot {
+  width: 922.056px;
+  height: 1185.886px;
+  transform: rotate(-5.22deg);
+}
+
+.about-paper-white .about-paper__rot img {
+  left: -.13%;
+  top: -.1%;
+  width: 100.26%;
+  height: 100.2%;
+}
+
+.about-paper-note {
+  left: 465.07px;
+  top: 3158.81px;
+  width: 1845.862px;
+  height: 1412.985px;
+}
+
+.about-paper-note .about-paper__rot {
+  width: 1728.672px;
+  height: 1244.203px;
+  transform: rotate(5.82deg);
+}
+
+.about-paper-note .about-paper__rot img {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /* 사진 자리 (회색 박스, 나중에 사진을 넣을 곳) */
 .about-photo {
   position: absolute;
-  left: 73.73px;
-  top: 3440.29px;
-  width: 195.535px;
-  height: 249.415px;
+  left: 108.23px;
+  top: 3436.56px;
+  width: 240.497px;
+  height: 294.095px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -909,10 +977,10 @@ a {
 
 .about-photo__img {
   flex: none;
-  width: 183px;
-  height: 240px;
+  width: 203.839px;
+  height: 267.329px;
   background: #d9d9d9;
-  transform: rotate(-3.06deg);
+  transform: rotate(-8.35deg);
 }
 
 .about-photo__img img {
@@ -928,7 +996,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  mix-blend-mode: luminosity;
+  mix-blend-mode: multiply;
 }
 
 .about-tape__rot {
@@ -942,43 +1010,43 @@ a {
 }
 
 .about-tape-top {
-  left: 59.31px;
-  top: 3417.37px;
-  width: 236.572px;
-  height: 55.254px;
+  left: 89.63px;
+  top: 3407.24px;
+  width: 266.57px;
+  height: 85.288px;
 }
 
 .about-tape-top .about-tape__rot {
-  width: 235.2px;
-  height: 48px;
-  transform: rotate(-1.77deg);
+  width: 261.983px;
+  height: 53.466px;
+  transform: rotate(-7.07deg);
 }
 
 .about-tape-top .about-tape__rot img {
-  left: -.51%;
-  top: -2.51%;
-  width: 101.02%;
-  height: 105.02%;
+  left: -.46%;
+  top: -2.25%;
+  width: 100.92%;
+  height: 104.5%;
 }
 
 .about-tape-bottom {
-  left: 102px;
-  top: 3649px;
-  width: 193.309px;
-  height: 71.356px;
+  left: 164.7px;
+  top: 3679.41px;
+  width: 212.397px;
+  height: 68.302px;
 }
 
 .about-tape-bottom .about-tape__rot {
-  width: 189.605px;
-  height: 57.668px;
-  transform: rotate(4.19deg);
+  width: 211.196px;
+  height: 64.235px;
+  transform: rotate(-1.11deg);
 }
 
 .about-tape-bottom .about-tape__rot img {
-  left: -.63%;
-  top: -2.09%;
-  width: 101.26%;
-  height: 104.18%;
+  left: -.57%;
+  top: -1.88%;
+  width: 101.14%;
+  height: 103.75%;
 }
 
 /* 이력 표 (작은 글씨라 지글거림을 줄인 필터) */
@@ -990,7 +1058,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  color: #fdfdfd;
+  color: #0c0c0c;
   line-height: 1.5;
   filter: var(--grain-soft);
 }
@@ -1001,7 +1069,7 @@ a {
   gap: 160px;
   width: 100%;
   padding-bottom: 8px;
-  border-bottom: 1px solid #fdfdfd;
+  border-bottom: 1px solid #0c0c0c;
 }
 
 .about-label {
@@ -1046,7 +1114,7 @@ a {
 .about-sub {
   font-size: 16px;
   letter-spacing: -.32px;
-  color: #acacac;
+  color: #5b5b5b;
 }
 
 /* Skills: 세 묶음이 가로로 나란히 */
@@ -1079,7 +1147,7 @@ a {
 .site-footer {
   position: absolute;
   left: 0;
-  top: 4146px; /* 피그마 4006 + 140: 표와 푸터 사이를 벌림 */
+  top: 4036px; /* 피그마 4006 + 30: 표와 푸터 사이를 살짝 벌림 */
   width: 1920px;
   height: 541px;
   overflow: hidden;
@@ -1274,7 +1342,7 @@ a {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #fdfdfd;
+  background: #0c0c0c;
   transform: translateY(-50%);
 }
 

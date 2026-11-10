@@ -26,7 +26,7 @@ const after = document.getElementById('after');
 const afterStage = document.getElementById('afterStage');
 
 /* 메인 페이지 디자인 전체 높이와 About Me 섹션 위치 (디자인 좌표) */
-const PAGE_HEIGHT = 4687; /* 피그마 4547 + 표와 푸터 사이를 벌린 140 */
+const PAGE_HEIGHT = 4577; /* 피그마 4547 + 표와 푸터 사이를 벌린 30 */
 const ABOUT_TOP = 3240;
 
 let scale = 1;
@@ -550,7 +550,7 @@ function initTapePeel() {
   const droop = () => {
     const n = removed.size;
     gsap.to(photo, {
-      rotation: n === 0 ? -3.06 : n === 1 ? -6 : -11,
+      rotation: n === 0 ? -8.35 : n === 1 ? -11.3 : -16.3,
       y: n === 0 ? 0 : n === 1 ? 4 : 22,
       transformOrigin: n === 1 ? '50% 0%' : '50% 12%',
       duration: 0.9,
@@ -689,6 +689,30 @@ function initTapePeel() {
   });
 }
 
+/*
+  헤더 색 맞추기: About Me 구간에서는 헤더가 흰 종이/크림색 종이 위에 올라가므로 글자색을 검정으로 바꿈
+  - 로고: 왼쪽 흰 종이 위로 올라가면 검정 로고
+  - 메뉴: 오른쪽 크림색 종이 위로 올라가면 검정 글씨 (그 전까지는 검은 배경이라 흰색)
+*/
+const HEADER_LOGO_ON_PAPER = 3140; /* 이 디자인 좌표(y)보다 아래에서는 로고가 흰 종이 위 */
+const HEADER_MENU_ON_PAPER = 3290; /* 이 디자인 좌표(y)보다 아래에서는 메뉴가 크림색 종이 위 */
+
+function updateHeaderTone() {
+  if (!fold.turned) {
+    header.classList.remove('is-logo-dark');
+    return;
+  }
+  const afterTop = SHEET_HEIGHT + window.innerHeight / scale;
+  const y = afterTop + (window.scrollY + 35 * scale - after.offsetTop) / scale; /* 헤더 가운데 높이가 가리키는 디자인 y */
+  header.classList.toggle('is-logo-dark', y > HEADER_LOGO_ON_PAPER);
+  header.classList.toggle('is-light', y <= HEADER_MENU_ON_PAPER);
+}
+
+function initHeaderTone() {
+  window.addEventListener('scroll', updateHeaderTone, { passive: true });
+  window.addEventListener('resize', updateHeaderTone);
+}
+
 function initScrollAnimations() {
   initPhilosophyColor();
   initFoldInteraction();
@@ -696,6 +720,7 @@ function initScrollAnimations() {
   initProjectHover();
   initFooterRepel();
   initTapePeel();
+  initHeaderTone();
   renderFold();
 }
 
