@@ -96,7 +96,8 @@ html::-webkit-scrollbar {
   --white: #fdfdfd;
   --black: #0c0c0c;
   /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
-  --grain: url(assets/filters.svg?v=24#grain);
+  --grain: url(assets/filters.svg?v=26#grain);
+  --grain-soft: url(assets/filters.svg?v=26#grain-soft);
 }
 
 * {
@@ -551,7 +552,7 @@ a {
   left: 0;
   top: 2040px;
   width: 1920px;
-  height: 1080px;
+  height: 2640px; /* About Me 와 푸터까지 이어지는 검은 배경 (디자인 높이 2640) */
   background: #0c0c0c;
 }
 
@@ -836,4 +837,443 @@ a {
 
 .project-num.is-dim p::after {
   opacity: 1;
+}
+
+/* ==========================================================================
+   About Me + 푸터 (.after): 디자인 좌표(1920px 기준, 메인 페이지 전체 높이 4547px) 그대로 배치.
+   위치와 크기는 main.js 가 화면 폭·높이에 맞춰 줄이고 밀어 줌
+   ========================================================================== */
+.after {
+  display: none;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #0c0c0c;
+}
+
+.after.is-visible {
+  display: block;
+}
+
+.after-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 4547px;
+  transform-origin: 0 0;
+}
+
+/* 종이 질감: 위쪽 화면(.stage)의 질감과 무늬가 이어지도록 세로 위치를 --vh 만큼 밀어 맞춤 */
+.after .paper {
+  top: calc(-45px + var(--vh, 0px));
+}
+
+/* About Me 제목 */
+.about-head {
+  position: absolute;
+  left: 60px;
+  top: 3240px;
+  width: 424px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-title {
+  font-size: 52px;
+  font-weight: 300;
+  line-height: 1;
+  color: #f5f6f9;
+}
+
+.about-sub {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.8px;
+  color: #fdfdfd;
+}
+
+/* 사진 자리 (회색 박스, 나중에 사진을 넣을 곳) */
+.about-photo {
+  position: absolute;
+  left: 73.73px;
+  top: 3440.29px;
+  width: 195.535px;
+  height: 249.415px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-photo__img {
+  flex: none;
+  width: 183px;
+  height: 240px;
+  background: #d9d9d9;
+  transform: rotate(-3.06deg);
+}
+
+.about-photo__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 사진에 붙은 테이프 (명도 블렌드) */
+.about-tape {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mix-blend-mode: luminosity;
+}
+
+.about-tape__rot {
+  position: relative;
+  flex: none;
+}
+
+.about-tape__rot img {
+  position: absolute;
+  max-width: none;
+}
+
+.about-tape-top {
+  left: 59.31px;
+  top: 3417.37px;
+  width: 236.572px;
+  height: 55.254px;
+}
+
+.about-tape-top .about-tape__rot {
+  width: 235.2px;
+  height: 48px;
+  transform: rotate(-1.77deg);
+}
+
+.about-tape-top .about-tape__rot img {
+  left: -.51%;
+  top: -2.51%;
+  width: 101.02%;
+  height: 105.02%;
+}
+
+.about-tape-bottom {
+  left: 102px;
+  top: 3649px;
+  width: 193.309px;
+  height: 71.356px;
+}
+
+.about-tape-bottom .about-tape__rot {
+  width: 189.605px;
+  height: 57.668px;
+  transform: rotate(4.19deg);
+}
+
+.about-tape-bottom .about-tape__rot img {
+  left: -.63%;
+  top: -2.09%;
+  width: 101.26%;
+  height: 104.18%;
+}
+
+/* 이력 표 (작은 글씨라 지글거림을 줄인 필터) */
+.about-table {
+  position: absolute;
+  left: 660px;
+  top: 3421px;
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #fdfdfd;
+  line-height: 1.5;
+  filter: var(--grain-soft);
+}
+
+.about-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 160px;
+  width: 100%;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #fdfdfd;
+}
+
+.about-label {
+  flex: none;
+  width: 100px;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: -.4px;
+}
+
+.about-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.about-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.about-date {
+  flex: none;
+  width: 165px;
+  font-size: 18px;
+  letter-spacing: -.36px;
+}
+
+.about-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.about-main {
+  font-size: 20px;
+  letter-spacing: -.4px;
+}
+
+.about-sub {
+  font-size: 16px;
+  letter-spacing: -.32px;
+  color: #acacac;
+}
+
+/* Skills: 세 묶음이 가로로 나란히 */
+.about-skills {
+  display: flex;
+  gap: 60px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.about-skill__title {
+  font-size: 20px;
+  letter-spacing: -.4px;
+}
+
+.about-skill ul {
+  margin: 0;
+  padding: 6px 0 0;
+  list-style: disc;
+  font-size: 18px;
+  letter-spacing: -.36px;
+}
+
+.about-skill li {
+  margin-left: 27px;
+  line-height: 1.5;
+}
+
+/* 푸터 */
+.site-footer {
+  position: absolute;
+  left: 0;
+  top: 4006px;
+  width: 1920px;
+  height: 541px;
+  overflow: hidden;
+}
+
+.site-footer__shape {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-footer__rot {
+  position: relative;
+  flex: none;
+}
+
+.site-footer__rot img {
+  position: absolute;
+  left: -.13%;
+  top: -.1%;
+  width: 100.26%;
+  height: 100.2%;
+  max-width: none;
+}
+
+.site-footer__shape-left {
+  left: -152px;
+  top: 90.04px;
+  width: 1023.413px;
+  height: 1234.995px;
+}
+
+.site-footer__shape-left .site-footer__rot {
+  width: 922.056px;
+  height: 1155.886px;
+  transform: rotate(-5.22deg);
+}
+
+.site-footer__shape-center {
+  left: 641px;
+  top: 132.04px;
+  width: 918.87px;
+  height: 1126.061px;
+}
+
+.site-footer__shape-center .site-footer__rot {
+  width: 846.822px;
+  height: 1070px;
+  background: #1b1b1b;
+  transform: rotate(3.97deg);
+}
+
+.site-footer__shape-right {
+  left: 1237px;
+  top: 90.04px;
+  width: 1142.435px;
+  height: 1322.479px;
+}
+
+.site-footer__shape-right .site-footer__rot {
+  width: 922.056px;
+  height: 1155.886px;
+  transform: rotate(-12.01deg);
+}
+
+.site-footer__menu {
+  position: absolute;
+  left: 1727px;
+  top: 240.02px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: right;
+  white-space: nowrap;
+  color: #fdfdfd;
+}
+
+.site-footer__menu p {
+  font-size: 16px;
+  color: #969696;
+}
+
+.site-footer__brand-box {
+  position: absolute;
+  left: 80px;
+  top: 240.38px;
+  width: 457.829px;
+  height: 193.908px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-footer__brand-rot {
+  flex: none;
+  transform: rotate(-5.22deg);
+}
+
+.site-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 445.666px;
+}
+
+.site-footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.site-footer__name {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.site-footer__name p {
+  font-size: 91.913px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -5.5148px;
+  color: #e5ff7f;
+  white-space: nowrap;
+}
+
+.site-footer__name p:first-child {
+  margin-right: -2.44px;
+}
+
+.site-footer__name img {
+  flex: none;
+  width: 97.428px;
+  height: 80.271px;
+  margin-right: -7.321px;
+}
+
+.site-footer__slogan {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.56px;
+  color: #fdfdfd;
+}
+
+.site-footer__contact {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.site-footer__talk {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -1.08px;
+  color: #fdfdfd;
+}
+
+.site-footer__mail {
+  display: block;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -1.44px;
+  color: #e5ff7f;
+  white-space: nowrap;
+}
+
+/* Skills 목록의 점: 디자인처럼 글자 높이 가운데에 놓이는 작은 점 */
+.about-skill ul {
+  list-style: none;
+}
+
+.about-skill li {
+  position: relative;
+}
+
+.about-skill li::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fdfdfd;
+  transform: translateY(-50%);
 }

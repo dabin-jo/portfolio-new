@@ -22,6 +22,12 @@ const header = document.querySelector('.header');
 const sheet = document.getElementById('sheet');
 const shelf = document.getElementById('shelf');
 const foldFlap = document.getElementById('foldFlap');
+const after = document.getElementById('after');
+const afterStage = document.getElementById('afterStage');
+
+/* 메인 페이지 디자인 전체 높이와 About Me 섹션 위치 (디자인 좌표) */
+const PAGE_HEIGHT = 4547;
+const ABOUT_TOP = 3240;
 
 let scale = 1;
 let holdStart = 0; /* 화면 고정이 시작되는 스크롤 위치(px) */
@@ -48,7 +54,21 @@ function fitStage() {
   stageSticky.style.top = `${-holdStart}px`;
   viewport.style.height = `${stickyHeight + COLOR_HOLD}px`;
 
+  layoutAfter();
   ScrollTrigger.refresh();
+}
+
+/*
+  About Me + 푸터(.after): 프로젝트 페이지(고정 화면) 바로 아래에서 이어짐.
+  고정 화면은 디자인 y 2040 ~ 2040+화면높이 를 보여 주므로, 아래 영역은 그 아래(디자인 y = afterTop)부터 시작함.
+*/
+function layoutAfter() {
+  const visibleHeight = window.innerHeight / scale;
+  const afterTop = SHEET_HEIGHT + visibleHeight;
+  after.style.height = `${Math.max(0, PAGE_HEIGHT - afterTop) * scale}px`;
+  gsap.set(afterStage, { scale, y: -afterTop * scale, transformOrigin: '0 0' });
+  after.style.setProperty('--vh', `${visibleHeight}px`);
+  return afterTop;
 }
 
 window.addEventListener('resize', fitStage);
@@ -278,6 +298,7 @@ function resetFold() {
   fold.turned = false;
   header.classList.remove('is-light');
   shelf.classList.remove('is-open');
+  after.classList.remove('is-visible');
   sheet.style.visibility = '';
   foldFlap.style.visibility = '';
   animateFold(CORNER, 0.5, 'power2.inOut');
@@ -306,6 +327,7 @@ function turnPage() {
     fold.turned = true;
     header.classList.add('is-light'); /* 검은 프로젝트 페이지 위에서는 흰색 헤더 */
     shelf.classList.add('is-open'); /* 이제부터 프로젝트 그림을 누를 수 있음 */
+    after.classList.add('is-visible'); /* 이제부터 아래로 스크롤해 About Me 와 푸터로 갈 수 있음 */
     sheet.style.visibility = 'hidden';
     foldFlap.style.visibility = 'hidden';
   });
@@ -327,30 +349,49 @@ function openProject() {
   renderFold();
   header.classList.add('is-light');
   shelf.classList.add('is-open');
+  after.classList.add('is-visible');
   sheet.style.visibility = 'hidden';
   foldFlap.style.visibility = 'hidden';
 
   window.scrollTo({ top: holdStart + COLOR_HOLD, behavior: 'instant' });
 }
 
+/* 섹션으로 이동: 프로젝트 페이지를 연 상태에서 해당 위치로 스크롤 (project / about / contact) */
+function goToSection(name) {
+  openProject();
+  const projectY = holdStart + COLOR_HOLD;
+  let y = projectY;
+  if (name === 'about') {
+    /* About Me 제목이 화면 위에서 60px 아래에 오도록 */
+    const afterTop = SHEET_HEIGHT + window.innerHeight / scale;
+    y = after.offsetTop + (ABOUT_TOP - afterTop - 60) * scale;
+  } else if (name === 'contact') {
+    y = document.documentElement.scrollHeight;
+  }
+  window.scrollTo({ top: Math.max(projectY, y), behavior: 'instant' });
+}
+
 function initProjectShortcut() {
-  /* 메인 페이지에서 Project 메뉴를 누르면 새로고침 없이 이동 (펜 전환 효과와 함께) */
-  document.querySelectorAll('[data-open-project]').forEach((a) => {
+  /* data-goto="project|about|contact" 링크: 새로고침 없이 이동 (연두색 펜 전환 효과와 함께) */
+  document.querySelectorAll('[data-goto]').forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
+      const name = a.dataset.goto;
       const go = () => {
-        openProject();
-        history.replaceState(null, '', '#project');
+        goToSection(name);
+        history.replaceState(null, '', '#' + name);
       };
-      /* 연두색 펜 전환이 화면을 덮은 순간에 프로젝트 페이지로 바꿈 (transition.js 가 없으면 바로 바꿈) */
+      /* 펜 전환이 화면을 덮은 순간에 화면을 바꿈 (transition.js 가 없으면 바로 바꿈) */
       if (window.pageTransition) window.pageTransition.run(go);
       else go();
     });
   });
 
-  /* 다른 페이지에서 index.html#project 로 들어온 경우 */
+  /* 다른 페이지에서 index.html#project / #about / #contact 로 들어온 경우 */
+  const SECTIONS = ['project', 'about', 'contact'];
   const openFromHash = () => {
-    if (location.hash === '#project') openProject();
+    const name = location.hash.slice(1);
+    if (SECTIONS.includes(name)) goToSection(name);
   };
   window.addEventListener('hashchange', openFromHash);
   if (document.readyState === 'complete') requestAnimationFrame(openFromHash);
@@ -429,11 +470,75 @@ function initProjectHover() {
   });
 }
 
+/*
+  푸터 종이 흔들기 (프로젝트 상세 페이지 푸터와 같은 효과)
+  - 종이는 각자 아래쪽의 한 점을 축으로 좌우로 흔들리는 추처럼 움직임
+  - 마우스가 가까울수록 크게 기울고, 멀어지면 출렁이며 제자리로 돌아옴
+  되돌리려면 이 함수와 initScrollAnimations 안의 호출을 지우면 됨
+*/
+const REPEL_RADIUS = 750; /* 이 거리 안으로 마우스가 들어오면 반응 */
+const REPEL_ROTATE = 2.4; /* 가장 세게 기울어질 때 각도(deg) */
+const REPEL_PIVOT_BELOW = 100; /* 흔들림의 축: 푸터 맨 아래에서 이만큼 더 아래 */
+const FOOTER_HEIGHT = 541;
+
+function initFooterRepel() {
+  const footer = document.getElementById('footer');
+  const shapes = [...footer.querySelectorAll('.site-footer__shape')];
+  let frame = 0;
+  let mouse = null;
+
+  shapes.forEach((shape) => {
+    gsap.set(shape, { transformOrigin: `50% ${FOOTER_HEIGHT - shape.offsetTop + REPEL_PIVOT_BELOW}px` });
+  });
+
+  const settle = (shape) => gsap.to(shape, { rotation: 0, duration: 1.4, ease: 'elastic.out(1, 0.3)', overwrite: true });
+
+  function update() {
+    frame = 0;
+    if (!mouse) return;
+    const baseY = footer.getBoundingClientRect().bottom - 250 * scale;
+    shapes.forEach((shape) => {
+      const r = shape.getBoundingClientRect();
+      const vx = (r.left + r.width / 2 - mouse.x) / scale;
+      const vy = (baseY - mouse.y) / scale;
+      const influence = Math.max(0, 1 - Math.hypot(vx, vy) / REPEL_RADIUS);
+      if (influence <= 0) {
+        if (shape._repelled) {
+          shape._repelled = false;
+          settle(shape);
+        }
+        return;
+      }
+      shape._repelled = true;
+      const side = Math.max(-1, Math.min(1, vx / 300));
+      gsap.to(shape, { rotation: side * REPEL_ROTATE * influence, duration: 0.5, ease: 'power3.out', overwrite: true });
+    });
+  }
+
+  window.addEventListener(
+    'mousemove',
+    (e) => {
+      mouse = { x: e.clientX, y: e.clientY };
+      if (!frame) frame = requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+
+  document.documentElement.addEventListener('mouseleave', () => {
+    mouse = null;
+    shapes.forEach((shape) => {
+      shape._repelled = false;
+      settle(shape);
+    });
+  });
+}
+
 function initScrollAnimations() {
   initPhilosophyColor();
   initFoldInteraction();
   initProjectShortcut();
   initProjectHover();
+  initFooterRepel();
   renderFold();
 }
 

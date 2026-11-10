@@ -21,6 +21,7 @@
 
 /* 연두색 위에서도 읽히도록, 어두운 배경(푸터, 프로젝트 페이지 위의 흰색 헤더)에서는 호버 중 글자를 검정으로 */
 .header.is-light .hover-host:hover,
-.pd-footer__menu .hover-host:hover {
+.pd-footer__menu .hover-host:hover,
+.site-footer__menu .hover-host:hover {
   color: var(--black, #0c0c0c);
 }
