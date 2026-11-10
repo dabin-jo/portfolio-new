@@ -22,6 +22,22 @@
 /* 연두색 위에서도 읽히도록, 어두운 배경(푸터, 프로젝트 페이지 위의 흰색 헤더)에서는 호버 중 글자를 검정으로 */
 .header.is-light .hover-host:hover,
 .pd-footer__menu .hover-host:hover,
-.site-footer__menu .hover-host:hover {
+.site-footer__menu .hover-host:hover,
+.pd-footer__mail.hover-host:hover,
+.site-footer__mail.hover-host:hover {
   color: var(--black, #0c0c0c);
+}
+
+/* 푸터 이메일은 글자 줄 높이가 낮아서, 형광펜을 위아래로 더 두껍게 */
+.site-footer__mail .hover-highlight,
+.pd-footer__mail .hover-highlight {
+  top: -7px;
+  bottom: -6px;
+}
+
+/* 두꺼워진 형광펜이 위의 문구와 겹치지 않도록 이메일 줄을 조금 아래로 */
+.site-footer__contact,
+.pd-footer__contact {
+  position: relative;
+  top: 6px;
 }

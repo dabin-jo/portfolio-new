@@ -1,0 +1,33 @@
+/* 이메일 복사 (copy-email.js): 복사되면 이메일 옆에 "Copied!" 가 잠깐 나타남 */
+.copy-email {
+  position: relative;
+  cursor: pointer;
+}
+
+.copy-email::after {
+  content: 'Copied!';
+  position: absolute;
+  left: calc(100% + 14px);
+  bottom: 2px;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -.3px;
+  line-height: 1;
+  color: #fdfdfd;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+
+.copy-email.is-copied::after {
+  opacity: 1;
+  transform: none;
+}
+
+.copy-email__buffer {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+}

@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="project-detail.css">
   <link rel="stylesheet" href="transition.css">
   <link rel="stylesheet" href="link-hover.css">
+  <link rel="stylesheet" href="copy-email.css">
   <script>
     /* 페이지 전환으로 들어온 경우, 첫 화면부터 연두색으로 덮인 상태로 시작 (깜빡임 방지). 문제가 생겨도 5초 뒤엔 풀림 */
     try {
@@ -24,6 +25,7 @@
   <script src="project-detail.js" defer></script>
   <script src="transition.js" defer></script>
   <script src="link-hover.js" defer></script>
+  <script src="copy-email.js" defer></script>
 </head>
 
 <body>
@@ -154,7 +156,7 @@
             </div>
             <div class="pd-footer__contact">
               <p class="pd-footer__talk">Let’s talk →</p>
-              <a class="pd-footer__mail" href="mailto:jodabin9098@gmail.com" target="_blank" rel="noopener">jodabin9098@gmail.com</a>
+              <a class="pd-footer__mail" role="button" tabindex="0" data-copy="jodabin9098@gmail.com">jodabin9098@gmail.com</a>
             </div>
           </div>
         </div></div>
