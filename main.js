@@ -15,6 +15,9 @@ const SHEET_HEIGHT = 2040;
 /* 글씨가 검정으로 바뀌는 동안 화면을 붙잡아 두는 스크롤 거리(px) */
 const COLOR_HOLD = 1400;
 
+/* 프로젝트 화면을 이만큼(디자인 px) 위로 올려서, 위쪽 여백을 줄이고 아래에 About Me 종이가 살짝 보이게 함 */
+const PROJECT_SHIFT = 0;
+
 const viewport = document.getElementById('viewport');
 const stageSticky = document.getElementById('stageSticky');
 const stage = document.getElementById('stage');
@@ -42,7 +45,7 @@ function fitStage() {
   holdStart = visibleTop * scale;
 
   /* 책장 페이지를 종이 뒤, 같은 화면 위치에 겹쳐 둠 */
-  gsap.set(shelf, { y: -(SHEET_HEIGHT - visibleTop) });
+  gsap.set(shelf, { y: -(SHEET_HEIGHT - visibleTop) - PROJECT_SHIFT });
 
   /*
     화면에 고정되는 영역의 높이 = 고정 시작 위치 + 화면 높이.
@@ -64,10 +67,10 @@ function fitStage() {
 */
 function layoutAfter() {
   const visibleHeight = window.innerHeight / scale;
-  const afterTop = SHEET_HEIGHT + visibleHeight;
+  const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + visibleHeight;
   after.style.height = `${Math.max(0, PAGE_HEIGHT - afterTop) * scale}px`;
   gsap.set(afterStage, { scale, y: -afterTop * scale, transformOrigin: '0 0' });
-  after.style.setProperty('--vh', `${visibleHeight}px`);
+  after.style.setProperty('--vh', `${visibleHeight + PROJECT_SHIFT}px`);
   return afterTop;
 }
 
@@ -363,7 +366,7 @@ function goToSection(name) {
   let y = projectY;
   if (name === 'about') {
     /* About Me 제목이 화면 위에서 85px 아래에 오도록 (헤더와 떨어지고 아래 푸터 윗부분이 같이 보임) */
-    const afterTop = SHEET_HEIGHT + window.innerHeight / scale;
+    const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + window.innerHeight / scale;
     y = after.offsetTop + (ABOUT_TOP - afterTop - 85) * scale;
   } else if (name === 'contact') {
     y = document.documentElement.scrollHeight;
@@ -529,6 +532,68 @@ function initFooterRepel() {
     shapes.forEach((shape) => {
       shape._repelled = false;
       settle(shape);
+    });
+  });
+}
+
+/*
+  About Me 종이 흔들기 (푸터 종이와 같은 느낌)
+  - 뒤에 깔린 종이 두 장(흰 종이, 크림색 종이)만 각자 아래쪽의 한 점을 축으로 따로따로 살랑 흔들림 (글씨·사진은 그대로)
+  - 마우스가 가까울수록 크게 기울고, 멀어지면 출렁이며 제자리로 돌아옴
+  되돌리려면 이 함수와 initScrollAnimations 안의 호출을 지우면 됨
+*/
+const ABOUT_SWAY_RADIUS = 1100; /* 이 거리(디자인 px) 안으로 마우스가 들어오면 반응 */
+const ABOUT_SWAY_ROTATE = 1.6; /* 가장 세게 기울어질 때 각도(deg) */
+const ABOUT_SWAY_PIVOT_Y = 4450; /* 흔들림의 축 높이 (디자인 y) */
+const ABOUT_SWAY_BASE_Y = 3900; /* 마우스와의 거리를 재는 기준 높이 (디자인 y) */
+
+function initAboutSway() {
+  const papers = [...afterStage.querySelectorAll('.about-paper')];
+  let frame = 0;
+  let mouse = null;
+
+  papers.forEach((paper) => {
+    gsap.set(paper, { transformOrigin: `50% ${ABOUT_SWAY_PIVOT_Y - parseFloat(getComputedStyle(paper).top)}px` }); /* 아래 영역은 처음엔 숨겨져 있어서 CSS 값으로 계산 */
+  });
+
+  const settle = (paper) => gsap.to(paper, { rotation: 0, duration: 1.6, ease: 'elastic.out(1, 0.3)', overwrite: true });
+
+  function update() {
+    frame = 0;
+    if (!mouse || !after.classList.contains('is-visible')) return;
+    const r = afterStage.getBoundingClientRect();
+    const mx = (mouse.x - r.left) / scale; /* 마우스의 디자인 좌표 */
+    const my = (mouse.y - r.top) / scale;
+    papers.forEach((paper) => {
+      const vx = parseFloat(getComputedStyle(paper).left) + parseFloat(getComputedStyle(paper).width) / 2 - mx;
+      const vy = ABOUT_SWAY_BASE_Y - my;
+      const influence = Math.max(0, 1 - Math.hypot(vx, vy) / ABOUT_SWAY_RADIUS);
+      if (influence <= 0) {
+        if (paper._swayed) {
+          paper._swayed = false;
+          settle(paper);
+        }
+        return;
+      }
+      paper._swayed = true;
+      const side = Math.max(-1, Math.min(1, vx / 400));
+      gsap.to(paper, { rotation: side * ABOUT_SWAY_ROTATE * influence, duration: 0.6, ease: 'power3.out', overwrite: true });
+    });
+  }
+
+  window.addEventListener(
+    'mousemove',
+    (e) => {
+      mouse = { x: e.clientX, y: e.clientY };
+      if (!frame) frame = requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
+  document.documentElement.addEventListener('mouseleave', () => {
+    mouse = null;
+    papers.forEach((paper) => {
+      paper._swayed = false;
+      settle(paper);
     });
   });
 }
@@ -702,7 +767,7 @@ function updateHeaderTone() {
     header.classList.remove('is-logo-dark');
     return;
   }
-  const afterTop = SHEET_HEIGHT + window.innerHeight / scale;
+  const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + window.innerHeight / scale;
   const y = afterTop + (window.scrollY + 35 * scale - after.offsetTop) / scale; /* 헤더 가운데 높이가 가리키는 디자인 y */
   header.classList.toggle('is-logo-dark', y > HEADER_LOGO_ON_PAPER);
   header.classList.toggle('is-light', y <= HEADER_MENU_ON_PAPER);
@@ -719,6 +784,7 @@ function initScrollAnimations() {
   initProjectShortcut();
   initProjectHover();
   initFooterRepel();
+  initAboutSway();
   initTapePeel();
   initHeaderTone();
   renderFold();
