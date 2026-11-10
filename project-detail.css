@@ -535,10 +535,10 @@ a {
 
 .pd-footer__brand-box {
   position: absolute;
-  left: 72.66px;
-  top: 3360.38px;
-  width: 457.101px;
-  height: 185.941px;
+  left: 80px;
+  top: 3400.93px;
+  width: 457.829px;
+  height: 193.908px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -552,8 +552,16 @@ a {
 .pd-footer__brand {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   width: 445.666px;
+}
+
+/* 이름 + 슬로건 */
+.pd-footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
 .pd-footer__name {
@@ -590,13 +598,31 @@ a {
   color: #fdfdfd;
 }
 
-.pd-footer__mail {
-  display: block;
-  font-size: 20px;
+/* "Let's talk →" + 이메일 */
+.pd-footer__contact {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.pd-footer__talk {
+  font-size: 18px;
   font-weight: 400;
   line-height: .9;
-  letter-spacing: -1.2px;
+  letter-spacing: -1.08px;
+  color: #fdfdfd;
+}
+
+.pd-footer__mail {
+  display: block;
+  font-size: 24px;
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -1.44px;
   color: var(--lime);
+  white-space: nowrap;
 }
 
 /* Paper texture overlay */
