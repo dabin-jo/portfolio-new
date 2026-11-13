@@ -546,6 +546,7 @@ const ABOUT_SWAY_RADIUS = 1100; /* 이 거리(디자인 px) 안으로 마우스�
 const ABOUT_SWAY_ROTATE = 1.6; /* 가장 세게 기울어질 때 각도(deg) */
 const ABOUT_SWAY_PIVOT_Y = 4450; /* 흔들림의 축 높이 (디자인 y) */
 const ABOUT_SWAY_BASE_Y = 3900; /* 마우스와의 거리를 재는 기준 높이 (디자인 y) */
+const STICKERS_FOLLOW_PAPER = false; /* true: 스티커가 크림색 종이와 함께 흔들림. 별로면 false 로 */
 
 function initAboutSway() {
   const papers = [...afterStage.querySelectorAll('.about-paper')];
@@ -556,7 +557,24 @@ function initAboutSway() {
     gsap.set(paper, { transformOrigin: `50% ${ABOUT_SWAY_PIVOT_Y - parseFloat(getComputedStyle(paper).top)}px` }); /* 아래 영역은 처음엔 숨겨져 있어서 CSS 값으로 계산 */
   });
 
-  const settle = (paper) => gsap.to(paper, { rotation: 0, duration: 1.6, ease: 'elastic.out(1, 0.3)', overwrite: true });
+  /* 크림색 종이 위에 붙은 스티커 묶음: 종이와 같은 축(종이 가로 가운데, 흔들림 축 높이)에서 같은 각도로 같이 흔들림 */
+  const note = papers.find((p) => p.classList.contains('about-paper-note'));
+  const followers = new Map();
+  if (STICKERS_FOLLOW_PAPER && note) {
+    const group = afterStage.querySelector('.about-sticker-follow');
+    if (group) {
+      const pivotX = parseFloat(getComputedStyle(note).left) + parseFloat(getComputedStyle(note).width) / 2;
+      gsap.set(group, { transformOrigin: `${pivotX}px ${ABOUT_SWAY_PIVOT_Y}px` });
+      followers.set(note, group);
+    }
+  }
+  /* 종이를 움직일 때 따라오는 요소도 같은 값으로 같이 움직임 */
+  const move = (paper, vars) => {
+    gsap.to(paper, vars);
+    if (followers.has(paper)) gsap.to(followers.get(paper), vars);
+  };
+
+  const settle = (paper) => move(paper, { rotation: 0, duration: 1.6, ease: 'elastic.out(1, 0.3)', overwrite: true });
 
   function update() {
     frame = 0;
@@ -577,7 +595,7 @@ function initAboutSway() {
       }
       paper._swayed = true;
       const side = Math.max(-1, Math.min(1, vx / 400));
-      gsap.to(paper, { rotation: side * ABOUT_SWAY_ROTATE * influence, duration: 0.6, ease: 'power3.out', overwrite: true });
+      move(paper, { rotation: side * ABOUT_SWAY_ROTATE * influence, duration: 0.6, ease: 'power3.out', overwrite: true });
     });
   }
 
@@ -605,6 +623,7 @@ function initAboutSway() {
   - 테이프가 떨어질 때마다 사진이 처지고, 사진을 클릭하면 테이프가 다시 붙음
   되돌리려면 이 함수와 initScrollAnimations 안의 호출, style.css 의 .about-tape 설정을 지우면 됨
 */
+const STICKER_RETURN_MS = 5000; /* 스티커를 뗀 뒤 이 시간(ms)이 지나면 저절로 다시 붙음 */
 const CLICK_SLOP = 6; /* 이 거리(캔버스 px)보다 적게 움직이고 놓으면 그냥 클릭으로 봄 */
 const FOLD_LIMIT = 60; /* 모서리가 이만큼(캔버스 px) 이상 끌려 오면 놓았을 때 떨어져 나감 */
 
@@ -615,8 +634,8 @@ function initTapePeel() {
     el.addEventListener('selectstart', (e) => e.preventDefault());
   });
   /* 테이프와 스티커는 같은 방식(모서리를 잡아 접어 떼기)으로 떼짐. 사진이 처지는 건 테이프를 뗄 때만 */
-  const tapes = [...document.querySelectorAll('.about-tape')];
-  const pieces = [...document.querySelectorAll('.about-tape, .about-sticker')];
+  const tapes = [...document.querySelectorAll('.about-tape:not(.about-sticker)')]; /* 사진에 붙은 테이프만 (스티커 제외) */
+  const pieces = [...document.querySelectorAll('.about-tape, .about-sticker')]; /* 스티커도 테이프와 같이 모서리를 접어 떼면 아래로 떨어져 사라짐 */
   const isTape = (p) => !p.classList.contains('about-sticker'); /* 스티커도 .about-tape 클래스를 쓰므로 따로 구분 */
   const tapeCount = () => [...removed].filter(isTape).length;
   const photo = document.querySelector('.about-photo__img');
@@ -747,6 +766,14 @@ function initTapePeel() {
           onComplete: () => gsap.to(tape, { y: 40, opacity: 0, duration: 0.45, ease: 'power1.in' }),
         });
         if (isTape(tape)) droop();
+        else {
+          /* 스티커는 시간이 지나면 위에서 다시 내려와 붙음 */
+          clearTimeout(tape._returnTimer);
+          tape._returnTimer = setTimeout(() => {
+            if (!removed.has(tape)) return;
+            tape._restore();
+          }, STICKER_RETURN_MS);
+        }
       } else {
         gsap.to(state, { px: corner.x, py: corner.y, duration: 0.4, ease: 'back.out(1.7)', onUpdate: render, onComplete: reset });
       }
@@ -755,6 +782,7 @@ function initTapePeel() {
     tape.addEventListener('pointercancel', release);
 
     tape._restore = () => {
+      clearTimeout(tape._returnTimer);
       gsap.killTweensOf([state, tape]);
       removed.delete(tape);
       tape.style.pointerEvents = '';
@@ -763,10 +791,11 @@ function initTapePeel() {
     };
   });
 
-  /* 사진을 클릭하면 떨어진 테이프와 스티커가 모두 다시 붙음 */
+  /* 사진(회색 박스)을 클릭하면 떨어진 테이프만 다시 붙음. 스티커는 따로, 시간이 지나면 저절로 돌아옴 */
   photo.addEventListener('click', () => {
-    if (!removed.size) return;
-    pieces.forEach((p) => p._restore());
+    const fallen = tapes.filter((t) => removed.has(t));
+    if (!fallen.length) return;
+    fallen.forEach((t) => t._restore());
     droop();
   });
 }

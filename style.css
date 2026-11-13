@@ -1435,7 +1435,47 @@ a {
   transform: matrix(0.993927, -0.110044, 0.110044, 0.993927, 0, 0); /* 6.3° 기울임 */
 }
 
-/* 떼어 넘어간 스티커 뒷면: 하얀 종이 뒷면 (그림 모양 그대로 흰색) */
-.about-sticker .about-tape__flap {
-  filter: brightness(0) invert(.93);
+/*
+  떼어 넘어간 스티커 뒷면: 불투명한 하얀 종이 뒷면이고, 앞면 그림이 뒤집혀서 아주 옅게 비쳐 보임
+  - 아래층(img): 그림 모양 그대로의 하얀 실루엣 (불투명)
+  - 위층(::after): 같은 그림을 옅게 얹음 (--art 는 스티커마다 아래에서 지정)
+*/
+.about-sticker-cursor {
+  --art: url(assets/about-sticker-cursor.svg);
 }
+
+.about-sticker-bubble {
+  --art: url(assets/about-sticker-bubble.svg);
+}
+
+.about-sticker .about-tape__flap {
+  filter: none;
+}
+
+.about-sticker .about-tape__flap img {
+  filter: brightness(0) invert(.97);
+}
+
+.about-sticker .about-tape__flap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--art) center / 100% 100% no-repeat;
+  opacity: .2; /* 뒷면에 비치는 그림의 진하기 */
+  pointer-events: none;
+}
+
+.about-sticker .about-tape__flapwrap {
+  filter: drop-shadow(3px 6px 7px rgba(0, 0, 0, .3));
+}
+
+/* 스티커 묶음: 종이 흔들림을 따라가기 위한 빈 상자 (크기 없음, 좌표는 스티커가 각자 가짐) */
+.about-sticker-follow {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  z-index: 3; /* 푸터 위로 */
+}
+
