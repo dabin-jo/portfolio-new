@@ -589,6 +589,82 @@ a {
   outline-offset: 2px;
 }
 
+/* 폼 종이 모서리에 붙은 테이프 (밝은 종이 위라 곱하기 블렌드로 비쳐 보임) */
+.ct-tape {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.ct-tape__rot {
+  position: relative;
+  flex: none;
+}
+
+.ct-tape__rot img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+.ct-tape-tl {
+  left: -50px;
+  top: -58px;
+  width: 295.274px;
+  height: 164.809px;
+}
+
+.ct-tape-tl .ct-tape__rot {
+  width: 294px;
+  height: 60px;
+  transform: rotate(-21.78deg);
+}
+
+.ct-tape-br {
+  left: 965.45px;
+  top: 702px;
+  width: 287.856px;
+  height: 190.726px;
+}
+
+.ct-tape-br .ct-tape__rot {
+  width: 294px;
+  height: 60px;
+  transform: rotate(152.07deg);
+}
+
+.ct-tape-tr {
+  left: 1026px;
+  top: -34px;
+  width: 214.418px;
+  height: 139.522px;
+}
+
+.ct-tape-tr .ct-tape__rot {
+  width: 206.446px;
+  height: 62.792px;
+  transform: rotate(23.37deg);
+}
+
+.ct-tape-bl {
+  left: -48.84px;
+  top: 711px;
+  width: 200.279px;
+  height: 178.232px;
+}
+
+.ct-tape-bl .ct-tape__rot {
+  width: 206.446px;
+  height: 62.792px;
+  transform: rotate(38.77deg);
+}
+
 /* Footer (페이지 맨 아래 541px) */
 .ct-footer {
   position: absolute;
