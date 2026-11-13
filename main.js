@@ -605,15 +605,25 @@ function initAboutSway() {
   - 테이프가 떨어질 때마다 사진이 처지고, 사진을 클릭하면 테이프가 다시 붙음
   되돌리려면 이 함수와 initScrollAnimations 안의 호출, style.css 의 .about-tape 설정을 지우면 됨
 */
+const CLICK_SLOP = 6; /* 이 거리(캔버스 px)보다 적게 움직이고 놓으면 그냥 클릭으로 봄 */
 const FOLD_LIMIT = 60; /* 모서리가 이만큼(캔버스 px) 이상 끌려 오면 놓았을 때 떨어져 나감 */
 
 function initTapePeel() {
+  /* 사진과 테이프는 마우스로 끌어도 이미지가 딸려 가거나 영역이 선택되지 않게 */
+  document.querySelectorAll('.about-photo, .about-tape, .about-sticker').forEach((el) => {
+    el.addEventListener('dragstart', (e) => e.preventDefault());
+    el.addEventListener('selectstart', (e) => e.preventDefault());
+  });
+  /* 테이프와 스티커는 같은 방식(모서리를 잡아 접어 떼기)으로 떼짐. 사진이 처지는 건 테이프를 뗄 때만 */
   const tapes = [...document.querySelectorAll('.about-tape')];
+  const pieces = [...document.querySelectorAll('.about-tape, .about-sticker')];
+  const isTape = (p) => !p.classList.contains('about-sticker'); /* 스티커도 .about-tape 클래스를 쓰므로 따로 구분 */
+  const tapeCount = () => [...removed].filter(isTape).length;
   const photo = document.querySelector('.about-photo__img');
   const removed = new Set();
 
   const droop = () => {
-    const n = removed.size;
+    const n = tapeCount();
     gsap.to(photo, {
       rotation: n === 0 ? -8.72 : n === 1 ? -11.7 : -16.7,
       y: n === 0 ? 0 : n === 1 ? 4 : 22,
@@ -623,7 +633,7 @@ function initTapePeel() {
     });
   };
 
-  tapes.forEach((tape) => {
+  pieces.forEach((tape) => {
     const body = tape.querySelector('.about-tape__rot');
     let W = 0;
     let H = 0;
@@ -652,6 +662,10 @@ function initTapePeel() {
     const state = { px: 0, py: 0 }; /* 끌려 온 모서리의 위치 */
     let corner = rect[0];
     let grab = null;
+    let travel = 0; /* 누른 뒤 마우스가 움직인 최대 거리 (거의 안 움직이면 클릭으로 봄) */
+
+    /* 본체에 걸린 회전·뒤집힘 (가운데 기준) */
+    const bodyLinear = () => new DOMMatrix(getComputedStyle(body).transform);
 
     const render = () => {
       const dx = state.px - corner.x;
@@ -667,12 +681,12 @@ function initTapePeel() {
       const visible = clipByLine(rect, mid, n);
       const folded = clipByLine(rect, mid, { x: -n.x, y: -n.y });
       const k = 2 * (mid.x * n.x + mid.y * n.y);
-      const th = (gsap.getProperty(body, 'rotation') * Math.PI) / 180;
+      const L = bodyLinear();
       body.style.clipPath = toClip(visible);
       flap.style.clipPath = toClip(folded);
       flap.style.transformOrigin = '0 0';
       flap.style.transform =
-        'translate(' + W / 2 + 'px, ' + H / 2 + 'px) rotate(' + th + 'rad) translate(' + -W / 2 + 'px, ' + -H / 2 + 'px) ' +
+        'translate(' + W / 2 + 'px, ' + H / 2 + 'px) matrix(' + L.a + ', ' + L.b + ', ' + L.c + ', ' + L.d + ', 0, 0) translate(' + -W / 2 + 'px, ' + -H / 2 + 'px) ' +
         'matrix(' + (1 - 2 * n.x * n.x) + ', ' + -2 * n.x * n.y + ', ' + -2 * n.x * n.y + ', ' + (1 - 2 * n.y * n.y) + ', ' + k * n.x + ', ' + k * n.y + ')';
     };
 
@@ -687,10 +701,10 @@ function initTapePeel() {
       const r = body.getBoundingClientRect();
       const dx = (e.clientX - (r.left + r.width / 2)) / scale;
       const dy = (e.clientY - (r.top + r.height / 2)) / scale;
-      const th = (gsap.getProperty(body, 'rotation') * Math.PI) / 180;
+      const inv = bodyLinear().inverse(); /* 회전만이 아니라 좌우 뒤집힘이 있어도 되돌릴 수 있음 */
       return {
-        x: dx * Math.cos(th) + dy * Math.sin(th) + W / 2,
-        y: -dx * Math.sin(th) + dy * Math.cos(th) + H / 2,
+        x: inv.a * dx + inv.c * dy + W / 2,
+        y: inv.b * dx + inv.d * dy + H / 2,
       };
     };
 
@@ -699,6 +713,7 @@ function initTapePeel() {
       measure();
       tape.setPointerCapture(e.pointerId);
       grab = toLocal(e);
+      travel = 0;
       corner = rect.reduce((best, c) => (Math.hypot(c.x - grab.x, c.y - grab.y) < Math.hypot(best.x - grab.x, best.y - grab.y) ? c : best));
       gsap.killTweensOf(state);
       state.px = corner.x;
@@ -709,6 +724,7 @@ function initTapePeel() {
     tape.addEventListener('pointermove', (e) => {
       if (!tape.classList.contains('is-peeling')) return;
       const q = toLocal(e);
+      travel = Math.max(travel, Math.hypot(q.x - grab.x, q.y - grab.y));
       state.px = Math.max(0, Math.min(W, corner.x + (q.x - grab.x)));
       state.py = Math.max(0, Math.min(H, corner.y + (q.y - grab.y)));
       render();
@@ -718,18 +734,19 @@ function initTapePeel() {
       if (!tape.classList.contains('is-peeling')) return;
       tape.classList.remove('is-peeling');
       const dist = Math.hypot(state.px - corner.x, state.py - corner.y);
-      if (dist >= FOLD_LIMIT) {
+      const clicked = travel < CLICK_SLOP; /* 끌지 않고 그냥 눌렀다 뗌: 가까운 모서리부터 저절로 접혀 떨어짐 */
+      if (dist >= FOLD_LIMIT || clicked) {
         removed.add(tape);
         tape.style.pointerEvents = 'none';
         gsap.to(state, {
           px: W - corner.x,
           py: H - corner.y,
-          duration: 0.5,
-          ease: 'power2.in',
+          duration: clicked ? 0.7 : 0.5,
+          ease: clicked ? 'power2.inOut' : 'power2.in',
           onUpdate: render,
           onComplete: () => gsap.to(tape, { y: 40, opacity: 0, duration: 0.45, ease: 'power1.in' }),
         });
-        droop();
+        if (isTape(tape)) droop();
       } else {
         gsap.to(state, { px: corner.x, py: corner.y, duration: 0.4, ease: 'back.out(1.7)', onUpdate: render, onComplete: reset });
       }
@@ -746,10 +763,10 @@ function initTapePeel() {
     };
   });
 
-  /* 사진을 클릭하면 떨어진 테이프가 다시 붙음 */
+  /* 사진을 클릭하면 떨어진 테이프와 스티커가 모두 다시 붙음 */
   photo.addEventListener('click', () => {
     if (!removed.size) return;
-    tapes.forEach((tape) => tape._restore());
+    pieces.forEach((p) => p._restore());
     droop();
   });
 }

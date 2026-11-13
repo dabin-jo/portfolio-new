@@ -1383,3 +1383,59 @@ a {
   background: var(--black);
   color: var(--white);
 }
+
+/* 사진·테이프는 드래그해도 글자 선택이나 이미지 끌기가 일어나지 않음 */
+.about-photo,
+.about-tape {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+}
+
+/*
+  스티커 (피그마 좌표 그대로)
+  피그마의 두 스티커는 기울어져 있고(커서는 좌우로 뒤집힌 채 기울어짐), 그림은 테두리까지 포함해 조금 더 큼.
+  그래서 "그림 전체 크기" 상자를 그림 가운데에 놓고, 본체(.about-tape__rot)에 피그마의 회전·뒤집힘(matrix)을 검.
+*/
+.about-sticker {
+  z-index: 3; /* 푸터 위로 */
+  mix-blend-mode: normal; /* 테이프와 달리 비쳐 보이지 않음 */
+}
+
+.about-sticker .about-tape__rot img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.about-sticker-cursor {
+  left: 618.875px;
+  top: 3277.875px;
+  width: 113.124px;
+  height: 113.124px;
+}
+
+.about-sticker-cursor .about-tape__rot {
+  width: 113.124px;
+  height: 113.124px;
+  transform: matrix(-0.995153, -0.098343, -0.098343, 0.995153, 0, 0); /* 좌우 뒤집고 5.6° 기울임 */
+}
+
+.about-sticker-bubble {
+  left: 1617.833px;
+  top: 3907.134px;
+  width: 220.126px;
+  height: 180.48px;
+}
+
+.about-sticker-bubble .about-tape__rot {
+  width: 220.126px;
+  height: 180.48px;
+  transform: matrix(0.993927, -0.110044, 0.110044, 0.993927, 0, 0); /* 6.3° 기울임 */
+}
+
+/* 떼어 넘어간 스티커 뒷면: 하얀 종이 뒷면 (그림 모양 그대로 흰색) */
+.about-sticker .about-tape__flap {
+  filter: brightness(0) invert(.93);
+}
