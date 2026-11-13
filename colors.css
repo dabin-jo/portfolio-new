@@ -8,4 +8,6 @@
   --white: #fdfdfd;
   --cream: #e0dfd7;
   --green: #e5ff7f;
+  /* 크림색 종이 위에서 --green 을 '곱하기'로 얹은 색 (= cream × green). 필터가 걸린 영역 안에서는 블렌드 모드가 종이까지 닿지 않아 계산해 둠 */
+  --green-on-cream: #c9df6b;
 }

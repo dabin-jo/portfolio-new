@@ -1479,3 +1479,12 @@ a {
   z-index: 3; /* 푸터 위로 */
 }
 
+
+/* Skills 에서 강조한 항목: 글씨 뒤에 연두색 형광펜 */
+.about-hl {
+  padding: 1px 6px;
+  margin: 0 -6px;
+  background: var(--green-on-cream); /* 곱하기(multiply)로 섞은 색. 종이 색(--cream)과 --green 을 곱한 값 */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
