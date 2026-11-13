@@ -13,6 +13,8 @@ if (window.Lenis && window.gsap) {
     duration: SMOOTH_DURATION,
     easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     smoothWheel: true,
+    /* 줄이 넘쳐서 안에서 스크롤되는 입력칸(메시지)에서만 휠을 입력칸에 양보. 넘치지 않을 때까지 양보하면 그 자리에서만 스크롤이 뚝뚝 끊김 */
+    prevent: (node) => node.tagName === 'TEXTAREA' && node.scrollHeight > node.clientHeight + 1,
   });
   window.lenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);

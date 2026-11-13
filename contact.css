@@ -234,10 +234,11 @@ a {
   margin: 1.667px 4.333px;
 }
 
-/* 복사되면 나오는 안내는 흰 바탕이라 글자를 검정으로 */
+/* 복사되면 나오는 안내: 이메일 바로 아래에 뜸. 흰 바탕이라 글자는 검정 */
 .ct-email__copy.copy-email::after {
-  left: calc(100% + 10px);
-  bottom: 6px;
+  left: 0;
+  top: calc(100% + 8px);
+  bottom: auto;
   font-size: 20px;
   color: var(--black);
 }
@@ -791,4 +792,12 @@ a {
 /* 문구가 비어 있으면 (OK 를 지운 뒤) 아이콘도 같이 숨김 */
 .ct-field .ct-field__msg:empty {
   display: none;
+}
+
+/* 크림색 폼 종이 위에서는 기본 회색 선택색이 배경과 비슷해서 안 보임 → 곱하기(multiply)를 흉내 낸 반투명 검정으로 선택 영역이 종이보다 어둡게 보임 */
+.ct-form ::selection,
+.ct-form input::selection,
+.ct-form textarea::selection {
+  background: rgba(12, 12, 12, .3);
+  color: var(--black);
 }
