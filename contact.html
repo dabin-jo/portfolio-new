@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact | JODABIN</title>
+  <link rel="stylesheet" href="contact.css">
+  <link rel="stylesheet" href="transition.css">
+  <link rel="stylesheet" href="link-hover.css">
+  <link rel="stylesheet" href="copy-email.css">
+  <script>
+    /* 페이지 전환으로 들어온 경우, 첫 화면부터 연두색으로 덮인 상태로 시작 (깜빡임 방지). 문제가 생겨도 5초 뒤엔 풀림 */
+    try {
+      if (sessionStorage.getItem('pageTransition')) {
+        document.documentElement.classList.add('is-transition-in');
+        setTimeout(function () { document.documentElement.classList.remove('is-transition-in'); }, 5000);
+      }
+    } catch (e) {}
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer></script>
+  <script src="smooth-scroll.js" defer></script>
+  <script src="contact.js" defer></script>
+  <script src="transition.js" defer></script>
+  <script src="link-hover.js" defer></script>
+  <script src="copy-email.js" defer></script>
+</head>
+
+<body>
+  <!-- 페이지 전환용 연두색 펜 선 (transition.js) -->
+  <div class="transition" aria-hidden="true">
+    <svg class="transition__svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <path class="transition__path" pathLength="1" d="M -150 40 C 250 10 700 70 1150 40 C 1320 40 1320 240 1150 240 C 700 270 250 210 -150 240 C -320 240 -320 440 -150 440 C 250 410 700 470 1150 440 C 1320 440 1320 640 1150 640 C 700 670 250 610 -150 640 C -320 640 -320 840 -150 840 C 250 810 700 870 1150 840 C 1320 840 1320 970 1150 970 C 700 990 250 950 -150 970"></path>
+    </svg>
+  </div>
+
+  <!-- header: 스크롤해도 화면 위에 고정 (캔버스 밖, 크기는 JS가 맞춤) -->
+  <header class="header">
+    <a class="header__logo" href="index.html" data-transition aria-label="Home"><img class="header__logo-dark" src="assets/logo.svg" alt=""><img class="header__logo-light" src="assets/logo-light.svg" alt=""></a>
+    <div class="grain header__menu">
+      <a href="index.html#project" data-transition>Project</a>
+      <a href="index.html#about" data-transition>About Me</a>
+      <a href="contact.html" data-transition>Contact</a>
+    </div>
+  </header>
+
+  <div class="viewport" id="viewport">
+    <main class="stage" id="stage">
+
+      <p class="grain ct-label ct-label-contact">Contact</p>
+      <div class="grain ct-quote">
+        <p>I notice what others pass by,</p>
+        <p>and make it worth a second look.</p>
+      </div>
+
+      <!-- Email: 누르면 주소가 복사됨 -->
+      <p class="grain ct-label ct-label-email">Email</p>
+      <div class="grain ct-email">
+        <button class="ct-email__copy" type="button" data-copy="jodabin9098@gmail.com" aria-label="이메일 주소 복사">
+          <span class="ct-email__text">jodabin9098@gmail.com</span>
+          <img src="assets/contact-copy.svg" alt="">
+        </button>
+      </div>
+
+      <!-- Form -->
+      <section class="ct-form" aria-label="Form">
+        <img class="grain ct-form__paper" src="assets/contact-form-paper.svg" alt="">
+        <form class="ct-form__body" id="contactForm" autocomplete="off" novalidate>
+          <input class="ct-botcheck" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <p class="grain ct-form__title">Form</p>
+
+          <div class="ct-form__fields">
+            <div class="ct-form__grid">
+              <div class="ct-form__col">
+                <label class="ct-field">
+                  <span class="grain ct-field__label">이름</span>
+                  <span class="grain ct-field__line"><input type="text" name="name" placeholder="이름을 입력하세요 (필수)" autocomplete="off"></span>
+                </label>
+                <label class="ct-field">
+                  <span class="grain ct-field__label">이메일</span>
+                  <span class="grain ct-field__line"><input type="email" name="email" placeholder="답장받을 이메일을 입력해주세요 (필수)" autocomplete="off"></span>
+                </label>
+              </div>
+              <div class="ct-form__col">
+                <label class="ct-field">
+                  <span class="grain ct-field__label">회사</span>
+                  <span class="grain ct-field__line"><input type="text" name="company" placeholder="회사명을 입력하세요 (필수)" autocomplete="off"></span>
+                </label>
+                <label class="ct-field">
+                  <span class="grain ct-field__label">포지션</span>
+                  <span class="grain ct-field__line"><input type="text" name="position" placeholder="예) UXUI 디자이너" autocomplete="off"></span>
+                </label>
+              </div>
+            </div>
+
+            <label class="ct-field">
+              <span class="grain ct-field__label">메시지</span>
+              <span class="grain ct-field__lines"><textarea name="message" rows="4" autocomplete="off" placeholder="남기고픈 내용을 작성해주세요 (필수)" data-lenis-prevent></textarea></span>
+            </label>
+
+            <p class="ct-form__error" id="formError" role="alert"></p>
+          </div>
+
+          <button class="grain ct-send" type="submit"><span class="ct-send__bg" aria-hidden="true"></span><span class="ct-send__label">메일 보내기</span><span class="ct-send__arrow">→</span></button>
+        </form>
+      </section>
+
+      <!-- footer -->
+      <footer class="ct-footer" id="footer">
+        <div class="ct-footer__shape ct-footer__shape-left"><div class="ct-footer__rot"><img src="assets/pd-footer-left.svg" alt=""></div></div>
+        <div class="ct-footer__shape ct-footer__shape-center"><div class="grain ct-footer__rot"></div></div>
+        <div class="ct-footer__shape ct-footer__shape-right"><div class="ct-footer__rot"><img src="assets/pd-footer-right.svg" alt=""></div></div>
+
+        <nav class="grain ct-footer__menu">
+          <a href="index.html" data-transition>Home</a>
+          <a href="index.html#project" data-transition>Project</a>
+          <a href="index.html#about" data-transition>About Me</a>
+          <a href="contact.html" data-transition>Contact</a>
+          <p>©2026 JODABIN</p>
+        </nav>
+
+        <div class="ct-footer__brand-box"><div class="ct-footer__brand-rot">
+          <div class="grain ct-footer__brand">
+            <div class="ct-footer__top">
+              <div class="ct-footer__name">
+                <p>JO</p>
+                <img src="assets/pd-footer-d.svg" alt="">
+                <p>ABIN</p>
+              </div>
+              <p class="ct-footer__slogan">I find value in the overlooked, and make what matters matter more.</p>
+            </div>
+            <div class="ct-footer__contact">
+              <p class="ct-footer__talk">Let’s talk →</p>
+              <a class="ct-footer__mail" role="button" tabindex="0" data-copy="jodabin9098@gmail.com">jodabin9098@gmail.com</a>
+            </div>
+          </div>
+        </div></div>
+      </footer>
+
+      <div class="paper"></div>
+    </main>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,794 @@
+/* Fonts */
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-3Light.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-4Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-6SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'A2z';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-6@1.0/에이투지체-7Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --white: #fdfdfd;
+  --black: #0c0c0c;
+  /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
+  --grain: url(assets/filters.svg?v=26#grain);
+  --grain-soft: url(assets/filters.svg?v=26#grain-soft);
+  --lime: #e5ff7f;
+}
+
+/* Base */
+/* 마우스로 드래그해서 글자를 선택했을 때의 색 (기본 파란색 대신 회색) */
+::selection {
+  background: #dedede;
+  color: #0c0c0c;
+}
+
+/* 스크롤바 숨기기 (스크롤은 그대로 됨) */
+html {
+  scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: #fff;
+}
+
+body {
+  font-family: 'A2z', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  color: var(--black);
+}
+
+img {
+  display: block;
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 1920px 기준 캔버스 (contact.js 가 화면 폭에 맞춰 scale) */
+.viewport {
+  width: 100%;
+  position: relative;
+  overflow-x: clip;
+}
+
+.stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1920px;
+  height: 2154px;
+  overflow: hidden;
+  background: #fff;
+  transform-origin: 0 0;
+}
+
+/* 찌그러지는 Figma GRAIN 효과: 적용할 요소에 class="grain"을 붙이면 됩니다 */
+.grain {
+  filter: var(--grain);
+}
+
+/* Header */
+.header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  transform-origin: 0 0;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 1920px;
+  padding: 20px 60px;
+  color: var(--black);
+  transition: color .3s;
+}
+
+/* 어두운 배경(푸터) 위에서는 글씨와 로고가 흰색 (contact.js 가 is-light 클래스를 붙임) */
+.header.is-light {
+  color: var(--white);
+}
+
+.header a {
+  pointer-events: auto;
+}
+
+.header__logo {
+  position: relative;
+  flex: none;
+  width: 36px;
+  height: 31px;
+}
+
+.header__logo img {
+  transition: opacity .3s;
+  position: absolute;
+  left: -3.34%;
+  top: -3.88%;
+  width: 106.68%;
+  height: 107.76%;
+  max-width: none;
+}
+
+.header__logo-light,
+.header.is-light .header__logo-dark {
+  opacity: 0;
+}
+
+.header.is-light .header__logo-light {
+  opacity: 1;
+}
+
+.header__menu {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.8px;
+  white-space: nowrap;
+}
+
+/* 제목 */
+.ct-label {
+  position: absolute;
+  left: 60px;
+  font-size: 20px;
+  font-weight: 300;
+  white-space: nowrap;
+}
+
+.ct-label-contact {
+  top: 120px;
+  line-height: 1;
+}
+
+.ct-label-email {
+  top: 720px;
+  width: 100px;
+  line-height: 1.5;
+  letter-spacing: -.4px;
+}
+
+.ct-quote {
+  position: absolute;
+  left: 60px;
+  top: 178px;
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -1.6px;
+  white-space: nowrap;
+}
+
+/* Email (누르면 복사) */
+.ct-email {
+  position: absolute;
+  left: 60px;
+  top: 798px;
+}
+
+.ct-email__copy {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.ct-email__text {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -1.28px;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+
+.ct-email__copy img {
+  flex: none;
+  width: 23.333px;
+  height: 28.667px;
+  margin: 1.667px 4.333px;
+}
+
+/* 복사되면 나오는 안내는 흰 바탕이라 글자를 검정으로 */
+.ct-email__copy.copy-email::after {
+  left: calc(100% + 10px);
+  bottom: 6px;
+  font-size: 20px;
+  color: var(--black);
+}
+
+/* Form 종이 */
+.ct-form {
+  position: absolute;
+  left: 660px;
+  top: 720px;
+  width: 1201px;
+  height: 840px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ct-form__paper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1201px;
+  height: 840px;
+  max-width: none;
+}
+
+.ct-form__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 958px;
+}
+
+.ct-form__title {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -.4px;
+}
+
+.ct-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.ct-form__grid {
+  display: flex;
+  gap: 100px;
+}
+
+.ct-form__col {
+  flex: 1 0 0;
+  min-width: 1px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.ct-field {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  cursor: text;
+}
+
+.ct-field__label {
+  display: block;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -.4px;
+}
+
+/* 한 줄 입력칸: 아래 밑줄 */
+.ct-field__line {
+  display: block;
+  padding: 0 0 4px 8px;
+  border-bottom: 2px solid var(--black);
+}
+
+.ct-field input,
+.ct-field textarea {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -.48px;
+  color: var(--black);
+  caret-color: var(--black);
+}
+
+.ct-field input::placeholder,
+.ct-field textarea::placeholder {
+  color: #7e7d77;
+  opacity: 1;
+  transition: opacity .2s;
+}
+
+.ct-field input:focus::placeholder,
+.ct-field textarea:focus::placeholder {
+  opacity: .45;
+}
+
+/* 메시지: 줄이 네 개 그어진 칸. 글자가 줄 위에 얹히도록 줄 높이를 줄 간격(45px)에 맞춤 */
+.ct-field__lines {
+  display: block;
+}
+
+.ct-field textarea {
+  height: 180px;
+  line-height: 45px;
+  resize: none;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding-left: 8px;
+  /* 줄 네 개를 따로 그림 (반복 무늬로 그리면 화면 비율에 따라 맨 위에 줄이 하나 더 비쳐 보임) */
+  background:
+    linear-gradient(var(--black), var(--black)) 0 43px / 100% 2px no-repeat local,
+    linear-gradient(var(--black), var(--black)) 0 88px / 100% 2px no-repeat local,
+    linear-gradient(var(--black), var(--black)) 0 133px / 100% 2px no-repeat local,
+    linear-gradient(var(--black), var(--black)) 0 178px / 100% 2px no-repeat local;
+}
+
+.ct-field textarea::-webkit-scrollbar {
+  display: none;
+}
+
+/* 스팸 방지용 숨은 칸 (사람 눈에는 안 보이고, 봇이 채우면 스팸으로 처리됨) */
+.ct-botcheck {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 입력 오류·전송 결과 안내 */
+.ct-form__error {
+  position: absolute;
+  left: 0;
+  bottom: 14px;
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: -.36px;
+  color: var(--black);
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.ct-form__error.is-visible {
+  opacity: 1;
+}
+
+/* 칸 아래 오류 안내: 칸이 빨갛게 물들고, 아래에 느낌표와 함께 안내가 뜸 */
+.ct-field {
+  position: relative;
+}
+
+.ct-field__msg {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  margin-top: 8px;
+  display: none;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -.3px;
+  color: #e0383e;
+  white-space: nowrap;
+  filter: var(--grain-soft); /* 약한 지글거림 */
+}
+
+.ct-field__msg::before {
+  content: '!';
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #e0383e;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.ct-field.is-error .ct-field__msg {
+  display: flex;
+}
+
+.ct-field.is-error .ct-field__line {
+  border-bottom-color: #e0383e;
+}
+
+/* 다 쓴 칸: 글씨 뒤에 연두색 형광펜이 왼쪽에서 오른쪽으로 칠해짐 (길이는 contact.js 가 --hl-w 로 알려 줌) */
+.ct-field__line {
+  position: relative;
+}
+
+.ct-field__line::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 0;
+  top: -4px;
+  height: 43px;
+  width: calc(var(--hl-w, 0px) + 14px);
+  background: var(--lime);
+  transform: rotate(-.7deg);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path .45s ease, width .2s ease;
+  pointer-events: none;
+}
+
+.ct-field.is-done .ct-field__line::before {
+  clip-path: inset(0 0 0 0);
+}
+
+/* 형식에 맞게 쓴 칸: 초록 밑줄과 오른쪽 체크 표시, 아래에 OK */
+.ct-field.is-valid .ct-field__msg {
+  display: flex;
+  color: #1f9d55;
+}
+
+.ct-field.is-valid .ct-field__msg::before {
+  content: '✓';
+  background: #1f9d55;
+}
+
+.ct-field.is-valid .ct-field__line {
+  border-bottom-color: #1f9d55;
+}
+
+.ct-field.is-valid .ct-field__line::after {
+  content: '✓';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-top: -14px;
+  border-radius: 50%;
+  background: #1f9d55;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  pointer-events: none;
+}
+
+/*
+  메일 보내기
+  - 배경(연두색 + 흰 테두리)은 .ct-send__bg 에 따로 그려 둠
+  - 마우스를 올리면 오른쪽 아래 모서리가 긴 대각선으로 접힘: 잘려 나간 자리는 아래 종이가 그대로 보이고, 접혀 넘어온 부분(::after)은 회색
+  - 접히는 모양은 --fold-x(밑변을 따라 접히는 길이), --fold-y(오른쪽 변을 따라 접히는 길이)로 정함.
+    접혀 넘어온 부분의 꼭짓점은 접는 선을 기준으로 모서리를 뒤집은 위치(아래 ::after 의 숫자)
+  되돌리려면 이 블록과 contact.html 의 .ct-send__bg 를 지우고 .ct-send 에 배경과 테두리를 다시 주면 됨
+*/
+.ct-send {
+  --fold-x: 56px;
+  --fold-y: 20px;
+  position: relative;
+  isolation: isolate;
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 16px;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -.48px;
+  color: var(--black);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ct-send__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border: 4px solid var(--white);
+  background: var(--lime);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%, 0 100%);
+  transition: clip-path .3s ease;
+}
+
+.ct-send__label,
+.ct-send__arrow {
+  position: relative;
+  z-index: 2;
+}
+
+/* 접혀 넘어온 부분 (회색). 오른쪽 아래 모서리에서 0 → 1 배로 커지며 접힘 */
+.ct-send::after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  width: var(--fold-x);
+  height: calc(var(--fold-y) * 1.8);
+  background: linear-gradient(135deg, #d9d9d5, #a9a9a5);
+  /* 꼭짓점: 밑변 위의 접는 점 / 오른쪽 변 위의 접는 점 / 모서리를 접는 선 너머로 뒤집은 점 */
+  clip-path: polygon(0 100%, 100% calc(100% - var(--fold-y)), calc(100% - 12.7px) 0); /* 12.7px 은 56x20 일 때 뒤집힌 점의 위치 */
+  transform: scale(0);
+  transform-origin: 100% 100%;
+  transition: transform .3s ease;
+  pointer-events: none;
+}
+
+.ct-send:not(:disabled):hover::after,
+.ct-send:not(:disabled):focus-visible::after {
+  transform: scale(1);
+}
+
+.ct-send:not(:disabled):hover .ct-send__bg,
+.ct-send:not(:disabled):focus-visible .ct-send__bg {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fold-y)), calc(100% - var(--fold-x)) 100%, 0 100%);
+}
+
+.ct-send:disabled {
+  cursor: progress;
+  opacity: .7;
+}
+
+.ct-send:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
+}
+
+/* Footer (페이지 맨 아래 541px) */
+.ct-footer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ct-footer a {
+  pointer-events: auto;
+}
+
+.ct-footer__shape {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ct-footer__rot {
+  position: relative;
+  flex: none;
+}
+
+.ct-footer__rot img {
+  position: absolute;
+  left: -.13%;
+  top: -.1%;
+  width: 100.26%;
+  height: 100.2%;
+  max-width: none;
+}
+
+.ct-footer__shape-left {
+  left: -152px;
+  top: 1703.04px;
+  width: 1023.413px;
+  height: 1234.995px;
+}
+
+.ct-footer__shape-left .ct-footer__rot {
+  width: 922.056px;
+  height: 1155.886px;
+  transform: rotate(-5.22deg);
+}
+
+.ct-footer__shape-center {
+  left: 641px;
+  top: 1745.04px;
+  width: 918.87px;
+  height: 1126.061px;
+}
+
+.ct-footer__shape-center .ct-footer__rot {
+  width: 846.822px;
+  height: 1070px;
+  background: #1b1b1b;
+  transform: rotate(3.97deg);
+}
+
+.ct-footer__shape-right {
+  left: 1237px;
+  top: 1703.04px;
+  width: 1142.435px;
+  height: 1322.479px;
+}
+
+.ct-footer__shape-right .ct-footer__rot {
+  width: 922.056px;
+  height: 1155.886px;
+  transform: rotate(-12.01deg);
+}
+
+.ct-footer__menu {
+  position: absolute;
+  left: 1727px;
+  top: 1853.02px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: right;
+  white-space: nowrap;
+  color: #fdfdfd;
+}
+
+.ct-footer__menu p {
+  font-size: 16px;
+  color: #969696;
+}
+
+.ct-footer__brand-box {
+  position: absolute;
+  left: 80px;
+  top: 1853.38px;
+  width: 457.465px;
+  height: 189.925px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ct-footer__brand-rot {
+  flex: none;
+  transform: rotate(-5.22deg);
+}
+
+.ct-footer__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 445.666px;
+}
+
+/* 이름 + 슬로건 */
+.ct-footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.ct-footer__name {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.ct-footer__name p {
+  font-size: 91.913px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -5.5148px;
+  color: var(--lime);
+  white-space: nowrap;
+}
+
+.ct-footer__name p:first-child {
+  margin-right: -2.44px;
+}
+
+.ct-footer__name img {
+  flex: none;
+  width: 97.428px;
+  height: 80.271px;
+  margin-right: -7.321px;
+}
+
+.ct-footer__slogan {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.56px;
+  color: #fdfdfd;
+}
+
+/* "Let's talk →" + 이메일 */
+.ct-footer__contact {
+  position: relative;
+  top: 6px;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+  white-space: nowrap;
+}
+
+.ct-footer__talk {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -1.08px;
+  color: #fdfdfd;
+}
+
+.ct-footer__mail {
+  display: block;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: .9;
+  letter-spacing: -1.2px;
+  color: var(--lime);
+  white-space: nowrap;
+}
+
+/* Paper texture overlay */
+.paper {
+  position: absolute;
+  left: -39px;
+  top: -42px;
+  width: 2008px;
+  height: 5678px;
+  opacity: .35;
+  background: url(assets/paper.png) top left/480px 480px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 문구가 비어 있으면 (OK 를 지운 뒤) 아이콘도 같이 숨김 */
+.ct-field .ct-field__msg:empty {
+  display: none;
+}

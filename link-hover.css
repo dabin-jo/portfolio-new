@@ -24,13 +24,16 @@
 .pd-footer__menu .hover-host:hover,
 .site-footer__menu .hover-host:hover,
 .pd-footer__mail.hover-host:hover,
-.site-footer__mail.hover-host:hover {
+.site-footer__mail.hover-host:hover,
+.ct-footer__menu .hover-host:hover,
+.ct-footer__mail.hover-host:hover {
   color: var(--black, #0c0c0c);
 }
 
 /* 푸터 이메일은 글자 줄 높이가 낮아서, 형광펜을 위아래로 더 두껍게 */
 .site-footer__mail .hover-highlight,
-.pd-footer__mail .hover-highlight {
+.pd-footer__mail .hover-highlight,
+.ct-footer__mail .hover-highlight {
   top: -7px;
   bottom: -6px;
 }

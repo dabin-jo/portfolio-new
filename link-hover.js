@@ -59,4 +59,4 @@ function setupLinkHover(link) {
   });
 }
 
-document.querySelectorAll('.header__menu a, .pd-footer__menu a, .site-footer__menu a, .pd-footer__mail, .site-footer__mail').forEach(setupLinkHover);
+document.querySelectorAll('.header__menu a, .pd-footer__menu a, .site-footer__menu a, .pd-footer__mail, .site-footer__mail, .ct-footer__menu a, .ct-footer__mail').forEach(setupLinkHover);
