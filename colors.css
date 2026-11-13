@@ -1,0 +1,11 @@
+/*
+  사이트 공통 색 (피그마 color 스타일과 같음)
+  모든 페이지가 이 파일을 가장 먼저 불러와서 var(--black) 처럼 가져다 씀. 색을 바꾸려면 여기만 고치면 됨.
+  (assets 안의 svg 도형 색은 파일 안에 들어 있어서 따로 바꿔야 함)
+*/
+:root {
+  --black: #0c0c0c;
+  --white: #fdfdfd;
+  --cream: #e0dfd7;
+  --green: #e5ff7f;
+}

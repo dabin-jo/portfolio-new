@@ -13,7 +13,7 @@
   right: -6px;
   top: 4%;
   bottom: 6%;
-  background: #e5ff7f;
+  background: var(--green);
   z-index: -1; /* 글자 뒤로 */
   pointer-events: none;
   transform: scaleX(0);
@@ -27,7 +27,7 @@
 .site-footer__mail.hover-host:hover,
 .ct-footer__menu .hover-host:hover,
 .ct-footer__mail.hover-host:hover {
-  color: var(--black, #0c0c0c);
+  color: var(--black);
 }
 
 /* 푸터 이메일은 글자 줄 높이가 낮아서, 형광펜을 위아래로 더 두껍게 */
@@ -43,4 +43,9 @@
 .pd-footer__contact {
   position: relative;
   top: 6px;
+}
+
+/* 이전 / 다음 프로젝트 링크는 이미 absolute 로 놓여 있으니, 형광펜 기준점(relative)이 위치를 덮어쓰지 않게 */
+.pd-move.hover-host {
+  position: absolute;
 }

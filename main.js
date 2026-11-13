@@ -88,7 +88,7 @@ new ResizeObserver(() => {
    1단계: 철학 문장이 회색에서 검정으로 (스크롤)
    -------------------------------------------------------------------------- */
 const TEXT_GRAY = '#efefef';
-const TEXT_BLACK = '#0c0c0c';
+const TEXT_BLACK = getComputedStyle(document.documentElement).getPropertyValue('--black').trim() || '#0c0c0c'; /* colors.css 의 --black */
 
 /* 글자 하나하나를 <span class="char">로 감쌈 (공백은 그대로 둠) */
 function splitChars(el) {
@@ -615,7 +615,7 @@ function initTapePeel() {
   const droop = () => {
     const n = removed.size;
     gsap.to(photo, {
-      rotation: n === 0 ? -8.35 : n === 1 ? -11.3 : -16.3,
+      rotation: n === 0 ? -8.72 : n === 1 ? -11.7 : -16.7,
       y: n === 0 ? 0 : n === 1 ? 4 : 22,
       transformOrigin: n === 1 ? '50% 0%' : '50% 12%',
       duration: 0.9,

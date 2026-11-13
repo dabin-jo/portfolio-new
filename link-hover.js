@@ -2,7 +2,7 @@
 
 /*
   링크 호버 형광펜
-  - 헤더 메뉴, 푸터 메뉴(Project, About Me, Contact, Home …), 푸터 이메일에 마우스를 올리면
+  - 헤더 메뉴, 푸터 메뉴(Project, About Me, Contact, Home …), 푸터 이메일, 이전/다음 프로젝트 링크에 마우스를 올리면
     글자 뒤에 연두색 사각 형광펜이 왼쪽에서 오른쪽으로 칠해지고, 호버할 때마다 무작위로 살짝 기울어짐
   - 마우스를 내리면 왼쪽부터 지워지며 걷힘
   - 어두운 배경(푸터, 프로젝트 페이지 위의 흰색 헤더)에서는 글자색이 검정으로 바뀜 (link-hover.css)
@@ -59,4 +59,4 @@ function setupLinkHover(link) {
   });
 }
 
-document.querySelectorAll('.header__menu a, .pd-footer__menu a, .site-footer__menu a, .pd-footer__mail, .site-footer__mail, .ct-footer__menu a, .ct-footer__mail').forEach(setupLinkHover);
+document.querySelectorAll('.header__menu a, .pd-footer__menu a, .site-footer__menu a, .pd-footer__mail, .site-footer__mail, .ct-footer__menu a, .ct-footer__mail, .pd-move').forEach(setupLinkHover);

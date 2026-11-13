@@ -13,7 +13,7 @@
   font-weight: 400;
   letter-spacing: -.3px;
   line-height: 1;
-  color: #fdfdfd;
+  color: var(--white);
   white-space: nowrap;
   opacity: 0;
   transform: translateY(4px);

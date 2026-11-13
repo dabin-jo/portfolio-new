@@ -19,7 +19,7 @@
 /* pathLength=1 로 길이를 1 로 맞춰 둠. offset 1 = 안 보임, 0 = 다 칠해짐, -1 = 다 걷힘 */
 .transition__path {
   fill: none;
-  stroke: #e5ff7f;
+  stroke: var(--green);
   stroke-width: 290;
   stroke-linecap: round;
   stroke-linejoin: round;

@@ -80,7 +80,7 @@
 /* 마우스로 드래그해서 글자를 선택했을 때의 색 (기본 파란색 대신 회색) */
 ::selection {
   background: #dedede;
-  color: #0c0c0c;
+  color: var(--black);
 }
 
 /* 스크롤바 숨기기 (스크롤은 그대로 됨). 되돌리려면 이 블록(html { ... } 두 개)을 지우면 됨 */
@@ -93,8 +93,6 @@ html::-webkit-scrollbar {
 }
 
 :root {
-  --white: #fdfdfd;
-  --black: #0c0c0c;
   /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
   --grain: url(assets/filters.svg?v=26#grain);
   --grain-soft: url(assets/filters.svg?v=26#grain-soft);
@@ -108,12 +106,12 @@ html::-webkit-scrollbar {
 
 html,
 body {
-  background: #fdfdfd;
+  background: var(--white);
 }
 
 body {
   font-family: 'A2z', 'Pretendard', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
-  color: #0c0c0c;
+  color: var(--black);
 }
 
 img {
@@ -150,7 +148,7 @@ a {
   width: 1920px;
   height: 3120px;
   overflow: hidden;
-  background: #fdfdfd;
+  background: var(--white);
   transform-origin: 0 0;
 }
 
@@ -161,7 +159,7 @@ a {
   top: 0;
   width: 1920px;
   height: 2040px;
-  background: #fdfdfd;
+  background: var(--white);
   z-index: 2;
 }
 
@@ -198,7 +196,7 @@ a {
 .fold-flap {
   position: absolute;
   inset: 0;
-  background: #e5ff7f;
+  background: var(--green);
   pointer-events: auto;
   cursor: grab;
   touch-action: none;
@@ -462,7 +460,7 @@ a {
   right: -12px;
   top: 8px;
   bottom: 4px;
-  background: #e5ff7f;
+  background: var(--green);
   mix-blend-mode: multiply;
   transform-origin: left center;
   transform: scaleX(0);
@@ -511,7 +509,7 @@ a {
   top: 3px;
   bottom: 1px;
   z-index: -1;
-  background: #e5ff7f;
+  background: var(--green);
   mix-blend-mode: multiply;
   transform-origin: left center;
   transform: scaleX(var(--hl));
@@ -562,7 +560,7 @@ a {
   top: 2040px;
   width: 1920px;
   height: 2640px; /* About Me 와 푸터까지 이어지는 검은 배경 (디자인 높이 2640) */
-  background: #0c0c0c;
+  background: var(--black);
 }
 
 .project-title {
@@ -584,7 +582,7 @@ a {
   align-items: center;
   justify-content: center;
   padding: 2px 10px;
-  border: 1px solid #fdfdfd;
+  border: 1px solid var(--white);
   border-radius: 20px;
 }
 
@@ -595,7 +593,7 @@ a {
   line-height: 1.5;
   letter-spacing: -.8px;
   text-align: center;
-  color: #fdfdfd;
+  color: var(--white);
 }
 
 .project-num-01 {
@@ -857,7 +855,7 @@ a {
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: #0c0c0c;
+  background: var(--black);
 }
 
 .after.is-visible {
@@ -893,7 +891,7 @@ a {
   font-size: 52px;
   font-weight: 300;
   line-height: 1;
-  color: #0c0c0c;
+  color: var(--black);
 }
 
 .about-head .about-sub {
@@ -901,7 +899,7 @@ a {
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -.8px;
-  color: #0c0c0c;
+  color: var(--black);
 }
 
 /* 뒤에 깔린 종이 두 장: 왼쪽 흰 종이(제목이 놓임), 오른쪽 크림색 노트 종이(이력 표가 놓임) */
@@ -944,32 +942,32 @@ a {
 }
 
 .about-paper-note {
-  left: 465.07px;
-  top: 3158.81px;
-  width: 1845.862px;
-  height: 1412.985px;
+  left: 488.54px;
+  top: 3158.2px;
+  width: 1823.916px;
+  height: 1197.127px;
 }
 
 .about-paper-note .about-paper__rot {
   width: 1728.672px;
-  height: 1244.203px;
+  height: 1027.128px;
   transform: rotate(5.82deg);
 }
 
 .about-paper-note .about-paper__rot img {
   left: 0;
-  top: 0;
+  top: -.12%;
   width: 100%;
-  height: 100%;
+  height: 100.24%;
 }
 
 /* 사진 자리 (회색 박스, 나중에 사진을 넣을 곳) */
 .about-photo {
   position: absolute;
-  left: 108.23px;
-  top: 3436.56px;
-  width: 240.497px;
-  height: 294.095px;
+  left: 113px;
+  top: 3426px;
+  width: 251.251px;
+  height: 285.601px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -977,10 +975,10 @@ a {
 
 .about-photo__img {
   flex: none;
-  width: 203.839px;
-  height: 267.329px;
+  width: 214.94px;
+  height: 255.983px;
   background: #d9d9d9;
-  transform: rotate(-8.35deg);
+  transform: rotate(-8.72deg);
 }
 
 .about-photo__img img {
@@ -1010,8 +1008,8 @@ a {
 }
 
 .about-tape-top {
-  left: 89.63px;
-  top: 3407.24px;
+  left: 93px;
+  top: 3407px;
   width: 266.57px;
   height: 85.288px;
 }
@@ -1030,8 +1028,8 @@ a {
 }
 
 .about-tape-bottom {
-  left: 164.7px;
-  top: 3679.41px;
+  left: 172px;
+  top: 3663px;
   width: 212.397px;
   height: 68.302px;
 }
@@ -1058,7 +1056,7 @@ a {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  color: #0c0c0c;
+  color: var(--black);
   line-height: 1.5;
   filter: var(--grain-soft);
 }
@@ -1069,7 +1067,7 @@ a {
   gap: 160px;
   width: 100%;
   padding-bottom: 8px;
-  border-bottom: 1px solid #0c0c0c;
+  border-bottom: 1px solid var(--black);
 }
 
 .about-label {
@@ -1227,7 +1225,7 @@ a {
   line-height: 1.5;
   text-align: right;
   white-space: nowrap;
-  color: #fdfdfd;
+  color: var(--white);
 }
 
 .site-footer__menu p {
@@ -1276,7 +1274,7 @@ a {
   font-weight: 700;
   line-height: .9;
   letter-spacing: -5.5148px;
-  color: #e5ff7f;
+  color: var(--green);
   white-space: nowrap;
 }
 
@@ -1296,7 +1294,7 @@ a {
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -.56px;
-  color: #fdfdfd;
+  color: var(--white);
 }
 
 .site-footer__contact {
@@ -1312,7 +1310,7 @@ a {
   font-weight: 400;
   line-height: .9;
   letter-spacing: -1.08px;
-  color: #fdfdfd;
+  color: var(--white);
 }
 
 .site-footer__mail {
@@ -1321,7 +1319,7 @@ a {
   font-weight: 400;
   line-height: .9;
   letter-spacing: -1.44px;
-  color: #e5ff7f;
+  color: var(--green);
   white-space: nowrap;
 }
 
@@ -1342,7 +1340,7 @@ a {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #0c0c0c;
+  background: var(--black);
   transform: translateY(-50%);
 }
 
@@ -1382,6 +1380,6 @@ a {
 .about-table ::selection,
 .about-head::selection,
 .about-table::selection {
-  background: #0c0c0c;
-  color: #fdfdfd;
+  background: var(--black);
+  color: var(--white);
 }

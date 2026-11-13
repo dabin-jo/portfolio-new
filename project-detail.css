@@ -21,19 +21,16 @@
 }
 
 :root {
-  --white: #fdfdfd;
-  --black: #0c0c0c;
   /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
   --grain: url(assets/filters.svg?v=26#grain);
   --grain-soft: url(assets/filters.svg?v=26#grain-soft);
-  --lime: #e5ff7f;
 }
 
 /* Base */
 /* 마우스로 드래그해서 글자를 선택했을 때의 색 (기본 파란색 대신 회색) */
 ::selection {
   background: #dedede;
-  color: #0c0c0c;
+  color: var(--black);
 }
 
 /* 스크롤바 숨기기 (스크롤은 그대로 됨). 되돌리려면 이 블록(html { ... } 두 개)을 지우면 됨 */
@@ -218,7 +215,7 @@ a {
   top: 632.02px;
   width: 150px;
   height: 56px;
-  background: var(--lime);
+  background: var(--green);
   clip-path: polygon(0 47.98px, 136.5px 27.75px, 150px 26px, 150px 56px, 0 56px);
 }
 
@@ -335,7 +332,7 @@ a {
 */
 .pd-bold {
   --hl: 0;
-  background: linear-gradient(var(--lime), var(--lime)) no-repeat left center / calc(var(--hl) * 100%) 100%;
+  background: linear-gradient(var(--green), var(--green)) no-repeat left center / calc(var(--hl) * 100%) 100%;
 }
 
 /* Info */
@@ -383,7 +380,7 @@ a {
   align-items: center;
   justify-content: center;
   padding: 4px 14px;
-  background: var(--lime);
+  background: var(--green);
   letter-spacing: -.64px;
   white-space: nowrap;
 }
@@ -426,7 +423,7 @@ a {
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 300;
   line-height: 1.5;
   white-space: nowrap;
@@ -525,7 +522,7 @@ a {
   line-height: 1.5;
   text-align: right;
   white-space: nowrap;
-  color: #fdfdfd;
+  color: var(--white);
 }
 
 .pd-footer__menu p {
@@ -575,7 +572,7 @@ a {
   font-weight: 700;
   line-height: .9;
   letter-spacing: -5.5148px;
-  color: var(--lime);
+  color: var(--green);
   white-space: nowrap;
 }
 
@@ -595,7 +592,7 @@ a {
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: -.56px;
-  color: #fdfdfd;
+  color: var(--white);
 }
 
 /* "Let's talk →" + 이메일 */
@@ -612,7 +609,7 @@ a {
   font-weight: 400;
   line-height: .9;
   letter-spacing: -1.08px;
-  color: #fdfdfd;
+  color: var(--white);
 }
 
 .pd-footer__mail {
@@ -621,7 +618,7 @@ a {
   font-weight: 400;
   line-height: .9;
   letter-spacing: -1.44px;
-  color: var(--lime);
+  color: var(--green);
   white-space: nowrap;
 }
 
