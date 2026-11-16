@@ -416,6 +416,31 @@ a {
   background: #d9d9d9;
 }
 
+/*
+  Details 에 이미지가 들어간 칸: 그림은 그대로 두고 가장자리만 자글자글하게 (메인 이미지와 같은 방식).
+  칸을 사방 6px 키우고, 같은 모양의 찌그러진 사각형(SVG)을 마스크로 씌워 오려 냄. 칸 크기(856x480)를 바꾸면 마스크 숫자도 바꿔야 함.
+*/
+.pd-details__item.has-image {
+  position: relative;
+  background: none;
+}
+
+.pd-details__art {
+  position: absolute;
+  inset: -6px;
+  padding: 6px;
+  background: #d9d9d9 content-box;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22868%22%20height%3D%22492%22%20viewBox%3D%220%200%20868%20492%22%3E%3Cfilter%20id%3D%22g%22%20filterUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%22868%22%20height%3D%22492%22%20color-interpolation-filters%3D%22sRGB%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.1348%22%20numOctaves%3D%223%22%20seed%3D%223146%22%20result%3D%22n%22%2F%3E%3CfeDisplacementMap%20in%3D%22SourceGraphic%22%20in2%3D%22n%22%20scale%3D%222.4059%22%20xChannelSelector%3D%22R%22%20yChannelSelector%3D%22G%22%2F%3E%3C%2Ffilter%3E%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%22856%22%20height%3D%22480%22%20fill%3D%22%23000%22%20filter%3D%22url%28%23g%29%22%2F%3E%3C%2Fsvg%3E") center / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22868%22%20height%3D%22492%22%20viewBox%3D%220%200%20868%20492%22%3E%3Cfilter%20id%3D%22g%22%20filterUnits%3D%22userSpaceOnUse%22%20x%3D%220%22%20y%3D%220%22%20width%3D%22868%22%20height%3D%22492%22%20color-interpolation-filters%3D%22sRGB%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.1348%22%20numOctaves%3D%223%22%20seed%3D%223146%22%20result%3D%22n%22%2F%3E%3CfeDisplacementMap%20in%3D%22SourceGraphic%22%20in2%3D%22n%22%20scale%3D%222.4059%22%20xChannelSelector%3D%22R%22%20yChannelSelector%3D%22G%22%2F%3E%3C%2Ffilter%3E%3Crect%20x%3D%226%22%20y%3D%226%22%20width%3D%22856%22%20height%3D%22480%22%20fill%3D%22%23000%22%20filter%3D%22url%28%23g%29%22%2F%3E%3C%2Fsvg%3E") center / 100% 100% no-repeat;
+}
+
+.pd-details__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* 이전 / 다음 프로젝트 */
 .pd-move {
   position: absolute;
@@ -711,4 +736,48 @@ a {
 .pd-move,
 .pd-footer {
   transform: translateY(var(--shift-below, 0px));
+}
+
+/*
+  이미지 둘레의 얇은 외곽선: 흰 바탕과 흰 이미지가 맞닿아 경계가 안 보이므로 연한 회색 선을 안쪽 가장자리에 둘러 줌.
+  이미지와 같은 마스크 안에 있어서 가장자리와 같이 자글자글해짐. 두께는 box-shadow 의 1.5px
+*/
+.pd-visual__image::before,
+.pd-details__art::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  box-shadow: inset 0 0 0 1.5px var(--line);
+  pointer-events: none;
+}
+
+/* 확대 보기: 이미지를 누르면 확대/축소. 확대하면 프레임 밖은 잘림 */
+.lightbox__frame {
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.lightbox__frame.is-zoomed {
+  cursor: grab; /* 확대된 동안: 잡고 끌어서 둘러봄, 가만히 누르면 축소 */
+  touch-action: none;
+}
+
+.lightbox__frame.is-dragging {
+  cursor: grabbing;
+}
+
+
+/* 확대 보기: 끌어도 이미지가 딸려 나오거나 선택되지 않음 */
+.lightbox,
+.lightbox__frame,
+.lightbox__frame img {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 닫기 X: 어두운 배경 위에서는 흰색, 흰 이미지 위에서는 검정으로 저절로 뒤집힘 (색 반전 블렌드) */
+.lightbox__close {
+  mix-blend-mode: difference;
+  z-index: 2;
 }

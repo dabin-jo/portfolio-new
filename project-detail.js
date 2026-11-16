@@ -77,19 +77,92 @@ document.body.append(lightbox);
 const lightboxFrame = lightbox.querySelector('.lightbox__frame');
 let lightboxOpen = false;
 
+/*
+  확대 보기 안의 이미지를 누르면 화면보다 크게 확대되고, 다시 누르면 원래 크기로 줄어듦
+  - 확대된 이미지는 화면 밖으로 넘치게 커짐. 마우스로 잡고 끌면 안 보이는 부분을 볼 수 있음 (가장자리 밖으로는 못 감)
+  - 거의 안 움직이고 놓으면 클릭으로 봐서 확대/축소
+*/
+const LIGHTBOX_OVERFLOW = 1.4; /* 확대되면 이미지 가로가 화면 가로의 이 배수가 됨 (1 이면 가로가 딱 맞음) */
+let lightboxZoomed = false;
+let lightboxScale = 1;
+let lightboxBase = { w: 0, h: 0 }; /* 확대 전 틀 크기 */
+
+function lightboxLimit() {
+  /* 이미지가 화면을 항상 덮도록, 가운데에서 움직일 수 있는 최대 거리 */
+  return {
+    x: Math.max(0, (lightboxBase.w * lightboxScale - window.innerWidth) / 2),
+    y: Math.max(0, (lightboxBase.h * lightboxScale - window.innerHeight) / 2),
+  };
+}
+
+function setLightboxZoom(on) {
+  lightboxZoomed = on;
+  lightboxFrame.classList.toggle('is-zoomed', on);
+  if (on) {
+    lightboxBase = { w: lightboxFrame.offsetWidth, h: lightboxFrame.offsetHeight };
+    lightboxScale = (window.innerWidth * LIGHTBOX_OVERFLOW) / lightboxBase.w;
+  } else {
+    lightboxScale = 1;
+  }
+  gsap.to(lightboxFrame, { scale: lightboxScale, x: 0, y: 0, duration: 0.8, ease: 'power2.inOut', overwrite: 'auto' }); /* 천천히 시작해서 천천히 멈춤 */
+}
+
+let lightboxPress = null;
+/* 이미지가 브라우저 기본 '끌어서 빼내기'로 딸려 나가거나 글자·그림이 선택되지 않게 */
+lightbox.addEventListener('dragstart', (e) => e.preventDefault());
+lightbox.addEventListener('selectstart', (e) => e.preventDefault());
+lightboxFrame.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  lightboxPress = { x: e.clientX, y: e.clientY, fx: gsap.getProperty(lightboxFrame, 'x'), fy: gsap.getProperty(lightboxFrame, 'y'), moved: 0 };
+  lightboxFrame.setPointerCapture(e.pointerId);
+  if (lightboxZoomed) gsap.killTweensOf(lightboxFrame, 'x,y');
+});
+lightboxFrame.addEventListener('pointermove', (e) => {
+  if (!lightboxPress) return;
+  const dx = e.clientX - lightboxPress.x;
+  const dy = e.clientY - lightboxPress.y;
+  lightboxPress.moved = Math.max(lightboxPress.moved, Math.hypot(dx, dy));
+  if (!lightboxZoomed || lightboxPress.moved < 6) return;
+  const lim = lightboxLimit();
+  lightboxFrame.classList.add('is-dragging');
+  gsap.set(lightboxFrame, {
+    x: Math.max(-lim.x, Math.min(lim.x, lightboxPress.fx + dx)),
+    y: Math.max(-lim.y, Math.min(lim.y, lightboxPress.fy + dy)),
+  });
+});
+const endLightboxPress = (e) => {
+  if (!lightboxPress) return;
+  const clicked = lightboxPress.moved < 6;
+  lightboxPress = null;
+  lightboxFrame.classList.remove('is-dragging');
+  if (lightboxFrame.hasPointerCapture(e.pointerId)) lightboxFrame.releasePointerCapture(e.pointerId);
+  if (clicked && e.type === 'pointerup') setLightboxZoom(!lightboxZoomed);
+};
+lightboxFrame.addEventListener('pointerup', endLightboxPress);
+lightboxFrame.addEventListener('pointercancel', endLightboxPress);
+window.addEventListener('resize', () => {
+  if (lightboxZoomed) setLightboxZoom(true);
+});
+
 function openLightbox(item) {
   const img = item.querySelector('img');
   lightboxFrame.replaceChildren();
+  lightboxZoomed = false;
+  lightboxFrame.classList.remove('is-zoomed');
   if (img) {
     const big = new Image();
     big.src = img.currentSrc || img.src;
     big.alt = img.alt;
+    big.draggable = false;
     lightboxFrame.append(big);
   }
   lightboxOpen = true;
   lightbox.classList.add('is-open');
   gsap.fromTo(lightbox, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power1.out' });
-  gsap.fromTo(lightboxFrame, { scale: 0.92, y: 20 }, { scale: 1, y: 0, duration: 0.4, ease: 'power3.out' });
+  lightboxScale = 1;
+  gsap.killTweensOf(lightboxFrame);
+  /* 이전에 확대하거나 끌어서 옮겨 둔 위치(x, y)가 남아 있지 않게 매번 정가운데에서 시작 */
+  gsap.fromTo(lightboxFrame, { scale: 0.92, x: 0, y: 20 }, { scale: 1, x: 0, y: 0, duration: 0.4, ease: 'power3.out' });
 }
 
 function closeLightbox() {
@@ -99,7 +172,13 @@ function closeLightbox() {
     opacity: 0,
     duration: 0.2,
     ease: 'power1.in',
-    onComplete: () => lightbox.classList.remove('is-open'),
+    onComplete: () => {
+      lightbox.classList.remove('is-open');
+      gsap.set(lightboxFrame, { scale: 1, x: 0, y: 0 }); /* 닫을 때 확대·이동 상태를 지움 */
+      lightboxScale = 1;
+      lightboxZoomed = false;
+      lightboxFrame.classList.remove('is-zoomed');
+    },
   });
 }
 
@@ -219,6 +298,7 @@ function initDetailsSlider() {
   - tags  : 제목 아래 작은 분류 (없으면 HTML 기본값)
   - overview : Overview 설명 (문단 2개: 프로젝트 소개 / 배운 점). **이렇게 감싼 부분**은 <span class="pd-bold"> 로 분리됨 (굵기는 그대로. 형광펜 인터랙션을 붙일 자리)
   - info     : Info 표 (Period, Team, Role, Contribution, Tools, Link)
+  - details : Details 가로 목록에 들어갈 이미지 경로들 (없으면 회색 상자 3개가 그대로 보임)
   - image : 맨 위 큰 이미지 경로 (파일이 아직 없으면 기본 이미지가 그대로 보임)
   이미지는 assets/pdf/main-번호.jpg 로 넣으면 바로 나옴 (Kooksoondang 은 지금 쓰는 01.jpg 유지)
 */
@@ -275,7 +355,8 @@ const PROJECTS = {
   '04': {
     title: '소소복담',
     tags: ['Branding Design', 'Graphic Design'],
-    image: 'assets/pdf/main-04.jpg',
+    image: 'assets/pdf/sosobokdam/01.jpg', /* 맨 위 큰 이미지 */
+    details: ['assets/pdf/sosobokdam/01.jpg', 'assets/pdf/sosobokdam/02.jpg', 'assets/pdf/sosobokdam/03.jpg', 'assets/pdf/sosobokdam/04.jpg', 'assets/pdf/sosobokdam/05.jpg', 'assets/pdf/sosobokdam/06.jpg', 'assets/pdf/sosobokdam/07.jpg', 'assets/pdf/sosobokdam/08.jpg', 'assets/pdf/sosobokdam/09.jpg', 'assets/pdf/sosobokdam/10.jpg'], /* Details 가로 목록 (01 은 표지와 같은 이미지) */
     overview: [
       '소소복담은 **영양 결핍을 겪고 있는 GG세대를 위해 기획한 건강 도시락 브랜드**입니다. 몸이 불편하거나 밖에 나가기 어려운 분들이 식사를 준비하는 수고를 조금이라도 덜고 집에서 편하게 건강을 챙길 수 있었으면 하는 마음에서, 도시락이 소포처럼 집으로 찾아간다는 콘셉트를 정하게 되었습니다. \'소소한 복을 담다\'라는 의미로 이름을 짓고, 로고에는 집 모양과 수저를 더해 따뜻한 집밥의 느낌을 표현했습니다. 안내책자에는 영양소가 부족할 때 나타나는 증상과 간단하게 해 먹을 수 있는 레시피 5가지, 지역 무료급식소와 급식 지원 사업, 자가진단서까지 실생활에 도움이 될 수 있는 내용을 담았습니다.',
       '이번 프로젝트는 **브랜드의 기획부터 실행까지 전 과정을 처음으로 진행해 본 작업**이었습니다. 작업 기간이 길어지면서 처음 정했던 방향에서 조금씩 벗어나는 순간들이 생겼습니다. 그럴 때마다 다시 기획 단계로 돌아가 확인하면서, **처음의 의도를 끝까지 유지하는 것이 생각보다 훨씬 중요하다는 것**을 알게 되었습니다. 또한 기획한 내용을 디자인으로 옮기며 일부 아이디어를 덜어내게 되었는데, 이 과정에서 **기획 단계부터 실제로 구현할 수 있는지를 함께 고민해야 한다는 것**도 배울 수 있었습니다.',
@@ -469,6 +550,27 @@ function initProjectTitle() {
       photo.src = project.image;
     };
     probe.src = project.image;
+  }
+
+  /* Details 이미지: 가로로 넘기는 목록에 이미지를 순서대로 넣음 (슬라이더는 이 뒤에 만들어져서 개수에 맞춰짐) */
+  if (project.details && project.details.length) {
+    const track = document.getElementById('detailsTrack');
+    track.replaceChildren(
+      ...project.details.map((src, i) => {
+        const item = document.createElement('div');
+        item.className = 'pd-details__item has-image';
+        const art = document.createElement('div');
+        art.className = 'pd-details__art';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = project.title + ' ' + String(i + 1).padStart(2, '0');
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        art.append(img);
+        item.append(art);
+        return item;
+      })
+    );
   }
 
   /* 제목 아래 작은 분류: 항목 사이에 · 를 끼워 넣음. tags 가 없으면(Kooksoondang) HTML 기본값 유지 */

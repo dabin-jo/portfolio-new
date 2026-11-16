@@ -1424,7 +1424,7 @@ a {
 
 .about-sticker-bubble {
   left: 1617.833px;
-  top: 3907.134px;
+  top: 4012px; /* 피그마 3907: 표 아래 줄 밑의 빈 종이 자리로 105px 내림 */
   width: 220.126px;
   height: 180.48px;
 }
@@ -1487,4 +1487,12 @@ a {
   background: var(--green-on-cream); /* 곱하기(multiply)로 섞은 색. 종이 색(--cream)과 --green 을 곱한 값 */
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
+}
+
+
+/* 테이프·스티커의 반응 영역을 사방으로 14px 넓힘: 마우스가 가장자리에서 조금 벗어나도 올려 둔 걸로 인식됨 */
+.about-tape::before {
+  content: '';
+  position: absolute;
+  inset: -14px;
 }

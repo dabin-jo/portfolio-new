@@ -546,7 +546,7 @@ const ABOUT_SWAY_RADIUS = 1100; /* 이 거리(디자인 px) 안으로 마우스�
 const ABOUT_SWAY_ROTATE = 1.6; /* 가장 세게 기울어질 때 각도(deg) */
 const ABOUT_SWAY_PIVOT_Y = 4450; /* 흔들림의 축 높이 (디자인 y) */
 const ABOUT_SWAY_BASE_Y = 3900; /* 마우스와의 거리를 재는 기준 높이 (디자인 y) */
-const STICKERS_FOLLOW_PAPER = false; /* true: 스티커가 크림색 종이와 함께 흔들림. 별로면 false 로 */
+const STICKERS_FOLLOW_PAPER = true; /* true: 스티커가 크림색 종이와 함께 흔들림. 별로면 false 로 */
 
 function initAboutSway() {
   const papers = [...afterStage.querySelectorAll('.about-paper')];
@@ -624,6 +624,21 @@ function initAboutSway() {
   되돌리려면 이 함수와 initScrollAnimations 안의 호출, style.css 의 .about-tape 설정을 지우면 됨
 */
 const STICKER_RETURN_MS = 5000; /* 스티커를 뗀 뒤 이 시간(ms)이 지나면 저절로 다시 붙음 */
+const STICKER_HOVER_LIFT = 44; /* 테이프·스티커에 마우스를 올리면 가까운 모서리가 이만큼(캔버스 px) 살짝 벗겨져 들림 */
+/* 마우스를 올렸을 때 들뜨는 모서리 (화면에서 보이는 기준: tl 왼쪽 위, tr 오른쪽 위, bl 왼쪽 아래, br 오른쪽 아래) */
+const HOVER_CORNER = {
+  'about-sticker-cursor': 'tr', /* 화살표 끝이 있는 쪽 */
+  'about-sticker-bubble': 'br', /* 말풍선 꼬리가 있는 쪽 */
+  'about-tape-top': 'tr',
+  'about-tape-bottom': 'br',
+};
+/* 들뜨는 크기를 따로 주고 싶은 것 (그림 모양 때문에 모서리가 많이 비어 있어서 더 깊이 접어야 보이는 경우) */
+const HOVER_LIFT = {
+  'about-sticker-bubble': 120,
+};
+const HOVER_LIFT_TIME = 0.3; /* 마우스를 올렸을 때 모서리가 말려 올라가는 데 걸리는 시간(초) */
+const HOVER_DROP_TIME = 0.7; /* 마우스를 치웠을 때 다시 붙는 데 걸리는 시간(초) */
+const HOVER_LEAVE_DELAY = 100; /* 마우스가 벗어난 뒤 이 시간(ms)이 지나야 붙음 */
 const CLICK_SLOP = 6; /* 이 거리(캔버스 px)보다 적게 움직이고 놓으면 그냥 클릭으로 봄 */
 const FOLD_LIMIT = 60; /* 모서리가 이만큼(캔버스 px) 이상 끌려 오면 놓았을 때 떨어져 나감 */
 
@@ -727,16 +742,88 @@ function initTapePeel() {
       };
     };
 
+    /* 테이프와 스티커: 마우스를 올리면 가까운 모서리가 살짝 벗겨져 들림 (뗄 수 있다는 표시) */
+    let hoverCorner = null;
+    let leaveTimer = 0;
+    let base = { x: 0, y: 0 }; /* 집기 전에 이미 들려 있던 만큼 */
+    /* 정해 둔 모서리(화면 기준)에 해당하는 본체 모서리: 회전·좌우 뒤집힘이 있어도 화면에서 그 방향에 가장 가까운 모서리를 고름 */
+    const fixedCorner = () => {
+      const key = Object.keys(HOVER_CORNER).find((k) => tape.classList.contains(k));
+      const want = key ? HOVER_CORNER[key] : 'tr';
+      const sx = want.includes('r') ? 1 : -1;
+      const sy = want.includes('b') ? 1 : -1;
+      const L = bodyLinear();
+      return rect.reduce((best, c) => {
+        const score = (q) => (L.a * (q.x - W / 2) + L.c * (q.y - H / 2)) * sx + (L.b * (q.x - W / 2) + L.d * (q.y - H / 2)) * sy;
+        return score(c) > score(best) ? c : best;
+      });
+    };
+    const nearestCorner = (q) => rect.reduce((best, c) => (Math.hypot(c.x - q.x, c.y - q.y) < Math.hypot(best.x - q.x, best.y - q.y) ? c : best));
+
+    {
+      tape.addEventListener('pointermove', (e) => {
+        clearTimeout(leaveTimer); /* 잠깐 벗어났다 돌아오면 벗어난 걸로 치지 않음 */
+        if (tape.classList.contains('is-peeling') || removed.has(tape)) return;
+        measure();
+        const c = fixedCorner();
+        /* measure() 가 모서리 목록을 매번 새로 만들어서 같은 모서리도 다른 객체가 됨 → 좌표로 비교해야 함 (안 그러면 마우스를 움직일 때마다 평평해졌다 다시 들림) */
+        if (!hoverCorner || hoverCorner.x !== c.x || hoverCorner.y !== c.y) {
+          gsap.killTweensOf(state);
+          if (hoverCorner) {
+            /* 다른 모서리로 옮겨 가면 이전 모서리는 바로 붙이고 새 모서리를 들어 올림 */
+            corner = hoverCorner;
+            state.px = corner.x;
+            state.py = corner.y;
+            render();
+          }
+          hoverCorner = c;
+          corner = c;
+          state.px = c.x;
+          state.py = c.y;
+        }
+        const len = Math.hypot(W / 2 - c.x, H / 2 - c.y) || 1;
+        const own = Object.keys(HOVER_LIFT).find((k) => tape.classList.contains(k));
+        const lift = Math.min(own ? HOVER_LIFT[own] : STICKER_HOVER_LIFT, Math.min(W, H) * 0.7); /* 얇은 테이프는 비율에 맞게 덜 들림 */
+        gsap.to(state, {
+          px: c.x + ((W / 2 - c.x) / len) * lift,
+          py: c.y + ((H / 2 - c.y) / len) * lift,
+          duration: HOVER_LIFT_TIME,
+          ease: 'power2.out',
+          overwrite: true,
+          onUpdate: render,
+        });
+      });
+      tape.addEventListener('pointerleave', () => {
+        if (!hoverCorner || tape.classList.contains('is-peeling')) return;
+        /* 바로 붙이지 않고 잠깐 기다림: 마우스가 가장자리에서 살짝 흔들려도 뗐다 붙였다 하지 않게 */
+        clearTimeout(leaveTimer);
+        leaveTimer = setTimeout(() => {
+          if (!hoverCorner || tape.classList.contains('is-peeling')) return;
+          hoverCorner = null;
+          gsap.to(state, { px: corner.x, py: corner.y, duration: HOVER_DROP_TIME, ease: 'sine.inOut', overwrite: true, onUpdate: render, onComplete: reset });
+        }, HOVER_LEAVE_DELAY);
+      });
+    }
+
     tape.addEventListener('pointerdown', (e) => {
+      clearTimeout(leaveTimer);
       if (removed.has(tape)) return;
       measure();
       tape.setPointerCapture(e.pointerId);
       grab = toLocal(e);
       travel = 0;
-      corner = rect.reduce((best, c) => (Math.hypot(c.x - grab.x, c.y - grab.y) < Math.hypot(best.x - grab.x, best.y - grab.y) ? c : best));
       gsap.killTweensOf(state);
-      state.px = corner.x;
-      state.py = corner.y;
+      if (hoverCorner) {
+        /* 이미 들린 모서리를 그대로 잡음: 튀지 않고 그 모양에서 이어서 접힘 */
+        corner = hoverCorner;
+        base = { x: state.px - corner.x, y: state.py - corner.y };
+        hoverCorner = null;
+      } else {
+        corner = nearestCorner(grab);
+        base = { x: 0, y: 0 };
+        state.px = corner.x;
+        state.py = corner.y;
+      }
       tape.classList.add('is-peeling');
     });
 
@@ -744,8 +831,8 @@ function initTapePeel() {
       if (!tape.classList.contains('is-peeling')) return;
       const q = toLocal(e);
       travel = Math.max(travel, Math.hypot(q.x - grab.x, q.y - grab.y));
-      state.px = Math.max(0, Math.min(W, corner.x + (q.x - grab.x)));
-      state.py = Math.max(0, Math.min(H, corner.y + (q.y - grab.y)));
+      state.px = Math.max(0, Math.min(W, corner.x + base.x + (q.x - grab.x)));
+      state.py = Math.max(0, Math.min(H, corner.y + base.y + (q.y - grab.y)));
       render();
     });
 
@@ -782,6 +869,8 @@ function initTapePeel() {
     tape.addEventListener('pointercancel', release);
 
     tape._restore = () => {
+      clearTimeout(leaveTimer);
+      hoverCorner = null;
       clearTimeout(tape._returnTimer);
       gsap.killTweensOf([state, tape]);
       removed.delete(tape);
