@@ -299,6 +299,7 @@ function initDetailsSlider() {
   - overview : Overview 설명 (문단 2개: 프로젝트 소개 / 배운 점). **이렇게 감싼 부분**은 <span class="pd-bold"> 로 분리됨 (굵기는 그대로. 형광펜 인터랙션을 붙일 자리)
   - info     : Info 표 (Period, Team, Role, Contribution, Tools, Link)
   - details : Details 가로 목록에 들어갈 이미지 경로들 (없으면 회색 상자 3개가 그대로 보임)
+  - video : 맨 위 큰 이미지 자리에 영상을 넣고 싶을 때의 경로 (소리 없이 자동 재생, 반복)
   - image : 맨 위 큰 이미지 경로 (파일이 아직 없으면 기본 이미지가 그대로 보임)
   이미지는 assets/pdf/main-번호.jpg 로 넣으면 바로 나옴 (Kooksoondang 은 지금 쓰는 01.jpg 유지)
 */
@@ -388,7 +389,8 @@ const PROJECTS = {
   '06': {
     title: '삼토 페스티벌',
     tags: ['Rebranding Design', 'Graphic Design'],
-    image: 'assets/pdf/main-06.jpg',
+    image: 'assets/pdf/main-06.jpg', /* 영상이 안 나올 때 보이는 대체 이미지 */
+    video: 'assets/pdf/samto/00.mp4', /* 맨 위 큰 이미지 자리에 소리 없이 반복 재생 */
     overview: [
       '삼토 페스티벌은 1964년부터 이어져 온 원주의 농업 축제로, **농업과 지역사회의 상생을 알리는 의미 있는 축제**입니다. 하지만 원주시 지역축제 중 인지도가 가장 낮았습니다. 저희는 20~30대가 축제를 찾아올 이유를 만들기 위해, 채도 높은 컬러로 축제의 올드한 분위기를 벗어나고자 했습니다. 특산물인 복숭아, 쌀, 배와 축제의 근원인 흙은 핵심 그래픽으로 사용했습니다. 다양한 프로그램은 B급 감성의 손그림 일러스트를 활용한 카드뉴스로 풀어냈고, 무빙포스터와 메인 영상에는 사람과 동물이 함께 걸어가는 모습을 담아 **도농상생의 의미를 표현**했습니다. 또한 본도시락과 함께한 \'새참\' 세트 패키지와 뱃지, 키링 등의 굿즈도 제작했습니다.',
       '이번 프로젝트를 진행하면서 지역 축제에 더 관심을 갖게 되었고, **그 지역의 특성을 살리는 디자인이 무엇인지 깊이 고민해 볼 수 있었습니다.** 또한 데스크 리서치를 통해 요즘 디자인 트렌드를 살펴보며, 젊은 세대가 다시 축제를 찾게 하려면 어떻게 다가가야 할지 생각해 볼 수 있는 시간이었습니다. 특산물과 흙처럼 그 지역에만 있는 요소를 그래픽으로 풀어내는 과정에서, **지역성이 곧 축제만의 차별점이 될 수 있다는 것**을 알게 되었습니다.',
@@ -550,6 +552,26 @@ function initProjectTitle() {
       photo.src = project.image;
     };
     probe.src = project.image;
+  }
+
+  /* 맨 위 큰 이미지 자리에 영상: 소리 없이 자동 재생, 반복. 이미지는 영상이 준비되기 전까지 보임 */
+  if (project.video) {
+    const video = document.createElement('video');
+    video.className = 'pd-visual__photo pd-visual__video';
+    video.src = project.video;
+    if (project.image) video.poster = project.image;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.loop = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    video.preload = 'auto';
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.disablePictureInPicture = true;
+    video.setAttribute('aria-label', project.title);
+    video.addEventListener('canplay', () => photo.replaceWith(video), { once: true });
+    video.play().catch(() => {}); /* 자동 재생이 막혀도 오류가 나지 않게 */
   }
 
   /* Details 이미지: 가로로 넘기는 목록에 이미지를 순서대로 넣음 (슬라이더는 이 뒤에 만들어져서 개수에 맞춰짐) */
