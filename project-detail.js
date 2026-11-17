@@ -391,7 +391,7 @@ const PROJECTS = {
     tags: ['Rebranding Design', 'Graphic Design'],
     image: 'assets/pdf/main-06.jpg', /* 영상이 안 나올 때 보이는 대체 이미지 */
     video: 'assets/pdf/samto/00.mp4', /* 맨 위 큰 이미지 자리에 소리 없이 반복 재생 */
-    details: ['assets/pdf/samto/01.jpg', 'assets/pdf/samto/02.jpg', 'assets/pdf/samto/03.jpg', 'assets/pdf/samto/04.png', 'assets/pdf/samto/05.jpg', 'assets/pdf/samto/06.jpg', 'assets/pdf/samto/07.jpg', 'assets/pdf/samto/08.jpg', 'assets/pdf/samto/09.jpg', 'assets/pdf/samto/10.jpg', 'assets/pdf/samto/11.jpg', 'assets/pdf/samto/12.jpg'], /* Details 가로 목록 (01부터 12까지) */
+    details: ['assets/pdf/samto/01.jpg', 'assets/pdf/samto/02.jpg', 'assets/pdf/samto/03.jpg', 'assets/pdf/samto/04.jpg', 'assets/pdf/samto/05.jpg', 'assets/pdf/samto/06.jpg', 'assets/pdf/samto/07.jpg', 'assets/pdf/samto/08.jpg', 'assets/pdf/samto/09.jpg', 'assets/pdf/samto/10.jpg', 'assets/pdf/samto/11.jpg', 'assets/pdf/samto/12.jpg'], /* Details 가로 목록 (01부터 12까지) */
     overview: [
       '삼토 페스티벌은 1964년부터 이어져 온 원주의 농업 축제로, **농업과 지역사회의 상생을 알리는 의미 있는 축제**입니다. 하지만 원주시 지역축제 중 인지도가 가장 낮았습니다. 저희는 20~30대가 축제를 찾아올 이유를 만들기 위해, 채도 높은 컬러로 축제의 올드한 분위기를 벗어나고자 했습니다. 특산물인 복숭아, 쌀, 배와 축제의 근원인 흙은 핵심 그래픽으로 사용했습니다. 다양한 프로그램은 B급 감성의 손그림 일러스트를 활용한 카드뉴스로 풀어냈고, 무빙포스터와 메인 영상에는 사람과 동물이 함께 걸어가는 모습을 담아 **도농상생의 의미를 표현**했습니다. 또한 본도시락과 함께한 \'새참\' 세트 패키지와 뱃지, 키링 등의 굿즈도 제작했습니다.',
       '이번 프로젝트를 진행하면서 지역 축제에 더 관심을 갖게 되었고, **그 지역의 특성을 살리는 디자인이 무엇인지 깊이 고민해 볼 수 있었습니다.** 또한 데스크 리서치를 통해 요즘 디자인 트렌드를 살펴보며, 젊은 세대가 다시 축제를 찾게 하려면 어떻게 다가가야 할지 생각해 볼 수 있는 시간이었습니다. 특산물과 흙처럼 그 지역에만 있는 요소를 그래픽으로 풀어내는 과정에서, **지역성이 곧 축제만의 차별점이 될 수 있다는 것**을 알게 되었습니다.',
