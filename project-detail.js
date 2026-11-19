@@ -324,6 +324,7 @@ const PROJECTS = {
   '02': {
     title: 'Kooksoondang',
     image: 'assets/pdf/01.jpg',
+    details: ['assets/pdf/kooksoondang/01.jpg', 'assets/pdf/kooksoondang/02.jpg', 'assets/pdf/kooksoondang/03.jpg', 'assets/pdf/kooksoondang/04.jpg', 'assets/pdf/kooksoondang/05.jpg', 'assets/pdf/kooksoondang/06.jpg', 'assets/pdf/kooksoondang/07.jpg', 'assets/pdf/kooksoondang/08.jpg', 'assets/pdf/kooksoondang/09.jpg', 'assets/pdf/kooksoondang/10.jpg', 'assets/pdf/kooksoondang/11.jpg', 'assets/pdf/kooksoondang/12.jpg', 'assets/pdf/kooksoondang/13.jpg', 'assets/pdf/kooksoondang/14.jpg', 'assets/pdf/kooksoondang/15.jpg', 'assets/pdf/kooksoondang/16.jpg', 'assets/pdf/kooksoondang/17.jpg', 'assets/pdf/kooksoondang/18.jpg', 'assets/pdf/kooksoondang/19.jpg'], /* Details 가로 목록 (01부터 19까지) */
     overview: [
       '국순당은 100년의 역사를 가진 전통주 브랜드지만, 웹사이트는 2009년에 만들어진 이후 그대로 머물러 있었습니다. 그래서 모바일 환경에서도, 해외 사용자에게도 제대로 닿지 못하고 있었습니다. 저희는 막걸리가 해외에서 K-푸드로 주목받기 시작한 흐름에 맞춰, **해외 사용자들에게 한국 전통주를 알릴 수 있는 영문 웹사이트**로 리뉴얼을 진행했습니다. ‘Tradition Meets Interactive Experience’를 콘셉트로, 전통이 무겁거나 어렵게 느껴지지 않도록 기존의 어두운 주황색을 밝은 톤으로 바꾸었습니다. 주막 문화도 유쾌한 손그림 캐릭터로 풀어내 **젊고 친근한 분위기를 만드는 데 중점을 두었습니다.** 또한 사용자들이 흥미를 잃지 않고 사이트를 더 둘러볼 수 있도록, **막걸리를 잘 모르는 외국인도 쉽게 자신의 취향을 알아갈 수 있는 테스트 페이지**를 더했습니다.',
       '개인 작업을 할 때는 저만 스타일 가이드를 알고 있으면 됐고, 중간에 기획이 어그러져도 다시 돌아가 진행하면 큰 문제가 없었습니다. 하지만 팀으로 작업을 진행하다 보니 사소한 것 하나까지 세세하게 정하고, **기획이 흔들리지 않도록 처음부터 확실하게 잡고 가야 한다는 것을 새롭게 알게 되었습니다.** 또한 마지막까지 일정이 빠듯했던 만큼, 일정이 미뤄지지 않도록 팀 프로젝트를 이끌어가는 방법에 대해서도 배울 수 있었습니다.',
