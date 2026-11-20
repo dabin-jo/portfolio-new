@@ -308,6 +308,7 @@ const PROJECTS = {
     title: '집메이트',
     tags: ['UXUI Design', 'App Design'],
     image: 'assets/pdf/main-01.jpg',
+    details: ['assets/pdf/zipmate/01.jpg', 'assets/pdf/zipmate/02.jpg', 'assets/pdf/zipmate/03.jpg', 'assets/pdf/zipmate/04.jpg', 'assets/pdf/zipmate/05.jpg', 'assets/pdf/zipmate/06.jpg', 'assets/pdf/zipmate/07.jpg', 'assets/pdf/zipmate/08.jpg', 'assets/pdf/zipmate/09.jpg', 'assets/pdf/zipmate/10.jpg', 'assets/pdf/zipmate/11.jpg', 'assets/pdf/zipmate/12.jpg', 'assets/pdf/zipmate/13.jpg', 'assets/pdf/zipmate/14.jpg', 'assets/pdf/zipmate/15.jpg', 'assets/pdf/zipmate/16.jpg', 'assets/pdf/zipmate/17.jpg', 'assets/pdf/zipmate/18.jpg', 'assets/pdf/zipmate/19.jpg', 'assets/pdf/zipmate/20.jpg', 'assets/pdf/zipmate/21.jpg', 'assets/pdf/zipmate/22.jpg', 'assets/pdf/zipmate/23.jpg', 'assets/pdf/zipmate/24.jpg', 'assets/pdf/zipmate/25.jpg', 'assets/pdf/zipmate/26.jpg', 'assets/pdf/zipmate/27.jpg', 'assets/pdf/zipmate/28.jpg', 'assets/pdf/zipmate/29.jpg', 'assets/pdf/zipmate/30.jpg', 'assets/pdf/zipmate/31.jpg'], /* Details 가로 목록 (01부터 31까지) */
     overview: [
       '집메이트는 셀프 인테리어를 해보고 싶어도 어디서부터 시작해야 할지 몰라 망설이는 사람들을 위해, **완성된 결과보다 과정에 집중한 웹앱**입니다. 사용자는 자신의 작업 과정을 기록하고 공유할 수 있으며, 실패했던 경험까지 함께 나누면서 피해야 할 방법이나 재료를 아끼는 방법 같은 실질적인 정보를 서로 주고받을 수 있습니다. 작업 후 남은 자재는 중고로 판매하거나 무료로 나눌 수 있고, 자신의 셀프 인테리어 경험을 강의로 만들어 판매할 수도 있습니다. 또한 무엇부터 해야 할지 모르는 사람들을 위해 AI 챗봇을 더해, 궁금한 점을 바로 물어보며 작업을 시작할 수 있도록 구성했습니다.',
       '이번 프로젝트에서 처음으로 PM을 맡게 되면서 일정 관리가 얼마나 어려운 일인지 새삼 느낄 수 있었습니다. 작업을 진행할수록 처음 기획보다 구현해야 할 페이지가 점점 늘어나 힘든 순간도 있었습니다. 그래도 팀원들과 UX와 UI를 두고 고민을 나누며 문제를 풀어가는 과정에서 **좋은 디자인이 무엇인지 다시 생각해 볼 수 있었습니다.** 또한 처음으로 React를 사용해 개발하고 브랜치를 나눠 작업하면서, **앱이 실제로 어떻게 구현되어 사용자에게 닿는지와 협업이 어떻게 이루어지는지를 직접 배울 수 있었습니다.**',
@@ -316,7 +317,7 @@ const PROJECTS = {
       period: '2026. 8 - 2026. 9',
       team: '4인 프로젝트',
       role: 'UX 기획, UI 디자인, 스타일 가이드 · 메인페이지 디자인 및 개발, 발표 자료 디자인',
-      contribution: ['기획 25%', '디자인 30%', '개발 20%', '기획서 디자인 40%'],
+      contribution: ['기획 25%', '디자인 33%', '개발 25%', '기획서 디자인 40%'],
       tools: ['Figma ·', 'Vercel ·', 'React ·', 'VS Code ·', 'Midjourney ·', 'Claude Code'],
       link: '#', /* 프로젝트 링크 주소 (없으면 Link 줄이 나오지 않음) */
     },
@@ -576,6 +577,16 @@ function initProjectTitle() {
     video.setAttribute('aria-label', project.title);
     video.addEventListener('canplay', () => photo.replaceWith(video), { once: true });
     video.play().catch(() => {}); /* 자동 재생이 막혀도 오류가 나지 않게 */
+  }
+
+  /* Details 제목 옆에 전체 페이지 수 (이미지가 들어간 프로젝트만) */
+  const heading = document.querySelector('.pd-heading-details');
+  heading.querySelector('.pd-heading__count')?.remove();
+  if (project.details && project.details.length) {
+    const count = document.createElement('span');
+    count.className = 'pd-heading__count';
+    count.textContent = project.details.length + 'P';
+    heading.append(count);
   }
 
   /* Details 이미지: 가로로 넘기는 목록에 이미지를 순서대로 넣음 (슬라이더는 이 뒤에 만들어져서 개수에 맞춰짐) */

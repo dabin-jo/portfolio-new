@@ -788,3 +788,11 @@ a {
   mix-blend-mode: difference;
   z-index: 2;
 }
+
+/* Details 제목 옆의 전체 페이지 수 (예: 31P) */
+.pd-heading__count {
+  margin-left: 14px;
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: -0.04em; /* 자간 -4% */
+}
