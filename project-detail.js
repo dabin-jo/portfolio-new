@@ -342,12 +342,14 @@ const PROJECTS = {
     title: 'Haeit!',
     tags: ['UXUI Design', 'App Design'],
     image: 'assets/pdf/main-03.jpg',
+    video: 'assets/pdf/haeit/00.mp4', /* 맨 위 큰 이미지 자리에 소리 없이 반복 재생 */
+    details: ['assets/pdf/haeit/01.jpg', 'assets/pdf/haeit/02.jpg', 'assets/pdf/haeit/03.jpg', 'assets/pdf/haeit/04.jpg', 'assets/pdf/haeit/05.jpg', 'assets/pdf/haeit/06.jpg', 'assets/pdf/haeit/07.jpg', 'assets/pdf/haeit/08.jpg', 'assets/pdf/haeit/09.jpg', 'assets/pdf/haeit/10.jpg', 'assets/pdf/haeit/11.jpg', 'assets/pdf/haeit/12.jpg', 'assets/pdf/haeit/13.jpg'], /* Details 가로 목록 (01부터 13까지) */
     overview: [
       '해잇은 혼자 발표를 준비하면서 잘하고 있는지, 누구에게 피드백을 받아야 할지 몰라 막막함을 느끼는 사람들을 위해 기획한 **스피치 연습 앱**입니다. 비디오 피드백을 받은 사람들의 발표 불안이 줄어들었다는 연구를 바탕으로, **스스로 자신의 발표를 돌아보며 자신감을 키우는 방향으로 기획을 진행**했습니다. 사용자는 발표 영상을 촬영해 불필요한 행동을 확인하고 시간을 맞춰가며 연습할 수 있으며, 녹음이나 영상, 대본을 올리면 AI에게 피드백을 받을 수 있습니다. 또한 나의 발표 타입을 알아보는 테스트와 데일리 챌린지, 같은 고민을 나눌 수 있는 익명 커뮤니티를 더해 꾸준히 연습할 수 있도록 구성했습니다.',
       '앱을 하나 기획하는 과정에서 아이콘, 컬러, 텍스트 크기, 레이아웃처럼 작은 요소 하나까지 신경 써야 한다는 점이 생각보다 어렵게 느껴졌습니다. 작업을 진행하며 필요한 페이지가 하나둘씩 늘어나는 것을 보면서, **처음부터 기능과 구조를 구체적으로 설계하는 것이 중요하다는 것**을 알게 되었습니다. 또한 수익화까지 함께 고민하면서, 단순히 필요한 기능을 제공하는 것을 넘어 **사용자가 다른 앱이 아닌 우리 앱을 계속 사용해야 할 이유를 만드는 것이 중요하다는 것**을 배울 수 있었습니다.',
     ],
     info: {
-      period: '2025. 5 - 2026. 10',
+      period: '2025. 5 - 2025. 10',
       team: '2인 프로젝트',
       role: '앱 기획, UX 정리, 디자인 컨셉 정의, 로고 · 캐릭터 디자인',
       contribution: ['기획 50%', '디자인 50%'],
