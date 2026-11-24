@@ -320,7 +320,7 @@ const PROJECTS = {
       role: 'UX 기획, UI 디자인, 스타일 가이드 · 메인페이지 디자인 및 개발, 발표 자료 디자인',
       contribution: ['기획 25%', '디자인 33%', '개발 25%', '기획서 디자인 40%'],
       tools: ['Figma ·', 'Vercel ·', 'React ·', 'VS Code ·', 'Midjourney ·', 'Claude Code'],
-      link: '#', /* 프로젝트 링크 주소 (없으면 Link 줄이 나오지 않음) */
+      link: 'https://zipmate-rouge.vercel.app/', /* 프로젝트 링크 주소 (없으면 Link 줄이 나오지 않음) */
     },
   },
   '02': {
