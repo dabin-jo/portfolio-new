@@ -377,7 +377,8 @@ const PROJECTS = {
   '05': {
     title: 'AI와 디자인의 상관관계',
     tags: ['Editorial Design'],
-    image: 'assets/pdf/main-05.jpg',
+    image: 'assets/pdf/ai_and_design/01.jpg', /* 맨 위 큰 이미지 */
+    details: ['assets/pdf/ai_and_design/01.jpg', 'assets/pdf/ai_and_design/02.jpg', 'assets/pdf/ai_and_design/03.jpg', 'assets/pdf/ai_and_design/04.jpg', 'assets/pdf/ai_and_design/05.jpg', 'assets/pdf/ai_and_design/06.jpg', 'assets/pdf/ai_and_design/07.jpg', 'assets/pdf/ai_and_design/08.jpg', 'assets/pdf/ai_and_design/09.jpg'], /* Details 가로 목록 (01부터 09까지) */
     overview: [
       'AI와 디자인의 상관관계는 **디자인 분야에서 AI가 어떻게 활용되고 어떤 영향을 미치는지 다각도로 살펴보기 위해 만든 편집 디자인 책자**입니다. AI의 기본 개념과 디자인 분야의 실제 활용 사례부터 장점과 단점, 저작권 침해 같은 악용 사례, 작가들을 보호하기 위한 AI 방지 필터까지 다뤘습니다. 이를 통해 **기술을 사용할 때 윤리적인 고려가 왜 중요한지 담고자 했습니다.** 디자인적으로는 AI라는 기계의 아직 정제되지 않은 모습을 표현하고 싶어, 실험적인 레이아웃과 타이포그래피로 작업했습니다. 독자가 책을 읽으며 AI를 알아가고, 디자인 분야에서의 AI 활용에 대해 함께 고민해 볼 수 있도록 하는 데 중점을 두었습니다.',
       '책을 만들면서 디자인과 AI가 앞으로 어떻게 접목될지 기대되면서도, 한편으로는 조금 두렵다는 생각이 들었습니다. 누구나 AI를 활용해 영상을 편집하고 포스터를 만들고 그림을 그릴 수 있는 시대가 된 만큼, 단순히 무언가를 만들어내는 능력만으로는 설명하기 어려운 디자이너만의 역할이 무엇인지 자연스럽게 고민하게 되었습니다. 이번 작업은 AI에 대해 알아보는 것을 넘어, **앞으로 디자인이 어떤 방향으로 나아가게 될지 생각해 보는 계기**가 되었습니다.',
@@ -386,7 +387,7 @@ const PROJECTS = {
       period: '2024. 11 - 2024. 12',
       team: '3인 프로젝트',
       role: '표지 디자인, 내지 ⅓ 디자인',
-      contribution: ['기획 30%', '디자인 40%'],
+      contribution: ['기획 35%', '디자인 40%'],
       tools: ['Adobe Photoshop ·', 'Adobe Illustrator ·', 'Adobe InDesign'],
     },
   },
