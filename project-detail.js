@@ -307,7 +307,8 @@ const PROJECTS = {
   '01': {
     title: '집메이트',
     tags: ['UXUI Design', 'App Design'],
-    image: 'assets/pdf/main-01.jpg',
+    image: 'assets/pdf/zipmate/01.jpg', /* 영상이 재생되지 않을 때(파일 없음·로딩 실패 등) 이 이미지가 대신 나옴 */
+    video: 'assets/pdf/zipmate/00.mp4', /* 맨 위 큰 이미지 자리에 소리 없이 반복 재생 */
     details: ['assets/pdf/zipmate/01.jpg', 'assets/pdf/zipmate/02.jpg', 'assets/pdf/zipmate/03.jpg', 'assets/pdf/zipmate/04.jpg', 'assets/pdf/zipmate/05.jpg', 'assets/pdf/zipmate/06.jpg', 'assets/pdf/zipmate/07.jpg', 'assets/pdf/zipmate/08.jpg', 'assets/pdf/zipmate/09.jpg', 'assets/pdf/zipmate/10.jpg', 'assets/pdf/zipmate/11.jpg', 'assets/pdf/zipmate/12.jpg', 'assets/pdf/zipmate/13.jpg', 'assets/pdf/zipmate/14.jpg', 'assets/pdf/zipmate/15.jpg', 'assets/pdf/zipmate/16.jpg', 'assets/pdf/zipmate/17.jpg', 'assets/pdf/zipmate/18.jpg', 'assets/pdf/zipmate/19.jpg', 'assets/pdf/zipmate/20.jpg', 'assets/pdf/zipmate/21.jpg', 'assets/pdf/zipmate/22.jpg', 'assets/pdf/zipmate/23.jpg', 'assets/pdf/zipmate/24.jpg', 'assets/pdf/zipmate/25.jpg', 'assets/pdf/zipmate/26.jpg', 'assets/pdf/zipmate/27.jpg', 'assets/pdf/zipmate/28.jpg', 'assets/pdf/zipmate/29.jpg', 'assets/pdf/zipmate/30.jpg', 'assets/pdf/zipmate/31.jpg'], /* Details 가로 목록 (01부터 31까지) */
     overview: [
       '집메이트는 셀프 인테리어를 해보고 싶어도 어디서부터 시작해야 할지 몰라 망설이는 사람들을 위해, **완성된 결과보다 과정에 집중한 웹앱**입니다. 사용자는 자신의 작업 과정을 기록하고 공유할 수 있으며, 실패했던 경험까지 함께 나누면서 피해야 할 방법이나 재료를 아끼는 방법 같은 실질적인 정보를 서로 주고받을 수 있습니다. 작업 후 남은 자재는 중고로 판매하거나 무료로 나눌 수 있고, 자신의 셀프 인테리어 경험을 강의로 만들어 판매할 수도 있습니다. 또한 무엇부터 해야 할지 모르는 사람들을 위해 AI 챗봇을 더해, 궁금한 점을 바로 물어보며 작업을 시작할 수 있도록 구성했습니다.',
@@ -324,7 +325,7 @@ const PROJECTS = {
   },
   '02': {
     title: 'Kooksoondang',
-    image: 'assets/pdf/01.jpg',
+    image: 'assets/pdf/kooksoondang/01.jpg', /* 영상이 재생되지 않을 때 이 이미지가 대신 나옴 */
     video: 'assets/pdf/kooksoondang/00.mp4', /* 맨 위 큰 이미지 자리에 소리 없이 반복 재생 */
     details: ['assets/pdf/kooksoondang/01.jpg', 'assets/pdf/kooksoondang/02.jpg', 'assets/pdf/kooksoondang/03.jpg', 'assets/pdf/kooksoondang/04.jpg', 'assets/pdf/kooksoondang/05.jpg', 'assets/pdf/kooksoondang/06.jpg', 'assets/pdf/kooksoondang/07.jpg', 'assets/pdf/kooksoondang/08.jpg', 'assets/pdf/kooksoondang/09.jpg', 'assets/pdf/kooksoondang/10.jpg', 'assets/pdf/kooksoondang/11.jpg', 'assets/pdf/kooksoondang/12.jpg', 'assets/pdf/kooksoondang/13.jpg', 'assets/pdf/kooksoondang/14.jpg', 'assets/pdf/kooksoondang/15.jpg', 'assets/pdf/kooksoondang/16.jpg', 'assets/pdf/kooksoondang/17.jpg', 'assets/pdf/kooksoondang/18.jpg', 'assets/pdf/kooksoondang/19.jpg'], /* Details 가로 목록 (01부터 19까지) */
     overview: [
@@ -343,7 +344,7 @@ const PROJECTS = {
   '03': {
     title: 'Haeit!',
     tags: ['UXUI Design', 'App Design'],
-    image: 'assets/pdf/main-03.jpg',
+    image: 'assets/pdf/haeit/01.jpg', /* 영상이 재생되지 않을 때 이 이미지가 대신 나옴 */
     video: 'assets/pdf/haeit/00.mp4', /* 맨 위 큰 이미지 자리에 소리 없이 반복 재생 */
     details: ['assets/pdf/haeit/01.jpg', 'assets/pdf/haeit/02.jpg', 'assets/pdf/haeit/03.jpg', 'assets/pdf/haeit/04.jpg', 'assets/pdf/haeit/05.jpg', 'assets/pdf/haeit/06.jpg', 'assets/pdf/haeit/07.jpg', 'assets/pdf/haeit/08.jpg', 'assets/pdf/haeit/09.jpg', 'assets/pdf/haeit/10.jpg', 'assets/pdf/haeit/11.jpg', 'assets/pdf/haeit/12.jpg', 'assets/pdf/haeit/13.jpg'], /* Details 가로 목록 (01부터 13까지) */
     overview: [
@@ -395,7 +396,7 @@ const PROJECTS = {
   '06': {
     title: '삼토 페스티벌',
     tags: ['Rebranding Design', 'Graphic Design'],
-    image: 'assets/pdf/main-06.jpg', /* 영상이 안 나올 때 보이는 대체 이미지 */
+    image: 'assets/pdf/samto/01.jpg', /* 영상이 재생되지 않을 때 이 이미지가 대신 나옴 */
     video: 'assets/pdf/samto/00.mp4', /* 맨 위 큰 이미지 자리에 소리 없이 반복 재생 */
     details: ['assets/pdf/samto/01.jpg', 'assets/pdf/samto/02.jpg', 'assets/pdf/samto/03.jpg', 'assets/pdf/samto/04.jpg', 'assets/pdf/samto/05.jpg', 'assets/pdf/samto/06.jpg', 'assets/pdf/samto/07.jpg', 'assets/pdf/samto/08.jpg', 'assets/pdf/samto/09.jpg', 'assets/pdf/samto/10.jpg', 'assets/pdf/samto/11.jpg', 'assets/pdf/samto/12.jpg'], /* Details 가로 목록 (01부터 12까지) */
     overview: [
