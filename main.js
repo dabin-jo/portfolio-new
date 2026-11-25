@@ -6,7 +6,6 @@ gsap.registerPlugin(ScrollTrigger);
    1920px 기준 캔버스를 화면 폭에 맞춰 축소/확대
    -------------------------------------------------------------------------- */
 const BASE_WIDTH = 1920;
-const BASE_HEIGHT = 3120;
 
 /* 위쪽 종이(철학 페이지)의 크기 */
 const SHEET_WIDTH = 1920;

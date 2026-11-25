@@ -51,9 +51,6 @@ window.addEventListener('scroll', updateHeaderColor, { passive: true });
 const ACCESS_KEY = '2784913b-c5c4-452a-bdfa-a4c10b144951';
 const SUBMIT_URL = 'https://api.web3forms.com/submit';
 
-/* 모션 확인용 스위치: false 면 실제로 메일을 보내지 않고(서버 연결 끊음) 성공한 것처럼 접는 모션만 보여 줌. 실제로 보내려면 true 로 */
-const SEND_FOR_REAL = true;
-
 function initForm() {
   const form = document.getElementById('contactForm');
   const notice = document.getElementById('formError');
@@ -184,8 +181,7 @@ function initForm() {
     notice.classList.remove('is-visible');
 
     try {
-      if (!SEND_FOR_REAL) await new Promise((resolve) => setTimeout(resolve, 600)); /* 보내는 중처럼 잠깐 기다림 */
-      const res = SEND_FOR_REAL && await fetch(SUBMIT_URL, {
+      const res = await fetch(SUBMIT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
@@ -200,10 +196,8 @@ function initForm() {
           botcheck: form.elements.botcheck.checked, /* 사람 눈에는 안 보이는 칸: 봇이 채우면 스팸으로 처리됨 */
         }),
       });
-      if (SEND_FOR_REAL) {
-        const data = await res.json();
-        if (!data.success) throw new Error(data.message || 'failed');
-      }
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || 'failed');
       form.reset();
       form.querySelectorAll('.ct-field input, .ct-field textarea').forEach((control) => setState(control, ''));
       showNotice('메일이 잘 도착했어요. 확인하고 답장드릴게요!', 6000);
