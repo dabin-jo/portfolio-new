@@ -796,3 +796,16 @@ a {
   font-weight: 300;
   letter-spacing: -0.04em; /* 자간 -4% */
 }
+
+/* 맨 위 큰 이미지·영상을 누르면 프로젝트 링크가 열림 (project-detail.js 가 링크가 있는 프로젝트에만 만들어 줌) */
+.pd-visual__link {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  cursor: pointer;
+}
+
+/* 테이프가 클릭을 가로채지 않게 (장식이라 눌릴 일이 없음) */
+.pd-tape {
+  pointer-events: none;
+}

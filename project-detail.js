@@ -338,7 +338,7 @@ const PROJECTS = {
       role: 'UX 기획, UI 디자인, 퍼블리싱',
       contribution: ['기획 30%', '디자인 40%', '일러스트 85%', '개발 20%'],
       tools: ['Figma ·', 'Adobe Illustrator ·', 'Clip Studio Paint ·', 'VS Code ·', 'Claude Code'],
-      link: '#', /* 프로젝트 링크 주소 (없으면 Link 줄이 나오지 않음) */
+      link: 'https://kooksoondang-redesign.vercel.app/', /* 프로젝트 링크 주소 (없으면 Link 줄이 나오지 않음) */
     },
   },
   '03': {
@@ -580,6 +580,19 @@ function initProjectTitle() {
     video.setAttribute('aria-label', project.title);
     video.addEventListener('canplay', () => photo.replaceWith(video), { once: true });
     video.play().catch(() => {}); /* 자동 재생이 막혀도 오류가 나지 않게 */
+  }
+
+  /* 맨 위 큰 이미지·영상을 누르면 프로젝트 링크로 이동 (링크가 있는 프로젝트만) */
+  const visual = document.getElementById('visual');
+  visual.querySelector('.pd-visual__link')?.remove();
+  if (project.info && project.info.link && project.info.link !== '#') {
+    const go = document.createElement('a');
+    go.className = 'pd-visual__link';
+    go.href = project.info.link;
+    go.target = '_blank';
+    go.rel = 'noopener';
+    go.setAttribute('aria-label', project.title + ' 프로젝트 열기');
+    visual.append(go);
   }
 
   /* Details 제목 옆에 전체 페이지 수 (이미지가 들어간 프로젝트만) */
