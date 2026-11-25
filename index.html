@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="transition.css">
   <link rel="stylesheet" href="link-hover.css">
   <link rel="stylesheet" href="copy-email.css">
+  <link rel="stylesheet" href="mobile.css">
+  <script src="compact.js"></script>
   <script>
     /* 페이지 전환으로 들어온 경우, 첫 화면부터 연두색으로 덮인 상태로 시작 (깜빡임 방지). 문제가 생겨도 5초 뒤엔 풀림 */
     try {
@@ -24,6 +26,7 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer></script>
   <script src="smooth-scroll.js" defer></script>
   <script src="main.js" defer></script>
+  <script src="mobile.js" defer></script>
   <script src="transition.js" defer></script>
   <script src="link-hover.js" defer></script>
   <script src="copy-email.js" defer></script>
@@ -46,6 +49,234 @@
       <a href="contact.html" data-transition>Contact</a>
     </div>
   </header>
+
+  <!-- 모바일 화면 (피그마 phone 시안 390 x 3456 그대로): 화면 폭 640px 이하에서만 보임. 배율은 mobile.js -->
+  <div class="m" id="mobile">
+    <header class="m-header" id="mHeader">
+      <div class="m-header__row">
+        <a class="m-header__logo" href="index.html" data-transition aria-label="Home"><img class="m-header__logo-dark" src="assets/m-logo.svg" alt=""><img class="m-header__logo-light" src="assets/logo-light.svg" alt=""></a>
+        <div class="grain-light m-header__menu">
+          <a href="index.html#project" data-m-goto="project">Project</a>
+          <a href="index.html#about" data-m-goto="about">About Me</a>
+          <a href="contact.html" data-transition>Contact</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 위쪽 종이 (hero + 철학): 스크롤하면 글씨가 검정이 되고, 접힌 모서리를 끌거나 누르면 종이가 넘어가 아래 Project 가 나타남 (mobile.js) -->
+    <div class="m-a" id="mA">
+    <div class="m-stage" id="mStageA">
+    <div class="m-sheet" id="mSheet">
+      <!-- hero -->
+      <p class="grain m-bg m-bg-ux">UX/UI</p>
+      <p class="grain m-bg m-bg-web">WEB/</p>
+      <p class="grain m-bg m-bg-interaction">INTERACTION</p>
+      <p class="grain m-bg m-bg-designer">DESIGNER</p>
+      <p class="grain m-bg m-bg-graphic">GRAPHIC</p>
+      <p class="grain m-bg m-bg-amp">&amp;</p>
+      <p class="grain m-bg m-bg-branding">BRANDING</p>
+      <p class="grain m-bg m-bg-copy">©2026</p>
+      <p class="grain m-bg m-bg-research">RESEARCH</p>
+      <p class="grain m-bg m-bg-thinking">thinking</p>
+
+      <div class="grain m-hero">
+        <div class="m-hero__main">
+          <p>Clarity</p>
+          <p>then craft</p>
+          <p>I build designs</p>
+          <p>that last</p>
+        </div>
+        <div class="m-hero__punct" aria-hidden="true">
+          <p>,</p>
+          <p>.</p>
+          <p>&nbsp;</p>
+          <p>.</p>
+        </div>
+      </div>
+
+      <!-- philosophy -->
+      <div class="grain m-phil">
+        <p class="m-phil__label">My Design Philosophy</p>
+        <div class="m-phil__text">
+          <div>
+            <p class="r">나는 <span class="hl">보이지 않던 것을 드러내는 시선</span>을</p>
+            <p>가진 디자이너가 되고자 한다.</p>
+          </div>
+          <p class="j">익숙함 속에서 쉽게 지나쳐지는 요소들에 주목하고, 그 안에서 <span class="hl">의미와 가치</span>를 발견하는 과정에 집중한다.</p>
+          <p class="j">사소해 보일 수 있는 것들 역시 각자의 강점을 가지고 있으며, 이를 적절한 방식으로 드러낼 때 <span class="hl">새로운 가능성</span>이 만들어진다고 믿는다.</p>
+          <div>
+            <p class="r"><span class="hl">중요한 것을 더 중요하게 만드는 것</span>,</p>
+            <p>그것이 내가 지향하는 디자인이다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="m-rule"></div>
+    </div>
+
+      <!-- 접힌 종이 모서리 (글씨가 다 검정이 되면 나타남) -->
+      <div class="m-fold" id="mFold">
+        <div class="m-fold-flap" id="mFoldFlap" title="끌거나 눌러서 페이지 넘기기"></div>
+      </div>
+    </div>
+    </div>
+
+    <!-- 종이 아래에 숨어 있다가, 종이가 넘어가면 나타나는 Project · About Me · 푸터 (좌표는 시안 그대로, 위쪽 978px 를 뺀 위치) -->
+    <div class="m-b" id="mB">
+    <div class="m-stage" id="mStageB">
+    <div class="m-lower">
+      <!-- Project -->
+      <div class="m-black"></div>
+      <p class="grain m-project-title">Project</p>
+
+      <a data-transition class="m-item m-item--col m-chair" href="project-detail.html?project=01" aria-label="Project 01">
+        <div class="grain m-pill"><p>01</p></div>
+        <div class="m-obj"><img src="assets/m-chair.svg" alt=""></div>
+      </a>
+      <a data-transition class="m-item m-item--col m-megaphone" href="project-detail.html?project=03" aria-label="Project 03">
+        <div class="grain m-pill"><p>03</p></div>
+        <div class="m-obj"><div class="m-obj__rot"><img src="assets/m-megaphone.svg" alt=""></div></div>
+      </a>
+      <a data-transition class="m-item m-bottle" href="project-detail.html?project=02" aria-label="Project 02">
+        <div class="grain m-pill"><p>02</p></div>
+        <div class="m-obj"><div class="m-obj__rot"><img src="assets/m-bottle.svg" alt=""></div></div>
+      </a>
+      <a data-transition class="m-item m-item--col m-chopsticks" href="project-detail.html?project=04" aria-label="Project 04">
+        <div class="grain m-pill"><p>04</p></div>
+        <div class="m-obj"><img src="assets/m-chopsticks.svg" alt=""></div>
+      </a>
+      <a data-transition class="m-item m-item--col m-puzzle" href="project-detail.html?project=05" aria-label="Project 05">
+        <div class="grain m-pill"><p>05</p></div>
+        <div class="m-obj"><div class="m-obj__rot"><img src="assets/m-puzzle.svg" alt=""></div></div>
+      </a>
+      <a data-transition class="m-item m-item--col m-apple" href="project-detail.html?project=06" aria-label="Project 06">
+        <div class="grain m-pill"><p>06</p></div>
+        <div class="m-obj"><div class="m-obj__rot"><img src="assets/m-apple.svg" alt=""></div></div>
+      </a>
+
+      <!-- About Me -->
+      <div class="m-paper m-paper-white"><div class="m-paper__rot"><img src="assets/m-paper-white.svg" alt=""></div></div>
+      <div class="m-about-head">
+        <p class="grain m-about-title">About Me</p>
+        <p class="grain-light m-about-sub">보이지 않던 가치를 드러내는 디자이너, 조다빈입니다.</p>
+      </div>
+      <div class="m-paper m-paper-note"><div class="m-paper__rot"><img src="assets/m-paper-note.svg" alt=""></div></div>
+
+      <div class="m-table">
+        <div class="m-row">
+          <p class="m-label">Education</p>
+          <div class="m-items">
+            <div class="m-item-entry">
+              <p class="m-date">2023. 3 - 2026. 2</p>
+              <p class="m-main">인덕대학교 시각디자인학과 졸업</p>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <p class="m-label">Training</p>
+          <div class="m-items">
+            <div class="m-item-entry">
+              <p class="m-date">2026. 4 - 2026. 10</p>
+              <div>
+                <p class="m-main">AI활용 UXUI디자인 &amp; 웹기획 프론트엔드 부트캠프</p>
+                <p class="m-sub">이젠아카데미DX교육센터</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <p class="m-label">Awards</p>
+          <div class="m-items m-items--gap12">
+            <div class="m-item-entry">
+              <p class="m-date">2024. 7</p>
+              <div>
+                <p class="m-main">2024 대한민국 헌혈공모전 포스터 대상</p>
+                <p class="m-sub">대한적십자사 혈액관리본부 주최</p>
+              </div>
+            </div>
+            <div class="m-item-entry">
+              <p class="m-date">2026. 8</p>
+              <div>
+                <p class="m-main">비주얼 크래프트, 인터랙션 디자인 부문 최우수상</p>
+                <p class="m-sub">이젠아카데미DX교육센터</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <p class="m-label">Certificate</p>
+          <div class="m-items m-items--gap20">
+            <div class="m-item-entry">
+              <p class="m-date">2023. 12</p>
+              <div>
+                <p class="m-main">그래픽기술자격(GTQ) 1급</p>
+                <p class="m-sub">한국생산성본부(KPC)</p>
+              </div>
+            </div>
+            <div class="m-item-entry">
+              <p class="m-date">2025. 1</p>
+              <div>
+                <p class="m-main">2종보통운전면허</p>
+                <p class="m-sub">경찰청(운전면허시험관리단)</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="m-row">
+          <p class="m-label">Skills</p>
+          <div class="m-skills">
+            <div class="m-skill">
+              <p class="m-skill__title">Design</p>
+              <ul><li>Figma</li><li>Adobe PhotoShop</li><li>Adobe Illustrator</li><li>Adobe InDesign</li><li>Adobe After Effects</li></ul>
+            </div>
+            <div class="m-skill">
+              <p class="m-skill__title">Develop</p>
+              <ul><li>HTML</li><li>CSS</li><li>JavaScript</li><li>React</li></ul>
+            </div>
+            <div class="m-skill">
+              <p class="m-skill__title">AI &amp; Tools</p>
+              <ul><li>Claude</li><li>ChatGPT</li><li>Midjourney</li><li>Vercel</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 푸터 -->
+      <footer class="m-footer" id="mFooter">
+        <div class="m-footer__paper"><div class="m-footer__paper-rot"><img src="assets/m-footer-paper.svg" alt=""></div></div>
+        <nav class="grain-light m-footer__menu">
+          <a href="index.html" data-transition>Home</a>
+          <a href="index.html#project" data-m-goto="project">Projects</a>
+          <a href="index.html#about" data-m-goto="about">About Me</a>
+          <a href="contact.html" data-transition>Contact</a>
+          <p>©2026 JODABIN</p>
+        </nav>
+        <div class="m-footer__brand-box">
+          <div class="m-footer__brand">
+            <div class="m-footer__top">
+              <div class="grain m-footer__name">
+                <p>JO</p>
+                <img src="assets/m-footer-d.svg" alt="">
+                <p>ABIN</p>
+              </div>
+              <p class="grain-light m-footer__slogan">I find value in the overlooked, and make what matters matter more.</p>
+            </div>
+            <div class="grain-light m-footer__contact">
+              <p class="m-footer__talk">Let’s talk →</p>
+              <a class="m-footer__mail" role="button" tabindex="0" data-copy="jodabin9098@gmail.com">jodabin9098@gmail.com</a>
+            </div>
+          </div>
+        </div>
+        <div class="m-footer__sticker m-footer__sticker-cursor"><div class="rot"><img src="assets/m-sticker-cursor.svg" alt=""></div></div>
+        <div class="m-footer__sticker m-footer__sticker-bubble"><div class="rot"><img src="assets/m-sticker-bubble.svg" alt=""></div></div>
+      </footer>
+
+    </div>
+    </div>
+    </div>
+
+    <div class="m-tex"></div>
+  </div>
 
   <div class="viewport" id="viewport">
     <div class="stage-sticky" id="stageSticky">

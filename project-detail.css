@@ -22,8 +22,8 @@
 
 :root {
   /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
-  --grain: url(assets/filters.svg?v=26#grain);
-  --grain-soft: url(assets/filters.svg?v=26#grain-soft);
+  --grain: url(assets/filters.svg?v=27#grain);
+  --grain-soft: url(assets/filters.svg?v=27#grain-soft);
 }
 
 /* Base */

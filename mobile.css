@@ -1,0 +1,762 @@
+/*
+  모바일 (화면 폭 640px 이하): 피그마 phone 시안(390 x 3456) 그대로
+  - 데스크톱처럼 시안 크기의 캔버스(.m-stage)를 만들고, mobile.js 가 화면 폭에 맞춰 줄이거나 늘림 (배율 = 화면 폭 / 390)
+  - 좌표와 크기는 시안 값 그대로. 데스크톱 화면(.viewport, .after, .header)은 모바일에서 숨김
+  - 641px 이상(태블릿 포함)은 기존 데스크톱 화면 그대로
+*/
+.m {
+  display: none;
+}
+
+html.is-mobile .m {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+html.is-mobile .viewport,
+html.is-mobile .after,
+html.is-mobile .header {
+  display: none;
+}
+
+/* 위쪽 종이(A): 시안의 0 ~ 978px. 문서 흐름 안에 있음 */
+.m-a {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* 아래쪽(B): 시안의 978px ~ 끝. 종이가 넘어가기 전에는 종이 아래(화면 맨 위부터)에 고정된 채 숨어 있다가, 넘어가면 문서 흐름으로 들어옴 */
+.m-b {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.m-b.is-open {
+  position: relative;
+  pointer-events: auto;
+}
+
+.m-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 390px;
+  overflow: hidden;
+  background: var(--white);
+  transform-origin: 0 0;
+}
+
+#mStageA {
+  height: 1228px;
+  background: transparent; /* 종이(.m-sheet)만 흰색: 종이를 접으면 그 자리에 아래 Project 가 보임 */
+}
+
+#mStageB {
+  height: 2498px; /* 3456 - 958 */
+}
+
+/* 아래쪽은 시안의 958px 부터 시작: Project 제목이 고정 헤더(높이 약 65px)와 겹치지 않게 위에 검은 여백 20px 을 둠 */
+.m-lower {
+  position: absolute;
+  left: 0;
+  top: -958px;
+  width: 390px;
+  height: 3456px;
+}
+
+/* 종이 한 장: 흰 바탕. 모서리를 접으면 접힌 만큼 잘려서 아래 Project 가 보임 */
+.m-sheet {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--white);
+}
+
+.m-fold {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  filter: var(--grain);
+}
+
+.m-fold-flap {
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  clip-path: polygon(0 0, 0 0, 0 0);
+}
+
+.m-stage p {
+  margin: 0;
+}
+
+.m-stage .abs {
+  position: absolute;
+}
+
+/* 고정 헤더 (시안의 header: 위 40px, 좌우 20px) */
+.m-header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  width: 390px;
+  padding: 18px 20px; /* 시안은 위아래 40px 인데 너무 넓어서 줄임 */
+  transform-origin: 0 0;
+  pointer-events: none;
+  color: var(--black);
+  transition: color .3s;
+}
+
+.m-header.is-light {
+  color: var(--white);
+}
+
+.m-header a {
+  pointer-events: auto;
+}
+
+.m-header__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.m-header__logo {
+  position: relative;
+  display: block;
+  flex: none;
+  width: 34px;
+  height: 29px;
+}
+
+.m-header__logo img {
+  position: absolute;
+  left: -3.54%;
+  top: -4.15%;
+  width: 107.08%;
+  height: 108.3%;
+  max-width: none;
+  transition: opacity .3s;
+}
+
+.m-header__logo-light,
+.m-header.is-light .m-header__logo-dark {
+  opacity: 0;
+}
+
+.m-header.is-light .m-header__logo-light {
+  opacity: 1;
+}
+
+.m-header__menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.56px;
+  white-space: nowrap;
+}
+
+/* --- hero --- */
+.m-bg {
+  position: absolute;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1.2px;
+  color: rgba(148, 148, 148, .3);
+  filter: var(--grain) blur(.5px);
+  white-space: nowrap;
+}
+
+.m-bg-ux { left: 20px; top: 109px; }
+.m-bg-web { left: 80px; top: 139px; }
+.m-bg-interaction { left: 20px; top: 271px; }
+.m-bg-designer { left: 76px; top: 301px; }
+.m-bg-graphic { left: 23px; top: 399px; }
+.m-bg-branding { left: 71px; top: 459px; }
+.m-bg-amp { left: 148px; top: 429px; }
+.m-bg-copy { left: 269px; top: 549px; font-weight: 500; }
+.m-bg-research { right: 20px; top: 206px; font-weight: 600; text-align: right; }
+.m-bg-thinking { left: 189px; top: 176px; font-weight: 600; text-transform: uppercase; }
+
+.m-hero {
+  position: absolute;
+  left: 41px;
+  top: 243px;
+  display: flex;
+  align-items: center;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 0;
+  letter-spacing: -1.92px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.m-hero__main {
+  margin-right: -2px;
+}
+
+.m-hero p {
+  line-height: .9;
+}
+
+.m-hero__punct {
+  pointer-events: none;
+}
+
+/* --- philosophy --- */
+.m-phil {
+  position: absolute;
+  left: 20px;
+  top: 760px; /* 처음 화면에서 철학이 덜 보이도록 히어로 아래 간격을 넓힘 */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 351px;
+  line-height: 1.5;
+}
+
+.m-phil__label {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -.56px;
+}
+
+.m-phil__text {
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.m-phil__text p {
+  width: 100%;
+}
+
+.m-phil__text .r { text-align: right; }
+.m-phil__text .j { text-align: justify; }
+
+.m-rule {
+  position: absolute;
+  left: 0;
+  top: 1227px;
+  width: 90px;
+  height: 1px;
+  background: #e1e3e6;
+}
+
+/* --- Project (검은 구역) --- */
+.m-black {
+  position: absolute;
+  left: -42px;
+  top: 958px;
+  width: 474px;
+  height: 2096px;
+  background: var(--black);
+}
+
+.m-project-title {
+  position: absolute;
+  left: 20px;
+  top: 1042px;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1;
+  color: #f5f6f9;
+  white-space: nowrap;
+}
+
+.m-item {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  width: 169px;
+}
+
+.m-item--col {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.m-item img {
+  position: absolute;
+  max-width: none;
+}
+
+.m-pill {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* 글씨 크기에 맞춰 번호표도 같이 줄임 (글씨 둘레 여백은 시안과 비슷한 비율). 아래 오브제 위치가 시안과 같도록 번호표를 줄인 만큼 간격(margin)을 더함 */
+  width: 36px;
+  height: 26px;
+  padding: 0 6px;
+  border: 1px solid var(--white);
+  border-radius: 20px;
+}
+
+.m-item--col .m-pill {
+  margin-bottom: 10px; /* 번호표 높이가 36 → 26 으로 줄어든 만큼 */
+}
+
+.m-pill p {
+  width: 100%;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.8px;
+  text-align: center;
+  color: var(--white);
+}
+
+
+.m-obj {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.m-obj__rot {
+  position: relative;
+  flex: none;
+}
+
+/* 01 의자 */
+.m-chair { left: 20px; top: 1112px; gap: 22px; /* 시안 12 + 줄어든 번호표 높이 10 */ }
+.m-chair .m-obj { width: 169px; height: 200.815px; }
+.m-chair img { left: -.71%; top: -.6%; width: 101.42%; height: 101.2%; }
+
+/* 03 확성기 */
+.m-megaphone { left: 20px; top: 1393px; }
+.m-megaphone .m-pill { margin-bottom: 6px; }
+.m-megaphone .m-obj { width: 183.835px; height: 196.348px; }
+.m-megaphone .m-obj__rot { width: 161.967px; height: 176.527px; transform: scaleY(-1) rotate(-172.42deg); }
+.m-megaphone img { left: 0; top: -.51%; width: 100.74%; height: 101.19%; }
+
+/* 02 병 */
+.m-bottle { left: 201px; top: 1109px; }
+.m-bottle .m-pill { margin-right: 4px; /* 시안 -7 + 줄어든 번호표 너비 11 */ }
+.m-bottle .m-obj { width: 119.915px; height: 274.599px; }
+.m-bottle .m-obj__rot { width: 79.369px; height: 265.452px; transform: rotate(9deg); }
+.m-bottle img { left: -1.52%; top: -.45%; width: 103.03%; height: 100.9%; }
+
+/* 04 젓가락 */
+.m-chopsticks { left: 201px; top: 1393px; }
+.m-chopsticks .m-pill { margin-bottom: -12px; }
+.m-chopsticks .m-obj { width: 159.998px; height: 225.775px; }
+.m-chopsticks img { left: 0; top: -.11%; width: 100%; height: 100.11%; }
+
+/* 05 퍼즐 */
+.m-puzzle { left: 20px; top: 1656px; }
+.m-puzzle .m-pill { margin-bottom: -7px; }
+.m-puzzle .m-obj { width: 182.142px; height: 189.334px; }
+.m-puzzle .m-obj__rot { width: 142.727px; height: 153.701px; transform: rotate(17.39deg); }
+.m-puzzle img { left: -.84%; top: 0; width: 100.84%; height: 100.78%; }
+
+/* 06 사과 */
+.m-apple { left: 201px; top: 1656px; }
+.m-apple .m-obj { width: 170.871px; height: 172.287px; }
+.m-apple .m-obj__rot { width: 148.714px; height: 150.426px; transform: rotate(9.21deg); }
+.m-apple img { left: -2.15%; top: -2.13%; width: 102.96%; height: 102.93%; }
+
+/* --- About Me --- */
+.m-paper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.m-paper__rot {
+  position: relative;
+  flex: none;
+}
+
+.m-paper-white { left: -111px; top: 1933px; width: 389.638px; height: 470.193px; }
+.m-paper-white .m-paper__rot { width: 351.049px; height: 440.074px; transform: rotate(-5.22deg); }
+.m-paper-white img { position: absolute; left: -.34%; top: -.27%; width: 100.68%; height: 100.54%; max-width: none; }
+
+.m-paper-note { left: -387px; top: 2044px; width: 1150.438px; height: 1154.254px; }
+.m-paper-note .m-paper__rot { width: 1049.036px; height: 1053.307px; transform: rotate(5.82deg); }
+.m-paper-note img { position: absolute; left: -.11%; top: -.11%; width: 100.22%; height: 100.22%; max-width: none; }
+
+.m-about-head {
+  position: absolute;
+  left: 20px;
+  top: 1968px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.m-about-title {
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.m-about-sub {
+  width: 168px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.56px;
+}
+
+/* 이력 표 */
+.m-table {
+  position: absolute;
+  left: 20px;
+  top: 2178px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 350px;
+  line-height: 1.5;
+  filter: var(--grain-light); /* 작은 글씨가 깨지지 않게 아주 약한 지글거림 */
+}
+
+.m-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 40px;
+  width: 100%;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--black);
+}
+
+.m-label {
+  flex: none;
+  width: 80px;
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: -.32px;
+}
+
+.m-items {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  min-width: 1px;
+  font-weight: 400;
+}
+
+.m-items--gap12 { gap: 12px; }
+.m-items--gap20 { gap: 20px; }
+
+.m-item-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.m-date {
+  width: 125px;
+  font-size: 12px;
+  letter-spacing: -.24px;
+}
+
+.m-main {
+  font-size: 14px;
+  letter-spacing: -.28px;
+}
+
+.m-sub {
+  font-size: 10px;
+  letter-spacing: -.2px;
+  color: #5b5b5b;
+  white-space: nowrap;
+}
+
+.m-skills {
+  display: flex;
+  flex: 1 0 0;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 1px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.m-skill__title {
+  font-size: 14px;
+  letter-spacing: -.28px;
+}
+
+.m-skill ul {
+  list-style: none;
+  padding: 6px 0 0;
+  font-size: 12px;
+  letter-spacing: -.24px;
+}
+
+.m-skill li {
+  position: relative;
+  margin-left: 18px;
+  line-height: 1.5;
+}
+
+.m-skill li::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 2.5px;
+  height: 2.5px;
+  border-radius: 50%;
+  background: var(--black);
+  transform: translateY(-50%);
+}
+
+/* --- 푸터 --- */
+.m-footer {
+  position: absolute;
+  left: -68px;
+  top: 2954px;
+  width: 484px;
+  height: 502px;
+  overflow: hidden;
+}
+
+.m-footer__paper {
+  position: absolute;
+  left: -152px;
+  top: 90.04px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1023.413px;
+  height: 1234.995px;
+}
+
+.m-footer__paper-rot {
+  position: relative;
+  flex: none;
+  width: 922.056px;
+  height: 1155.886px;
+  transform: rotate(-5.22deg);
+}
+
+.m-footer__paper-rot img {
+  position: absolute;
+  left: -.13%;
+  top: -.1%;
+  width: 100.26%;
+  height: 100.2%;
+  max-width: none;
+}
+
+.m-footer__menu {
+  position: absolute;
+  left: 338px;
+  top: 324px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--white);
+}
+
+.m-footer__menu p {
+  font-size: 12px;
+  color: #969696;
+}
+
+.m-footer__brand-box {
+  position: absolute;
+  left: 86px;
+  top: 169px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 293.194px;
+  height: 139.366px;
+}
+
+.m-footer__brand {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 16px;
+  transform: rotate(-5.22deg);
+}
+
+.m-footer__top {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.m-footer__name {
+  display: flex;
+  align-items: flex-end;
+}
+
+.m-footer__name p {
+  font-size: 37.617px;
+  font-weight: 700;
+  line-height: .9;
+  letter-spacing: -2.257px;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+.m-footer__name p:first-child {
+  margin-right: -1.199px;
+}
+
+.m-footer__name img {
+  flex: none;
+  width: 39.874px;
+  height: 32.852px;
+  margin-right: -2.996px;
+}
+
+.m-footer__slogan {
+  width: 253px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -.48px;
+  color: var(--white);
+}
+
+.m-footer__contact {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.m-footer__talk {
+  font-size: 16px;
+  line-height: .9;
+  letter-spacing: -.96px;
+  color: var(--white);
+}
+
+.m-footer__mail {
+  display: block;
+  font-size: 18px;
+  line-height: .9;
+  letter-spacing: -1.08px;
+  color: var(--green);
+  white-space: nowrap;
+}
+
+.m-footer__sticker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.m-footer__sticker-cursor {
+  left: 360px;
+  top: 145px;
+  width: 73.226px;
+  height: 73.226px;
+}
+
+.m-footer__sticker-cursor .rot {
+  position: relative;
+  flex: none;
+  width: 66.94px;
+  height: 66.94px;
+  transform: rotate(-5.64deg);
+}
+
+.m-footer__sticker-cursor img {
+  position: absolute;
+  left: -3.29%;
+  top: -3.29%;
+  width: 106.58%;
+  height: 106.58%;
+  max-width: none;
+}
+
+.m-footer__sticker-bubble {
+  left: 90px;
+  top: 337px;
+  width: 108.747px;
+  height: 92.447px;
+}
+
+.m-footer__sticker-bubble .rot {
+  position: relative;
+  flex: none;
+  width: 100.343px;
+  height: 81.902px;
+  transform: rotate(-6.32deg);
+}
+
+.m-footer__sticker-bubble img {
+  position: absolute;
+  left: -1.93%;
+  top: -2.36%;
+  width: 103.86%;
+  height: 104.72%;
+  max-width: none;
+}
+
+/* 종이 질감: 화면 전체에 고정으로 덮음 (--ms 는 mobile.js 가 정한 화면 배율) */
+.m-tex {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  opacity: .35;
+  background: url(assets/paper.png) 0 0 / calc(480px * var(--ms, 1)) calc(480px * var(--ms, 1));
+  pointer-events: none;
+}
+
+/* 철학 글자: 스크롤하면 앞에서부터 검정으로 */
+.m-phil .char {
+  display: inline;
+}
+
+/*
+  철학 문장 형광펜 (데스크톱과 같은 효과): 그 구절이 다 검정이 된 뒤 왼쪽에서 오른쪽으로 칠해지고, 되돌리면 지워짐
+  --hl 값(0 → 1)은 mobile.js 가 바꿈. 구절이 두 줄에 걸쳐도 줄마다 칠해지도록 배경으로 그림
+*/
+.m-phil .hl {
+  --hl: 0;
+  background: linear-gradient(var(--green), var(--green)) no-repeat left 3px / calc(var(--hl) * 100%) calc(100% - 4px);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* 작은 글씨(10~16px)는 지글거림을 아주 약하게 (filters.svg 의 grain-light) */
+.grain-light {
+  filter: var(--grain-light);
+}
