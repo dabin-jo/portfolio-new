@@ -26,6 +26,7 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" defer></script>
   <script src="smooth-scroll.js" defer></script>
   <script src="main.js" defer></script>
+  <script src="mobile-sway.js" defer></script>
   <script src="mobile.js" defer></script>
   <script src="transition.js" defer></script>
   <script src="link-hover.js" defer></script>
@@ -65,6 +66,7 @@
 
     <!-- 위쪽 종이 (hero + 철학): 스크롤하면 글씨가 검정이 되고, 접힌 모서리를 끌거나 누르면 종이가 넘어가 아래 Project 가 나타남 (mobile.js) -->
     <div class="m-a" id="mA">
+    <div class="m-a__pin" id="mPin">
     <div class="m-stage" id="mStageA">
     <div class="m-sheet" id="mSheet">
       <!-- hero -->
@@ -118,6 +120,7 @@
       <div class="m-fold" id="mFold">
         <div class="m-fold-flap" id="mFoldFlap" title="끌거나 눌러서 페이지 넘기기"></div>
       </div>
+    </div>
     </div>
     </div>
 

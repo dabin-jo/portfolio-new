@@ -12,9 +12,11 @@ if (window.IS_MOBILE) {
   const SHEET_H = 1228; /* 위쪽 종이 높이 (히어로 간격을 넓히고 철학을 아래로 내리면서 978 → 1228) */
   const LOWER_TOP = 958; /* 아래쪽이 시작하는 시안 y (종이 아래 끝 978px 보다 60px 위: 헤더와 Project 제목이 겹치지 않게) */
   const LOWER_H = 3456 - LOWER_TOP; /* 아래쪽 높이 */
+  const COLOR_HOLD = 700; /* 글씨가 검정이 되는 동안 종이를 붙잡아 두는 스크롤 거리(px). 클수록 천천히 검정이 됨 */
 
   const wrap = document.getElementById('mobile');
   const areaA = document.getElementById('mA');
+  const pin = document.getElementById('mPin');
   const areaB = document.getElementById('mB');
   const stageA = document.getElementById('mStageA');
   const stageB = document.getElementById('mStageB');
@@ -28,9 +30,13 @@ if (window.IS_MOBILE) {
     mScale = wrap.clientWidth / MOBILE_WIDTH;
     gsap.set([stageA, stageB], { scale: mScale, transformOrigin: '0 0' });
     gsap.set(header, { scale: mScale, transformOrigin: '0 0' });
-    areaA.style.height = `${SHEET_H * mScale}px`;
+    /* 종이(pin)는 아래 끝이 화면 아래 끝에 닿으면 붙잡혀서, COLOR_HOLD 만큼 더 스크롤하는 동안 그대로 있음 */
+    const pinH = SHEET_H * mScale;
+    pin.style.height = `${pinH}px`;
+    pin.style.top = `${Math.min(0, window.innerHeight - pinH)}px`;
+    areaA.style.height = `${pinH + COLOR_HOLD}px`;
     areaB.style.height = `${LOWER_H * mScale}px`;
-    wrap.style.height = `${(turned ? LOWER_H : SHEET_H) * mScale}px`;
+    wrap.style.height = turned ? `${LOWER_H * mScale}px` : `${SHEET_H * mScale + COLOR_HOLD}px`;
     document.documentElement.style.setProperty('--ms', mScale);
     ScrollTrigger.refresh();
     updateHeaderTone();
@@ -448,6 +454,27 @@ if (window.IS_MOBILE) {
   initMobilePhilosophy();
   initFoldInteraction();
   initFooterStickers();
+  /* 마우스를 가져다 대면 About Me 종이 두 장과 푸터 종이가 각자 따로 살랑 흔들림 (PC 와 같은 효과, 값은 모바일 크기에 맞춤) */
+  const lower = document.querySelector('.m-lower');
+  initMobileSway({
+    frame: lower,
+    items: [...lower.querySelectorAll('.m-paper')],
+    getScale: () => mScale,
+    pivotY: 3330,
+    baseY: 2300,
+    radius: 1000,
+    rotate: 1.4,
+  });
+  const mFooter = document.getElementById('mFooter');
+  initMobileSway({
+    frame: mFooter,
+    items: [mFooter.querySelector('.m-footer__paper')],
+    getScale: () => mScale,
+    pivotY: 602,
+    baseY: 382,
+    radius: 450,
+    rotate: 1.2,
+  });
   renderFold();
 
   /* 다른 페이지에서 index.html#project / #about 으로 들어온 경우 */

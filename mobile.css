@@ -25,7 +25,14 @@ html.is-mobile .header {
   position: relative;
   z-index: 2;
   width: 100%;
-  overflow: hidden;
+  overflow: clip; /* hidden 이면 안쪽 sticky 가 동작하지 않음 */
+}
+
+/* 철학 글씨가 검정이 되는 동안 종이를 화면에 붙잡아 둠 (PC 의 COLOR_HOLD 와 같음). 높이와 위치는 mobile.js 가 정함 */
+.m-a__pin {
+  position: sticky;
+  top: 0;
+  width: 100%;
 }
 
 /* 아래쪽(B): 시안의 978px ~ 끝. 종이가 넘어가기 전에는 종이 아래(화면 맨 위부터)에 고정된 채 숨어 있다가, 넘어가면 문서 흐름으로 들어옴 */
@@ -442,7 +449,7 @@ html.is-mobile .header {
   gap: 10px;
   width: 350px;
   line-height: 1.5;
-  filter: var(--grain-light); /* 작은 글씨가 깨지지 않게 아주 약한 지글거림 */
+  filter: var(--grain-soft); /* 작은 글씨라 중간 세기(1.8). 더 약하게는 --grain-light(1.0) */
 }
 
 .m-row {

@@ -279,4 +279,9 @@ fitStage();
 updateHeaderColor();
 initForm();
 if (!IS_MOBILE) initFooterRepel(); /* 마우스에 반응하는 종이 흔들림은 모바일에서 쓰지 않음 */
-if (IS_MOBILE) initMobileFooterStickers('.ct-footer__sticker', () => scale);
+if (IS_MOBILE) {
+  initMobileFooterStickers('.ct-footer__sticker', () => scale);
+  /* 마우스를 가져다 대면 푸터 종이가 살랑 흔들림 (PC 푸터와 같은 효과) */
+  const footer = document.getElementById('footer');
+  initMobileSway({ frame: footer, items: [footer.querySelector('.ct-footer__shape-left')], getScale: () => scale, pivotY: 602, baseY: 382, radius: 450, rotate: 1.2 });
+}
