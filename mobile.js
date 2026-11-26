@@ -147,15 +147,25 @@ if (window.IS_MOBILE) {
     foldTimer = null;
     if (fold.tween) fold.tween.kill();
     ScrollTrigger.getAll().forEach((t) => t.kill());
-    areaA.style.display = 'none';
-    areaB.classList.add('is-open');
-    wrap.style.height = `${LOWER_H * mScale}px`;
+    /*
+      스크롤을 먼저 맨 위로 돌려 놓고, 두 프레임 뒤에 위쪽 종이를 치우고 아래쪽을 문서 흐름에 넣음.
+      (치우는 것과 스크롤 되돌리기를 한꺼번에 하면 브라우저가 그 사이 한 프레임을 옛 스크롤 위치(About Me 쪽)로 그려서 잠깐 번쩍임.
+       이 시점엔 종이가 이미 다 넘어가서 위쪽은 투명하고, 아래쪽은 화면에 고정돼 Project 맨 위를 보여 주므로 스크롤을 먼저 옮겨도 화면은 그대로임)
+    */
     scrollToY(0);
-    ScrollTrigger.refresh();
     /* 페이지가 넘어간 순간 헤더 색을 서서히가 아니라 바로 바꿈 (검은 바탕 위에 검은 글씨가 잠깐 보이는 것 방지) */
     header.classList.add('is-snap');
     updateHeaderTone();
-    requestAnimationFrame(() => requestAnimationFrame(() => header.classList.remove('is-snap')));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        areaA.style.display = 'none';
+        areaB.classList.add('is-open');
+        wrap.style.height = `${LOWER_H * mScale}px`;
+        ScrollTrigger.refresh();
+        updateHeaderTone();
+        requestAnimationFrame(() => header.classList.remove('is-snap'));
+      })
+    );
   }
 
   function turnPage() {
