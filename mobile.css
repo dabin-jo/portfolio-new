@@ -124,6 +124,12 @@ html.is-mobile .header {
   color: var(--white);
 }
 
+/* 페이지가 넘어간 직후 한 번만: 색 바뀜을 바로 적용 (mobile.js setTurned) */
+.m-header.is-snap,
+.m-header.is-snap img {
+  transition: none;
+}
+
 .m-header a {
   pointer-events: auto;
 }

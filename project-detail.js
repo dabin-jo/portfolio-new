@@ -5,8 +5,9 @@ gsap.registerPlugin(ScrollTrigger);
 /* --------------------------------------------------------------------------
    1920px 기준 캔버스를 화면 폭에 맞춰 축소/확대
    -------------------------------------------------------------------------- */
-const BASE_WIDTH = 1920;
-const BASE_HEIGHT = 3655; /* Overview 가 길어지면 아래로 밀린 만큼(layoutShift) 더해짐 */
+const IS_MOBILE = window.IS_MOBILE === true; /* compact.js 가 판정: 화면 폭 640px 이하는 모바일 시안(390 x 2064) 크기의 캔버스 */
+const BASE_WIDTH = IS_MOBILE ? 390 : 1920;
+const BASE_HEIGHT = IS_MOBILE ? 2064 : 3655; /* Overview 가 길어지면 아래로 밀린 만큼(layoutShift) 더해짐 */
 let layoutShift = 0;
 
 const viewport = document.getElementById('viewport');
@@ -45,7 +46,7 @@ const details = document.getElementById('details');
 const detailsTrack = document.getElementById('detailsTrack');
 
 /* 헤더가 어두운 푸터 위에 올라오면 흰색으로 */
-const FOOTER_TOP = 3260; /* 푸터 도형이 시작되는 높이(캔버스 기준) */
+const FOOTER_TOP = IS_MOBILE ? 1574 : 3260; /* 푸터 도형이 시작되는 높이(캔버스 기준) */
 
 function updateHeaderColor() {
   const headerBottom = (window.scrollY + header.offsetHeight * scale / 2) / scale;
@@ -59,9 +60,9 @@ window.addEventListener('scroll', updateHeaderColor, { passive: true });
   - 마우스로 잡고 끌거나, 터치로 밀거나, 트랙패드 가로 스크롤로 넘김
   - 놓으면 가까운 위치에 딱 붙음 (처음 / 한 장씩 / 마지막 장 오른쪽 끝이 화면 오른쪽에서 60px)
 */
-const DETAILS_ITEM_WIDTH = 856;
-const DETAILS_GAP = 20;
-const DETAILS_END_RIGHT = 1860; /* 마지막 이미지의 오른쪽 끝이 닿는 위치 (오른쪽 여백 60px) */
+const DETAILS_ITEM_WIDTH = IS_MOBILE ? 267.04 : 856;
+const DETAILS_GAP = IS_MOBILE ? 12 : 20;
+const DETAILS_END_RIGHT = IS_MOBILE ? 370 : 1860; /* 마지막 이미지의 오른쪽 끝이 닿는 위치 (오른쪽 여백 60px) */
 
 /*
   Details 이미지 확대 보기
@@ -197,7 +198,7 @@ lightbox.addEventListener('touchmove', (e) => e.preventDefault(), { passive: fal
 function initDetailsSlider() {
   const items = detailsTrack.children;
   const step = DETAILS_ITEM_WIDTH + DETAILS_GAP;
-  const trackStart = 660; /* .pd-details__track 의 margin-left */
+  const trackStart = IS_MOBILE ? 80 : 660; /* .pd-details__track 의 margin-left */
   const trackWidth = items.length * DETAILS_ITEM_WIDTH + (items.length - 1) * DETAILS_GAP;
   const minX = -(trackStart + trackWidth - DETAILS_END_RIGHT);
   const maxX = 0;
@@ -503,7 +504,8 @@ function renderInfo(info) {
     const dd = document.createElement('dd');
     if (Array.isArray(value)) {
       dd.className = 'pd-info__list';
-      value.forEach((v) => dd.append(Object.assign(document.createElement('span'), { textContent: v })));
+      /* 모바일은 한 줄씩 세로로 나열하므로 끝의 ' ·' 구분점은 뺌 */
+      value.forEach((v) => dd.append(Object.assign(document.createElement('span'), { textContent: IS_MOBILE ? v.replace(/\s*·$/, '') : v })));
     } else if (value instanceof Node) {
       dd.append(value);
     } else {
@@ -642,8 +644,8 @@ function initProjectTitle() {
   - Overview 가 원래 디자인(160px)보다 길면 Info 와 그 아래를 같은 만큼 내림
   - Info 표가 6줄(256px)보다 짧으면 Details 와 그 아래를 짧아진 만큼 올림
 */
-const OVERVIEW_BASE_HEIGHT = 160;
-const INFO_BASE_HEIGHT = 256;
+const OVERVIEW_BASE_HEIGHT = IS_MOBILE ? 286 : 160;
+const INFO_BASE_HEIGHT = IS_MOBILE ? 360 : 256;
 
 function applyLayoutShift() {
   const overview = document.querySelector('.pd-overview');
@@ -738,7 +740,8 @@ function initInteractions() {
   document.fonts.ready.then(applyLayoutShift);
   updateHeaderColor();
   initDetailsSlider();
-  initFooterRepel();
+  if (IS_MOBILE) initMobileFooterStickers('.pd-footer__sticker', () => scale);
+  else initFooterRepel(); /* 마우스에 반응하는 종이 흔들림은 모바일에서 쓰지 않음 */
 }
 
 fitStage();

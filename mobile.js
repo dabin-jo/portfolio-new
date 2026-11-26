@@ -152,7 +152,10 @@ if (window.IS_MOBILE) {
     wrap.style.height = `${LOWER_H * mScale}px`;
     scrollToY(0);
     ScrollTrigger.refresh();
+    /* 페이지가 넘어간 순간 헤더 색을 서서히가 아니라 바로 바꿈 (검은 바탕 위에 검은 글씨가 잠깐 보이는 것 방지) */
+    header.classList.add('is-snap');
     updateHeaderTone();
+    requestAnimationFrame(() => requestAnimationFrame(() => header.classList.remove('is-snap')));
   }
 
   function turnPage() {
@@ -217,7 +220,10 @@ if (window.IS_MOBILE) {
   document.querySelectorAll('[data-m-goto]').forEach((a) => {
     a.addEventListener('click', (e) => {
       e.preventDefault();
-      goTo(a.dataset.mGoto);
+      /* PC 와 같이 연두색 펜 전환이 화면을 덮은 순간에 위치를 바꿈 (transition.js 가 없으면 바로 이동) */
+      const go = () => goTo(a.dataset.mGoto, true);
+      if (window.pageTransition) window.pageTransition.run(go);
+      else go();
     });
   });
 

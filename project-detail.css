@@ -809,3 +809,8 @@ a {
 .pd-tape {
   pointer-events: none;
 }
+
+/* 영상이 들어가도 외곽선이 영상 위(가장자리 안쪽)에 그려져서 이미지를 감싸 보이게 */
+.pd-visual__image::before {
+  z-index: 2;
+}
