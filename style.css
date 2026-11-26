@@ -159,7 +159,7 @@ a {
   left: 0;
   top: 0;
   width: 1920px;
-  height: 2040px;
+  height: var(--sheet-h, 2040px); /* 화면이 세로로 길면 main.js 가 늘림 */
   background: var(--white);
   z-index: 2;
 }
@@ -169,7 +169,7 @@ a {
   left: 0;
   top: 0;
   width: 1920px;
-  height: 2040px;
+  height: var(--sheet-h, 2040px);
   background: #eef0f2;
   z-index: -1;
 }
@@ -188,7 +188,7 @@ a {
   left: 0;
   top: 0;
   width: 1920px;
-  height: 2040px;
+  height: var(--sheet-h, 2040px);
   z-index: 3;
   pointer-events: none;
   filter: var(--grain);
@@ -418,6 +418,12 @@ a {
 .hero-punct {
   right: 32px;
   pointer-events: none; /* 글자 위에 겹친 쉼표/마침표가 마우스 호버를 가로채지 않게 */
+}
+
+/* 화면이 세로로 길어 종이가 늘어나면(main.js) 철학 문장은 그 절반만큼 아래로 내려감 */
+.label-philosophy,
+.phil {
+  transform: translateY(var(--phil-shift, 0px));
 }
 
 /* Philosophy */

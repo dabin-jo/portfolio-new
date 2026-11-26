@@ -10,6 +10,12 @@ const BASE_WIDTH = 1920;
 /* 위쪽 종이(철학 페이지)의 크기 */
 const SHEET_WIDTH = 1920;
 const SHEET_HEIGHT = 2040;
+/*
+  화면이 좁아져 캔버스가 많이 줄어들면 화면이 종이(2040)보다 세로로 길어져서 아래에 뒤의 검은 화면이 보임.
+  그럴 땐 종이를 화면 높이까지 늘리고, 철학 문장은 늘어난 길이의 절반(PHIL_SHIFT_RATIO)만큼만 내려서 위아래 여백을 나눔 (fitStage 가 계산)
+*/
+let sheetH = SHEET_HEIGHT;
+const PHIL_SHIFT_RATIO = 0.5;
 
 /* 글씨가 검정으로 바뀌는 동안 화면을 붙잡아 두는 스크롤 거리(px) */
 const COLOR_HOLD = 1400;
@@ -23,6 +29,11 @@ const PROJECT_SHIFT = 0;
   그림 아랫부분이 잘리지 않고 스크롤하면 이어서 보이게 함 (fitStage / layoutAfter)
 */
 const PROJECT_VIEW_MIN = 1000;
+/*
+  반대로 창이 세로로 아주 길면(좁은 폭 등) 고정 화면을 이 높이까지만 쓰고, 그 아래는 About Me·푸터 영역(.after)이 이어받음.
+  끝까지 고정하면 푸터가 고정 화면 위로 겹쳐 올라가서(.after 의 질감은 자기 영역부터만 입혀짐) 푸터에 종이 질감이 빠짐
+*/
+const PROJECT_VIEW_MAX = 1300;
 
 const viewport = document.getElementById('viewport');
 const stageSticky = document.getElementById('stageSticky');
@@ -43,17 +54,18 @@ let holdStart = 0; /* 화면 고정이 시작되는 스크롤 위치(px) */
 
 /* 고정 화면이 보여 주는 디자인 높이: 화면 높이, 단 Project 가 다 들어갈 만큼은 확보 */
 function viewHeight() {
-  return Math.max(window.innerHeight / scale, PROJECT_VIEW_MIN);
+  return Math.min(PROJECT_VIEW_MAX, Math.max(window.innerHeight / scale, PROJECT_VIEW_MIN));
 }
 
 /*
   고정 화면의 높이 = 고정 시작 위치 + 화면 높이.
   종이를 넘기기 전에는 이 값 그대로라서 문서의 맨 끝이 곧 글씨가 다 검정이 되는 지점이고,
   접힌 모서리가 나타난 뒤에는 브라우저가 아래로 더 내려가지 못함 (잠금 코드 불필요).
-  종이를 넘긴 뒤에는 화면이 Project 보다 낮을 때(viewHeight 가 화면보다 큼) 그만큼 더 길어져서, 스크롤하면 그림 아랫부분이 이어서 보임
+  종이를 넘긴 뒤에는 viewHeight 에 맞춤: 화면이 Project 보다 낮으면 그만큼 더 길어져서 스크롤하면 그림 아랫부분이 이어서 보이고,
+  화면이 아주 길면 더 짧아져서 그 아래를 About Me·푸터가 이어받음
 */
 function applyStickyHeight() {
-  const extra = fold.turned ? Math.max(0, viewHeight() * scale - window.innerHeight) : 0;
+  const extra = fold.turned ? viewHeight() * scale - window.innerHeight : 0;
   const stickyHeight = holdStart + window.innerHeight + extra;
   stageSticky.style.height = `${stickyHeight}px`;
   viewport.style.height = `${stickyHeight + COLOR_HOLD}px`;
@@ -64,8 +76,23 @@ function fitStage() {
   gsap.set(stage, { scale, transformOrigin: '0 0' });
   gsap.set(header, { scale, transformOrigin: '0 0' }); /* 고정 헤더도 같은 비율로 */
 
+  /* 종이가 화면보다 짧으면 화면 높이까지 늘림 */
+  const nextSheetH = Math.max(SHEET_HEIGHT, Math.ceil(window.innerHeight / scale));
+  if (nextSheetH !== sheetH) {
+    sheetH = nextSheetH;
+    CORNER.y = sheetH;
+    FOLD_REST.y = sheetH - FOLD_REST_FROM_BOTTOM;
+    FOLD_END.y = -sheetH;
+    if (!fold.tween || !fold.tween.isActive()) {
+      Object.assign(fold.p, fold.turned ? FOLD_END : fold.shown ? FOLD_REST : CORNER);
+      renderFold();
+    }
+  }
+  stage.style.setProperty('--sheet-h', sheetH + 'px');
+  stage.style.setProperty('--phil-shift', (sheetH - SHEET_HEIGHT) * PHIL_SHIFT_RATIO + 'px');
+
   /* 철학 페이지(종이)의 아래쪽 끝이 화면 아래 끝에 오도록 맞춤 */
-  const visibleTop = Math.max(0, SHEET_HEIGHT - window.innerHeight / scale);
+  const visibleTop = Math.max(0, sheetH - window.innerHeight / scale);
   holdStart = visibleTop * scale;
 
   /* 책장 페이지를 종이 뒤, 같은 화면 위치에 겹쳐 둠 */
@@ -87,12 +114,25 @@ function fitStage() {
   About Me + 푸터(.after): 프로젝트 페이지(고정 화면) 바로 아래에서 이어짐.
   고정 화면은 디자인 y 2040 ~ 2040+화면높이 를 보여 주므로, 아래 영역은 그 아래(디자인 y = afterTop)부터 시작함.
 */
+/*
+  Project ~ 푸터 전체(디자인 높이 PAGE_HEIGHT - SHEET_HEIGHT)가 화면 높이보다 짧으면 푸터 아래에 흰 바탕이 보임.
+  그만큼(projectGap)을 Project 와 About Me 사이에 더 벌려서 푸터 아래 끝이 화면 아래 끝에 닿게 함.
+  About Me·푸터가 gap 만큼 아래로 내려가므로, .after 의 첫 줄에 해당하는 디자인 y 는 그만큼 위로 올라감
+*/
+function projectGap() {
+  return Math.max(0, Math.ceil(window.innerHeight / scale - (PAGE_HEIGHT - SHEET_HEIGHT)));
+}
+
+/* .after (About Me + 푸터) 영역의 첫 줄에 해당하는 디자인 y */
+function afterTopDesign() {
+  return SHEET_HEIGHT + PROJECT_SHIFT + viewHeight() - projectGap();
+}
+
 function layoutAfter() {
-  const visibleHeight = viewHeight();
-  const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + visibleHeight;
+  const afterTop = afterTopDesign();
   after.style.height = `${Math.max(0, PAGE_HEIGHT - afterTop) * scale}px`;
   gsap.set(afterStage, { scale, y: -afterTop * scale, transformOrigin: '0 0' });
-  after.style.setProperty('--vh', `${visibleHeight + PROJECT_SHIFT}px`);
+  after.style.setProperty('--vh', `${afterTop - SHEET_HEIGHT}px`);
   return afterTop;
 }
 
@@ -212,6 +252,7 @@ function initPhilosophyColor() {
    - 종이가 있던 자리에는 뒤 배경(회색)이 드러남
    -------------------------------------------------------------------------- */
 const CORNER = { x: SHEET_WIDTH, y: SHEET_HEIGHT }; /* 종이 오른쪽 아래 꼭짓점 */
+const FOLD_REST_FROM_BOTTOM = SHEET_HEIGHT - 1795.4; /* 종이 아래 끝에서 위로 244.6 */
 const FOLD_REST = { x: 1883.8, y: 1795.4 }; /* 처음 접혀 있는 모양 (디자인의 연두색 삼각형) */
 const FOLD_END = { x: -SHEET_WIDTH, y: -SHEET_HEIGHT }; /* 종이가 완전히 넘어간 상태 */
 const TURN_DISTANCE = 900; /* 이만큼 이상 끌어야 놓았을 때 페이지가 넘어감 */
@@ -255,7 +296,11 @@ let peekRemoved = []; /* 지금 뜯겨 나간 부분(캔버스 좌표) */
 function updatePeek() {
   if (!peeking) return;
   const sr = stage.getBoundingClientRect();
-  const top = viewport.getBoundingClientRect().bottom; /* 위쪽 화면이 끝나는 곳 = About Me 영역이 시작하는 곳 */
+  /*
+    About Me 영역이 시작하는 곳 = 종이를 넘긴 뒤 고정 화면이 끝나는 곳(고정 시작 위치 + viewHeight).
+    (창이 길면 고정 화면이 화면 높이보다 짧아지므로, 뜯는 동안과 넘긴 뒤의 About Me 위치가 같도록 넘긴 뒤 기준으로 계산함)
+  */
+  const top = stageSticky.getBoundingClientRect().top + holdStart + viewHeight() * scale;
   after.style.top = `${top}px`;
   after.style.clipPath =
     peekRemoved.length < 3
@@ -314,8 +359,8 @@ function renderFold() {
   const rect = [
     { x: 0, y: 0 },
     { x: SHEET_WIDTH, y: 0 },
-    { x: SHEET_WIDTH, y: SHEET_HEIGHT },
-    { x: 0, y: SHEET_HEIGHT },
+    { x: SHEET_WIDTH, y: sheetH },
+    { x: 0, y: sheetH },
   ];
 
   /* 보이는 종이: P 쪽 (X - M)·n >= 0 */
@@ -332,7 +377,7 @@ function renderFold() {
     [{ x: 0, y: 0 }, { x: 1, y: 0 }],
     [{ x: SHEET_WIDTH, y: 0 }, { x: -1, y: 0 }],
     [{ x: 0, y: 0 }, { x: 0, y: 1 }],
-    [{ x: 0, y: SHEET_HEIGHT }, { x: 0, y: -1 }],
+    [{ x: 0, y: sheetH }, { x: 0, y: -1 }],
   ].forEach(([pt, nn]) => {
     flap = clipByLine(flap, pt, nn);
   });
@@ -381,13 +426,14 @@ function resetFold() {
   fold.turned = false;
   applyStickyHeight();
   after.style.transform = '';
-  setPeek(false);
+  /* 종이가 돌아오는 동안 About Me 도 Project 와 같이 그 자리에 남아 있다가(종이가 덮는 만큼 가려짐) 다 돌아오면 사라짐 */
+  setPeek(true);
   header.classList.remove('is-light');
   shelf.classList.remove('is-open');
   after.classList.remove('is-visible');
   sheet.style.visibility = '';
   foldFlap.style.visibility = '';
-  animateFold(CORNER, 0.5, 'power2.inOut');
+  animateFold(CORNER, 0.5, 'power2.inOut', () => setPeek(false));
 }
 
 /* 페이지를 넘긴 뒤에는 이만큼 이상 위로 스크롤해야 철학 페이지로 돌아감 (1 = 맨 끝, 0.5 = 절반 거리) */
@@ -453,7 +499,7 @@ function goToSection(name) {
   let y = projectY;
   if (name === 'about') {
     /* About Me 제목이 화면 위에서 85px 아래에 오도록 (헤더와 떨어지고 아래 푸터 윗부분이 같이 보임) */
-    const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + viewHeight();
+    const afterTop = afterTopDesign();
     y = after.offsetTop + (ABOUT_TOP - afterTop - 85) * scale;
   } else if (name === 'contact') {
     y = document.documentElement.scrollHeight;
@@ -989,7 +1035,7 @@ function updateHeaderTone() {
     header.classList.remove('is-logo-dark');
     return;
   }
-  const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + viewHeight();
+  const afterTop = afterTopDesign();
   const y = afterTop + (window.scrollY + 35 * scale - after.offsetTop) / scale; /* 헤더 가운데 높이가 가리키는 디자인 y */
   header.classList.toggle('is-logo-dark', y > HEADER_LOGO_ON_PAPER);
   header.classList.toggle('is-light', y <= HEADER_MENU_ON_PAPER);
