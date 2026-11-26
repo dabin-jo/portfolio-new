@@ -797,6 +797,9 @@ a {
   overflow-x: clip;
   overflow-y: visible; /* 위로 삐져나온 종이가 이 상자 위쪽 경계에서 잘리지 않게 */
   background: var(--black);
+  /* 위쪽 고정 화면과 맞닿는 곳에 화면 배율 때문에 소수점 픽셀 틈이 생기면 흰 실선이 비침: 위로 2px 덧대 가림.
+     색은 종이 질감이 얹힌 검은 배경의 평균색(#232323). 순수 검정(--black)이면 질감이 없어 오히려 진한 선으로 보임 */
+  box-shadow: 0 -2px 0 #232323;
 }
 
 .after.is-visible {

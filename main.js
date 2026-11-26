@@ -17,6 +17,13 @@ const COLOR_HOLD = 1400;
 /* 프로젝트 화면을 이만큼(디자인 px) 위로 올려서, 위쪽 여백을 줄이고 아래에 About Me 종이가 살짝 보이게 함 */
 const PROJECT_SHIFT = 0;
 
+/*
+  Project 화면이 한 화면에 다 들어가려면 필요한 세로 길이(디자인 px).
+  창이 가로로 넓고 세로로 짧아서 화면 높이가 이보다 작으면, 고정된 화면을 이만큼으로 키워서
+  그림 아랫부분이 잘리지 않고 스크롤하면 이어서 보이게 함 (fitStage / layoutAfter)
+*/
+const PROJECT_VIEW_MIN = 1000;
+
 const viewport = document.getElementById('viewport');
 const stageSticky = document.getElementById('stageSticky');
 const stage = document.getElementById('stage');
@@ -33,6 +40,24 @@ const ABOUT_TOP = 3240;
 
 let scale = 1;
 let holdStart = 0; /* 화면 고정이 시작되는 스크롤 위치(px) */
+
+/* 고정 화면이 보여 주는 디자인 높이: 화면 높이, 단 Project 가 다 들어갈 만큼은 확보 */
+function viewHeight() {
+  return Math.max(window.innerHeight / scale, PROJECT_VIEW_MIN);
+}
+
+/*
+  고정 화면의 높이 = 고정 시작 위치 + 화면 높이.
+  종이를 넘기기 전에는 이 값 그대로라서 문서의 맨 끝이 곧 글씨가 다 검정이 되는 지점이고,
+  접힌 모서리가 나타난 뒤에는 브라우저가 아래로 더 내려가지 못함 (잠금 코드 불필요).
+  종이를 넘긴 뒤에는 화면이 Project 보다 낮을 때(viewHeight 가 화면보다 큼) 그만큼 더 길어져서, 스크롤하면 그림 아랫부분이 이어서 보임
+*/
+function applyStickyHeight() {
+  const extra = fold.turned ? Math.max(0, viewHeight() * scale - window.innerHeight) : 0;
+  const stickyHeight = holdStart + window.innerHeight + extra;
+  stageSticky.style.height = `${stickyHeight}px`;
+  viewport.style.height = `${stickyHeight + COLOR_HOLD}px`;
+}
 
 function fitStage() {
   scale = viewport.clientWidth / BASE_WIDTH;
@@ -51,10 +76,8 @@ function fitStage() {
     이렇게 하면 문서의 맨 끝이 곧 글씨가 다 검정이 되는 지점이라,
     접힌 모서리가 나타난 뒤에는 브라우저가 아래로 더 내려가지 못하게 함 (잠금 코드 불필요).
   */
-  const stickyHeight = holdStart + window.innerHeight;
-  stageSticky.style.height = `${stickyHeight}px`;
   stageSticky.style.top = `${-holdStart}px`;
-  viewport.style.height = `${stickyHeight + COLOR_HOLD}px`;
+  applyStickyHeight();
 
   layoutAfter();
   ScrollTrigger.refresh();
@@ -65,7 +88,7 @@ function fitStage() {
   고정 화면은 디자인 y 2040 ~ 2040+화면높이 를 보여 주므로, 아래 영역은 그 아래(디자인 y = afterTop)부터 시작함.
 */
 function layoutAfter() {
-  const visibleHeight = window.innerHeight / scale;
+  const visibleHeight = viewHeight();
   const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + visibleHeight;
   after.style.height = `${Math.max(0, PAGE_HEIGHT - afterTop) * scale}px`;
   gsap.set(afterStage, { scale, y: -afterTop * scale, transformOrigin: '0 0' });
@@ -356,6 +379,7 @@ function resetFold() {
   foldTimer = null;
   fold.shown = false;
   fold.turned = false;
+  applyStickyHeight();
   after.style.transform = '';
   setPeek(false);
   header.classList.remove('is-light');
@@ -387,6 +411,7 @@ function onColorProgress(progress) {
 function turnPage() {
   animateFold(FOLD_END, 0.9, 'power2.inOut', () => {
     fold.turned = true;
+    applyStickyHeight();
     setPeek(false);
     header.classList.add('is-light'); /* 검은 프로젝트 페이지 위에서는 흰색 헤더 */
     shelf.classList.add('is-open'); /* 이제부터 프로젝트 그림을 누를 수 있음 */
@@ -408,6 +433,7 @@ function openProject() {
   setPeek(false);
   fold.shown = true;
   fold.turned = true;
+  applyStickyHeight();
   fold.p.x = FOLD_END.x;
   fold.p.y = FOLD_END.y;
   renderFold();
@@ -427,7 +453,7 @@ function goToSection(name) {
   let y = projectY;
   if (name === 'about') {
     /* About Me 제목이 화면 위에서 85px 아래에 오도록 (헤더와 떨어지고 아래 푸터 윗부분이 같이 보임) */
-    const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + window.innerHeight / scale;
+    const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + viewHeight();
     y = after.offsetTop + (ABOUT_TOP - afterTop - 85) * scale;
   } else if (name === 'contact') {
     y = document.documentElement.scrollHeight;
@@ -963,7 +989,7 @@ function updateHeaderTone() {
     header.classList.remove('is-logo-dark');
     return;
   }
-  const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + window.innerHeight / scale;
+  const afterTop = SHEET_HEIGHT + PROJECT_SHIFT + viewHeight();
   const y = afterTop + (window.scrollY + 35 * scale - after.offsetTop) / scale; /* 헤더 가운데 높이가 가리키는 디자인 y */
   header.classList.toggle('is-logo-dark', y > HEADER_LOGO_ON_PAPER);
   header.classList.toggle('is-light', y <= HEADER_MENU_ON_PAPER);
