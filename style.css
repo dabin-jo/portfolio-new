@@ -803,6 +803,14 @@ a {
   display: block;
 }
 
+/* 종이를 뜯는 동안 미리 보이는 상태: 문서 길이는 늘리지 않고 화면에 고정 (위치와 잘라 내는 모양은 main.js updatePeek 이 정함) */
+.after.is-peek {
+  display: block;
+  position: fixed;
+  left: 0;
+  pointer-events: none;
+}
+
 .after-stage {
   position: absolute;
   left: 0;
@@ -810,6 +818,7 @@ a {
   width: 1920px;
   height: 4577px;
   transform-origin: 0 0;
+  overflow: hidden; /* 종이 질감처럼 캔버스(4577px) 밖으로 더 긴 요소가 푸터 아래에 빈 스크롤 공간을 만들지 않게 */
 }
 
 /* 종이 질감: 위쪽 화면(.stage)의 질감과 무늬가 이어지도록 세로 위치를 --vh 만큼 밀어 맞춤 */

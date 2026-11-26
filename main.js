@@ -221,6 +221,55 @@ function clipByLine(poly, m, n) {
 const toClip = (poly) =>
   poly.length < 3 ? 'polygon(0 0, 0 0, 0 0)' : `polygon(${poly.map((q) => `${q.x}px ${q.y}px`).join(',')})`;
 
+/*
+  종이를 뜯는 동안 아래의 About Me 도 같이 보이게 함 (뜯고 난 뒤에 갑자기 나타나지 않도록)
+  - 아직 문서 흐름에 넣지 않고(스크롤 길이가 늘어나지 않게) 화면에 고정해서, 종이가 뜯겨 나간 모양 안쪽만 보이게 잘라서 보여 줌
+  - 뜯기가 끝나면 같은 자리에서 원래대로 문서 흐름 안으로 들어옴
+*/
+let peeking = false;
+let peekRemoved = []; /* 지금 뜯겨 나간 부분(캔버스 좌표) */
+
+function updatePeek() {
+  if (!peeking) return;
+  const sr = stage.getBoundingClientRect();
+  const top = viewport.getBoundingClientRect().bottom; /* 위쪽 화면이 끝나는 곳 = About Me 영역이 시작하는 곳 */
+  after.style.top = `${top}px`;
+  after.style.clipPath =
+    peekRemoved.length < 3
+      ? 'polygon(0 0, 0 0, 0 0)'
+      : `polygon(${peekRemoved.map((q) => `${sr.left + q.x * scale}px ${sr.top + q.y * scale - top}px`).join(',')})`;
+}
+
+function setPeek(on) {
+  if (peeking === on) return;
+  peeking = on;
+  after.classList.toggle('is-peek', on);
+  if (on) {
+    updatePeek();
+  } else {
+    after.style.top = '';
+    after.style.clipPath = '';
+  }
+}
+
+/*
+  종이를 넘긴 뒤 위로 조금 스크롤해도 Project 화면은 고정(핀)되어 있는데, 그 위로 삐져나온 About Me 종이만 같이 내려가 검은 틈이 벌어지는 것을 막음
+  - 핀이 풀리는 지점(맨 끝)보다 위로 올라간 만큼 About Me 영역을 위로 끌어올려서, 종이를 넘긴 직후 모습 그대로 고정해 둠
+*/
+function syncAfterOffset() {
+  const off = fold.turned ? Math.max(0, holdStart + COLOR_HOLD - window.scrollY) : 0;
+  after.style.transform = off > 0.5 ? `translateY(${-off}px)` : '';
+}
+
+const onScrollSync = () => {
+  updatePeek();
+  syncAfterOffset();
+};
+window.addEventListener('scroll', onScrollSync, { passive: true });
+/* 부드러운 스크롤(Lenis)은 스크롤 위치를 매 프레임 직접 바꾸므로, 같은 프레임 안에서 바로 맞춰야 그려질 때 한 프레임씩 어긋나 드드득거리지 않음 */
+if (window.lenis) window.lenis.on('scroll', onScrollSync);
+window.addEventListener('resize', updatePeek);
+
 function renderFold() {
   const { p } = fold;
   const dx = p.x - CORNER.x;
@@ -231,6 +280,8 @@ function renderFold() {
   if (dist < 0.5) {
     sheet.style.clipPath = 'none';
     foldFlap.style.clipPath = toClip([]);
+    peekRemoved = [];
+    updatePeek();
     return;
   }
 
@@ -265,6 +316,8 @@ function renderFold() {
 
   sheet.style.clipPath = toClip(visible);
   foldFlap.style.clipPath = toClip(flap);
+  peekRemoved = removed;
+  updatePeek();
 }
 
 function setFold(x, y) {
@@ -293,6 +346,7 @@ let foldTimer = null;
 function showFold() {
   foldTimer = null;
   fold.shown = true;
+  setPeek(true);
   animateFold(FOLD_REST, 1.1, 'power3.out');
 }
 
@@ -302,6 +356,8 @@ function resetFold() {
   foldTimer = null;
   fold.shown = false;
   fold.turned = false;
+  after.style.transform = '';
+  setPeek(false);
   header.classList.remove('is-light');
   shelf.classList.remove('is-open');
   after.classList.remove('is-visible');
@@ -331,6 +387,7 @@ function onColorProgress(progress) {
 function turnPage() {
   animateFold(FOLD_END, 0.9, 'power2.inOut', () => {
     fold.turned = true;
+    setPeek(false);
     header.classList.add('is-light'); /* 검은 프로젝트 페이지 위에서는 흰색 헤더 */
     shelf.classList.add('is-open'); /* 이제부터 프로젝트 그림을 누를 수 있음 */
     after.classList.add('is-visible'); /* 이제부터 아래로 스크롤해 About Me 와 푸터로 갈 수 있음 */
@@ -348,6 +405,7 @@ function openProject() {
   foldTimer = null;
   if (fold.tween) fold.tween.kill();
 
+  setPeek(false);
   fold.shown = true;
   fold.turned = true;
   fold.p.x = FOLD_END.x;

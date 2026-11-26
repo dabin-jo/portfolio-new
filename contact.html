@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="transition.css">
   <link rel="stylesheet" href="link-hover.css">
   <link rel="stylesheet" href="copy-email.css">
+  <link rel="stylesheet" href="mobile-contact.css">
+  <script src="compact.js"></script>
   <script>
     /* 페이지 전환으로 들어온 경우, 첫 화면부터 연두색으로 덮인 상태로 시작 (깜빡임 방지). 문제가 생겨도 5초 뒤엔 풀림 */
     try {
@@ -50,6 +52,10 @@
   <div class="viewport" id="viewport">
     <main class="stage" id="stage">
 
+      <!-- 모바일 전용: 뒤에 깔린 종이 두 장 (데스크톱에서는 숨김, mobile-contact.css) -->
+      <div class="ct-mpaper ct-mpaper-black"><div class="ct-mpaper__rot"><img src="assets/mc-black-paper.svg" alt=""></div></div>
+      <div class="ct-mpaper ct-mpaper-cream"><div class="ct-mpaper__rot"><img src="assets/mc-cream-paper.svg" alt=""></div></div>
+
       <p class="grain ct-label ct-label-contact">Contact</p>
       <div class="grain ct-quote">
         <p>I notice what others pass by,</p>
@@ -62,6 +68,7 @@
         <button class="ct-email__copy" type="button" data-copy="jodabin9098@gmail.com" aria-label="이메일 주소 복사">
           <span class="ct-email__text">jodabin9098@gmail.com</span>
           <img src="assets/contact-copy.svg" alt="">
+          <img class="ct-email__copy-m" src="assets/mc-copy.svg" alt="">
         </button>
       </div>
 
@@ -144,6 +151,10 @@
             </div>
           </div>
         </div></div>
+
+        <!-- 모바일 전용 스티커 (데스크톱에서는 숨김) -->
+        <div class="ct-footer__sticker ct-footer__sticker-cursor"><div class="rot"><img src="assets/m-sticker-cursor.svg" alt=""></div></div>
+        <div class="ct-footer__sticker ct-footer__sticker-bubble"><div class="rot"><img src="assets/m-sticker-bubble.svg" alt=""></div></div>
       </footer>
 
       <div class="paper"></div>

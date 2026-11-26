@@ -1,0 +1,471 @@
+/*
+  연락처 페이지 모바일 (화면 폭 640px 이하): 피그마 phone 시안(390 x 1575) 그대로
+  - compact.js 가 html 에 is-mobile 을 붙였을 때만 적용됨 (모든 규칙이 html.is-mobile 로 시작)
+  - 데스크톱과 같은 HTML 을 쓰되, 1920px 캔버스(.stage)를 시안 크기(390 x 1575)로 바꿔서 배치함.
+    크기 배율은 contact.js 가 화면 폭 / 390 으로 정함. 폼 입력·검사·전송 코드도 그대로 씀
+  - 641px 이상(태블릿 포함)은 기존 데스크톱 화면 그대로
+*/
+:root {
+  --grain-light: url(assets/filters.svg?v=27#grain-light);
+}
+
+/* 모바일 전용 요소: 데스크톱에서는 숨김 */
+.ct-mpaper,
+.ct-email__copy-m,
+.ct-footer__sticker {
+  display: none;
+}
+
+html.is-mobile .stage {
+  width: 390px;
+  height: 1635px;
+}
+
+/* --- 헤더 (위아래 15px, 시안 그대로) --- */
+html.is-mobile .header {
+  align-items: center;
+  width: 390px;
+  padding: 15px 20px;
+}
+
+html.is-mobile .header__logo {
+  width: 34px;
+  height: 29px;
+}
+
+html.is-mobile .header__logo img {
+  left: -3.54%;
+  top: -4.15%;
+  width: 107.08%;
+  height: 108.3%;
+}
+
+html.is-mobile .header__menu {
+  gap: 12px;
+  font-size: 14px;
+  letter-spacing: -.56px;
+}
+
+/* --- 뒤에 깔린 종이 두 장: 검은 종이(Email 뒤), 그 위에 크림색 노트 종이(폼 뒤) --- */
+html.is-mobile .ct-mpaper {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+html.is-mobile .ct-mpaper__rot {
+  position: relative;
+  flex: none;
+}
+
+html.is-mobile .ct-mpaper__rot img {
+  position: absolute;
+  max-width: none;
+}
+
+html.is-mobile .ct-mpaper-black {
+  left: -43px;
+  top: 267px;
+  width: 389.638px;
+  height: 470.193px;
+}
+
+html.is-mobile .ct-mpaper-black .ct-mpaper__rot {
+  width: 351.049px;
+  height: 440.074px;
+  transform: rotate(-5.22deg);
+}
+
+html.is-mobile .ct-mpaper-black img {
+  left: -.34%;
+  top: -.27%;
+  width: 100.68%;
+  height: 100.54%;
+}
+
+html.is-mobile .ct-mpaper-cream {
+  left: -354.6px;
+  top: 361px;
+  width: 1196.229px;
+  height: 1199.806px;
+}
+
+html.is-mobile .ct-mpaper-cream .ct-mpaper__rot {
+  width: 1049.036px;
+  height: 1053.307px;
+  transform: rotate(-8.7deg);
+}
+
+html.is-mobile .ct-mpaper-cream img {
+  left: -.11%;
+  top: -.11%;
+  width: 100.22%;
+  height: 100.22%;
+}
+
+/* --- 제목, 인용구 --- */
+html.is-mobile .ct-label-contact {
+  left: 20px;
+  top: 87px;
+  font-size: 14px;
+  line-height: 1;
+  filter: var(--grain-light);
+}
+
+html.is-mobile .ct-quote {
+  left: 20px;
+  top: 113px;
+  font-size: 20px;
+  letter-spacing: -.8px;
+  filter: var(--grain-soft);
+}
+
+/* --- Email (검은 종이 위라 흰색) --- */
+html.is-mobile .ct-label-email {
+  left: 20px;
+  top: 328px;
+  width: auto;
+  font-size: 14px;
+  letter-spacing: -.28px;
+  color: var(--white);
+  filter: var(--grain-light);
+}
+
+html.is-mobile .ct-email {
+  left: 20px;
+  top: 361px;
+  color: var(--white);
+  filter: var(--grain-soft);
+}
+
+html.is-mobile .ct-email__text {
+  font-size: 20px;
+  letter-spacing: -.8px;
+}
+
+html.is-mobile .ct-email__copy {
+  gap: 16px;
+}
+
+html.is-mobile .ct-email__copy img {
+  display: none;
+}
+
+html.is-mobile .ct-email__copy .ct-email__copy-m {
+  display: block;
+  width: 19.333px;
+  height: 23.667px;
+  margin: 1.167px 3.333px;
+}
+
+html.is-mobile .ct-email__copy.copy-email::after {
+  font-size: 14px;
+  color: var(--white);
+}
+
+/* --- Form: 시안은 종이 그림 없이 크림색 노트 종이 위에 바로 놓임 --- */
+html.is-mobile .ct-form {
+  left: 20px;
+  top: 521px;
+  display: block;
+  width: 350px;
+  height: auto;
+}
+
+html.is-mobile .ct-form__paper,
+html.is-mobile .ct-tape {
+  display: none;
+}
+
+html.is-mobile .ct-form__body {
+  width: 350px;
+  gap: 20px;
+}
+
+html.is-mobile .ct-form__title {
+  font-size: 14px;
+  letter-spacing: -.28px;
+  filter: var(--grain-light);
+}
+
+html.is-mobile .ct-form__fields {
+  gap: 40px;
+}
+
+html.is-mobile .ct-form__grid {
+  flex-direction: column;
+  gap: 20px;
+}
+
+html.is-mobile .ct-form__col {
+  gap: 20px;
+}
+
+html.is-mobile .ct-field {
+  gap: 8px;
+}
+
+html.is-mobile .ct-field__label {
+  font-size: 14px;
+  letter-spacing: -.28px;
+  filter: var(--grain-light);
+}
+
+html.is-mobile .ct-field__line {
+  filter: var(--grain-soft);
+}
+
+html.is-mobile .ct-field input,
+html.is-mobile .ct-field textarea {
+  font-size: 16px;
+  letter-spacing: -.32px;
+}
+
+/* 메시지: 줄 네 개(시안: 첫 줄 30px 높이, 나머지 38px + 간격 8px). 줄 간격 46px 이고 글자가 줄 위에 얹히도록 줄 높이를 46px 로 맞춤 */
+html.is-mobile .ct-field textarea {
+  height: 176px;
+  margin-top: -8px;
+  line-height: 46px;
+  background:
+    linear-gradient(var(--black), var(--black)) 0 36px / 100% 2px no-repeat local,
+    linear-gradient(var(--black), var(--black)) 0 82px / 100% 2px no-repeat local,
+    linear-gradient(var(--black), var(--black)) 0 128px / 100% 2px no-repeat local,
+    linear-gradient(var(--black), var(--black)) 0 174px / 100% 2px no-repeat local;
+}
+
+html.is-mobile .ct-field__lines {
+  filter: var(--grain-soft);
+}
+
+/* 칸 사이 간격이 20px 라서, 안내(오류·OK)가 다음 칸 제목을 가리지 않도록 작게 붙임 */
+html.is-mobile .ct-field__msg {
+  margin-top: 2px;
+  gap: 5px;
+  font-size: 12px;
+}
+
+html.is-mobile .ct-field__msg::before {
+  width: 14px;
+  height: 14px;
+  font-size: 10px;
+}
+
+html.is-mobile .ct-field.is-valid .ct-field__line::after {
+  right: 6px;
+  width: 20px;
+  height: 20px;
+  margin-top: -12px;
+  font-size: 13px;
+}
+
+html.is-mobile .ct-form__error {
+  bottom: 10px;
+  width: 168px;
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: -.3px;
+}
+
+html.is-mobile .ct-send {
+  --fold-x: 37px;
+  --fold-y: 13px;
+  font-size: 16px;
+  letter-spacing: -.32px;
+}
+
+html.is-mobile .ct-send::after {
+  clip-path: polygon(0 100%, 100% calc(100% - var(--fold-y)), calc(100% - 8.3px) 0);
+}
+
+/* --- 푸터 (시안: 484 x 502, 가로로 넓게 잘리는 검은 종이 한 장) --- */
+html.is-mobile .ct-footer {
+  inset: auto;
+  left: -68px;
+  top: 1133px;
+  width: 484px;
+  height: 502px;
+  overflow: hidden;
+}
+
+html.is-mobile .ct-footer__shape-center,
+html.is-mobile .ct-footer__shape-right {
+  display: none;
+}
+
+html.is-mobile .ct-footer__shape-left {
+  left: -152px;
+  top: 90.04px;
+}
+
+html.is-mobile .ct-footer__menu {
+  left: 338px;
+  top: 324px;
+  gap: 8px;
+  font-size: 16px;
+  filter: var(--grain-light);
+}
+
+html.is-mobile .ct-footer__menu p {
+  font-size: 12px;
+}
+
+html.is-mobile .ct-footer__brand-box {
+  left: 86px;
+  top: 169px;
+  width: 293.194px;
+  height: 139.366px;
+}
+
+html.is-mobile .ct-footer__brand {
+  width: auto;
+  filter: none;
+}
+
+html.is-mobile .ct-footer__name {
+  width: auto;
+  filter: var(--grain);
+}
+
+html.is-mobile .ct-footer__name p {
+  font-size: 37.617px;
+  letter-spacing: -2.257px;
+}
+
+html.is-mobile .ct-footer__name p:first-child {
+  margin-right: -1.199px;
+}
+
+html.is-mobile .ct-footer__name img {
+  width: 39.874px;
+  height: 32.852px;
+  margin-right: -2.996px;
+}
+
+html.is-mobile .ct-footer__slogan {
+  width: 253px;
+  font-size: 12px;
+  letter-spacing: -.48px;
+  filter: var(--grain-light);
+}
+
+html.is-mobile .ct-footer__contact {
+  top: 0;
+  filter: var(--grain-light);
+}
+
+html.is-mobile .ct-footer__talk {
+  font-size: 16px;
+  letter-spacing: -.96px;
+}
+
+html.is-mobile .ct-footer__mail {
+  font-size: 18px;
+  letter-spacing: -1.08px;
+}
+
+html.is-mobile .ct-footer__sticker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+html.is-mobile .ct-footer__sticker.is-peeling {
+  cursor: grabbing;
+}
+
+/* 떼어 넘어간 뒷면: 불투명한 하얀 종이 뒷면 + 앞면 그림이 아주 옅게 비침 (contact.js initFooterStickers) */
+html.is-mobile .ct-sticker__flapwrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  filter: drop-shadow(3px 6px 7px rgba(0, 0, 0, 0.3));
+}
+
+html.is-mobile .ct-sticker__flap img {
+  filter: brightness(0) invert(.97);
+}
+
+html.is-mobile .ct-sticker__flap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--art) center / 100% 100% no-repeat;
+  opacity: .2;
+  pointer-events: none;
+}
+
+html.is-mobile .ct-footer__sticker-cursor {
+  --art: url(assets/m-sticker-cursor.svg);
+}
+
+html.is-mobile .ct-footer__sticker-bubble {
+  --art: url(assets/m-sticker-bubble.svg);
+}
+
+html.is-mobile .ct-footer__sticker-cursor {
+  left: 360px;
+  top: 145px;
+  width: 73.226px;
+  height: 73.226px;
+}
+
+html.is-mobile .ct-footer__sticker-cursor .rot {
+  position: relative;
+  flex: none;
+  width: 66.94px;
+  height: 66.94px;
+  transform: rotate(-5.64deg);
+}
+
+html.is-mobile .ct-footer__sticker-cursor img {
+  position: absolute;
+  left: -3.29%;
+  top: -3.29%;
+  width: 106.58%;
+  height: 106.58%;
+  max-width: none;
+}
+
+html.is-mobile .ct-footer__sticker-bubble {
+  left: 90px;
+  top: 337px;
+  width: 108.747px;
+  height: 92.447px;
+}
+
+html.is-mobile .ct-footer__sticker-bubble .rot {
+  position: relative;
+  flex: none;
+  width: 100.343px;
+  height: 81.902px;
+  transform: rotate(-6.32deg);
+}
+
+html.is-mobile .ct-footer__sticker-bubble img {
+  position: absolute;
+  left: -1.93%;
+  top: -2.36%;
+  width: 103.86%;
+  height: 104.72%;
+  max-width: none;
+}
+
+/* --- 종이 질감 (시안: 456 x 5678) --- */
+html.is-mobile .paper {
+  left: -39px;
+  top: -42px;
+  width: 456px;
+  height: 5678px;
+}

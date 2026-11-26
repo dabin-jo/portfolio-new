@@ -760,3 +760,54 @@ html.is-mobile .header {
 .grain-light {
   filter: var(--grain-light);
 }
+
+/* 철학 문장: 약한 필터(grain-light, 세기 1)보다 조금 강한 중간 세기(grain-soft, 1.8) */
+.grain-soft {
+  filter: var(--grain-soft);
+}
+
+/* 푸터 스티커: 누르거나 끌어서 뗄 수 있음 (mobile.js initFooterStickers) */
+.m-footer__sticker {
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.m-footer__sticker.is-peeling {
+  cursor: grabbing;
+}
+
+.m-footer__sticker-cursor {
+  --art: url(assets/m-sticker-cursor.svg);
+}
+
+.m-footer__sticker-bubble {
+  --art: url(assets/m-sticker-bubble.svg);
+}
+
+/* 떼어 넘어간 뒷면: 불투명한 하얀 종이 뒷면 + 앞면 그림이 아주 옅게 비침 (PC 스티커와 같음) */
+.m-sticker__flapwrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  filter: drop-shadow(3px 6px 7px rgba(0, 0, 0, 0.3));
+}
+
+.m-sticker__flap img {
+  filter: brightness(0) invert(.97);
+}
+
+.m-sticker__flap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--art) center / 100% 100% no-repeat;
+  opacity: .2;
+  pointer-events: none;
+}

@@ -288,11 +288,150 @@ if (window.IS_MOBILE) {
       .fromTo(chars, { color: gray }, { color: black, duration: CHAR_TIME, stagger: step, immediateRender: true }, 0);
   }
 
+  /* --------------------------------------------------------------------------
+     푸터 스티커 떼기 (PC 의 About Me 스티커와 같은 동작)
+     - 모서리를 잡고 끌면 접혀 넘어가며 하얀 뒷면이 보이고, 충분히 접어 놓으면 아래로 떨어져 사라짐. 덜 접었으면 다시 붙음
+     - 끌지 않고 그냥 눌러도 저절로 접혀 떨어짐
+     - 떨어지고 STICKER_RETURN_MS 가 지나면 위에서 다시 내려와 붙음
+     - 접는 계산(clipByLine, toClip)은 main.js 의 것을 그대로 씀. 손가락에는 마우스를 올리는 동작이 없어서 올렸을 때 모서리가 들리는 효과는 없음
+     -------------------------------------------------------------------------- */
+  const STICKER_FOLD_LIMIT = 28; /* 이만큼(캔버스 px) 이상 접어서 놓으면 떨어져 나감 */
+  const STICKER_CLICK_SLOP = 6; /* 이보다 적게 움직이고 놓으면 눌렀다고 봄 */
+  const STICKER_RETURN_MS = 5000; /* 떨어진 뒤 다시 붙기까지 */
+
+  function initFooterStickers() {
+    document.querySelectorAll('.m-footer__sticker').forEach((el) => {
+      const body = el.querySelector('.rot');
+      const NONE = 'polygon(0 0, 0 0, 0 0)';
+      let W = 0;
+      let H = 0;
+      let rect = [];
+      const measure = () => {
+        W = body.offsetWidth;
+        H = body.offsetHeight;
+        rect = [{ x: 0, y: 0 }, { x: W, y: 0 }, { x: W, y: H }, { x: 0, y: H }];
+      };
+      measure();
+
+      /* 접혀 넘어간 뒷면: 앞면을 복제해서 접는 선 기준으로 뒤집어 그림 */
+      const flapWrap = document.createElement('div');
+      flapWrap.className = 'm-sticker__flapwrap';
+      const flap = body.cloneNode(true);
+      flap.classList.add('m-sticker__flap');
+      flapWrap.append(flap);
+      el.append(flapWrap);
+
+      const state = { px: 0, py: 0 };
+      let corner = rect[0];
+      let grab = null;
+      let travel = 0;
+      let gone = false;
+      let returnTimer = 0;
+
+      const linear = () => new DOMMatrix(getComputedStyle(body).transform);
+
+      const render = () => {
+        const dx = state.px - corner.x;
+        const dy = state.py - corner.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 0.5) {
+          body.style.clipPath = '';
+          flap.style.clipPath = NONE;
+          return;
+        }
+        const n = { x: dx / dist, y: dy / dist };
+        const mid = { x: (corner.x + state.px) / 2, y: (corner.y + state.py) / 2 };
+        const visible = clipByLine(rect, mid, n);
+        const folded = clipByLine(rect, mid, { x: -n.x, y: -n.y });
+        const k = 2 * (mid.x * n.x + mid.y * n.y);
+        const L = linear();
+        body.style.clipPath = toClip(visible);
+        flap.style.clipPath = toClip(folded);
+        flap.style.transformOrigin = '0 0';
+        flap.style.transform =
+          'translate(' + W / 2 + 'px, ' + H / 2 + 'px) matrix(' + L.a + ', ' + L.b + ', ' + L.c + ', ' + L.d + ', 0, 0) translate(' + -W / 2 + 'px, ' + -H / 2 + 'px) ' +
+          'matrix(' + (1 - 2 * n.x * n.x) + ', ' + -2 * n.x * n.y + ', ' + -2 * n.x * n.y + ', ' + (1 - 2 * n.y * n.y) + ', ' + k * n.x + ', ' + k * n.y + ')';
+      };
+
+      const reset = () => {
+        body.style.clipPath = '';
+        flap.style.clipPath = NONE;
+      };
+      reset();
+
+      /* 포인터 위치를 본체(회전 전) 좌표로 변환 */
+      const toLocal = (e) => {
+        const r = body.getBoundingClientRect();
+        const dx = (e.clientX - (r.left + r.width / 2)) / mScale;
+        const dy = (e.clientY - (r.top + r.height / 2)) / mScale;
+        const inv = linear().inverse();
+        return { x: inv.a * dx + inv.c * dy + W / 2, y: inv.b * dx + inv.d * dy + H / 2 };
+      };
+
+      const restore = () => {
+        clearTimeout(returnTimer);
+        gsap.killTweensOf([state, el]);
+        gone = false;
+        el.style.pointerEvents = '';
+        reset();
+        gsap.fromTo(el, { y: -90, rotation: 12, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: 0.7, ease: 'back.out(1.6)' });
+      };
+
+      el.addEventListener('pointerdown', (e) => {
+        if (gone) return;
+        measure();
+        el.setPointerCapture(e.pointerId);
+        grab = toLocal(e);
+        travel = 0;
+        corner = rect.reduce((best, c) => (Math.hypot(c.x - grab.x, c.y - grab.y) < Math.hypot(best.x - grab.x, best.y - grab.y) ? c : best));
+        gsap.killTweensOf(state);
+        state.px = corner.x;
+        state.py = corner.y;
+        el.classList.add('is-peeling');
+      });
+
+      el.addEventListener('pointermove', (e) => {
+        if (!el.classList.contains('is-peeling')) return;
+        const q = toLocal(e);
+        travel = Math.max(travel, Math.hypot(q.x - grab.x, q.y - grab.y));
+        state.px = Math.max(0, Math.min(W, corner.x + (q.x - grab.x)));
+        state.py = Math.max(0, Math.min(H, corner.y + (q.y - grab.y)));
+        render();
+      });
+
+      const release = () => {
+        if (!el.classList.contains('is-peeling')) return;
+        el.classList.remove('is-peeling');
+        const dist = Math.hypot(state.px - corner.x, state.py - corner.y);
+        const clicked = travel < STICKER_CLICK_SLOP;
+        if (dist >= STICKER_FOLD_LIMIT || clicked) {
+          gone = true;
+          el.style.pointerEvents = 'none';
+          gsap.to(state, {
+            px: W - corner.x,
+            py: H - corner.y,
+            duration: clicked ? 0.7 : 0.5,
+            ease: clicked ? 'power2.inOut' : 'power2.in',
+            onUpdate: render,
+            onComplete: () => gsap.to(el, { y: 40, opacity: 0, duration: 0.45, ease: 'power1.in' }),
+          });
+          returnTimer = setTimeout(restore, STICKER_RETURN_MS);
+        } else {
+          gsap.to(state, { px: corner.x, py: corner.y, duration: 0.4, ease: 'back.out(1.7)', onUpdate: render, onComplete: reset });
+        }
+      };
+      el.addEventListener('pointerup', release);
+      el.addEventListener('pointercancel', release);
+      el.addEventListener('dragstart', (e) => e.preventDefault());
+    });
+  }
+
   window.addEventListener('resize', fitMobile);
   window.addEventListener('scroll', updateHeaderTone, { passive: true });
   fitMobile();
   initMobilePhilosophy();
   initFoldInteraction();
+  initFooterStickers();
   renderFold();
 
   /* 다른 페이지에서 index.html#project / #about 으로 들어온 경우 */
