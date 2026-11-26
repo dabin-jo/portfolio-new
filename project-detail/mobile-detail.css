@@ -5,7 +5,7 @@
   - 641px 이상(태블릿 포함)은 기존 데스크톱 화면 그대로
 */
 :root {
-  --grain-light: url(assets/filters.svg?v=27#grain-light);
+  --grain-light: url(../assets/filters.svg?v=27#grain-light);
 }
 
 /* 모바일 전용 요소: 데스크톱에서는 숨김 */
@@ -353,11 +353,11 @@ html.is-mobile .ct-sticker__flap::after {
 }
 
 html.is-mobile .pd-footer__sticker-cursor {
-  --art: url(assets/m-sticker-cursor.svg);
+  --art: url(../assets/m-sticker-cursor.svg);
 }
 
 html.is-mobile .pd-footer__sticker-bubble {
-  --art: url(assets/m-sticker-bubble.svg);
+  --art: url(../assets/m-sticker-bubble.svg);
 }
 
 html.is-mobile .pd-footer__sticker-cursor {

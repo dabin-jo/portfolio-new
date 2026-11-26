@@ -749,7 +749,7 @@ html.is-mobile .header {
   inset: 0;
   z-index: 60;
   opacity: .35;
-  background: url(assets/paper.png) 0 0 / calc(480px * var(--ms, 1)) calc(480px * var(--ms, 1));
+  background: url(../assets/paper.png) 0 0 / calc(480px * var(--ms, 1)) calc(480px * var(--ms, 1));
   pointer-events: none;
 }
 
@@ -794,11 +794,11 @@ html.is-mobile .header {
 }
 
 .m-footer__sticker-cursor {
-  --art: url(assets/m-sticker-cursor.svg);
+  --art: url(../assets/m-sticker-cursor.svg);
 }
 
 .m-footer__sticker-bubble {
-  --art: url(assets/m-sticker-bubble.svg);
+  --art: url(../assets/m-sticker-bubble.svg);
 }
 
 /* 떼어 넘어간 뒷면: 불투명한 하얀 종이 뒷면 + 앞면 그림이 아주 옅게 비침 (PC 스티커와 같음) */

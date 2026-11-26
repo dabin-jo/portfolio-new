@@ -22,8 +22,8 @@
 
 :root {
   /* 필터 정의는 assets/filters.svg. 수정하면 ?v= 숫자를 올려서 캐시를 피하세요 */
-  --grain: url(assets/filters.svg?v=27#grain);
-  --grain-soft: url(assets/filters.svg?v=27#grain-soft);
+  --grain: url(../assets/filters.svg?v=27#grain);
+  --grain-soft: url(../assets/filters.svg?v=27#grain-soft);
 }
 
 /* Base */
@@ -655,7 +655,7 @@ a {
   width: 1998px;
   height: 6129px;
   opacity: .35;
-  background: url(assets/paper.png) top left/480px 480px;
+  background: url(../assets/paper.png) top left/480px 480px;
   pointer-events: none;
   z-index: 10;
 }
