@@ -792,8 +792,10 @@ a {
 .after {
   display: none;
   position: relative;
+  z-index: 3; /* 위쪽 고정 화면(검은 Project 배경)보다 앞: 키가 큰 화면에서 About Me 종이 윗부분이 검은 배경 위로 보이도록 */
   width: 100%;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible; /* 위로 삐져나온 종이가 이 상자 위쪽 경계에서 잘리지 않게 */
   background: var(--black);
 }
 
@@ -813,6 +815,8 @@ a {
 /* 종이 질감: 위쪽 화면(.stage)의 질감과 무늬가 이어지도록 세로 위치를 --vh 만큼 밀어 맞춤 */
 .after .paper {
   top: calc(-45px + var(--vh, 0px));
+  /* 이 영역(.after)은 위로 삐져나올 수 있어서, 위쪽 화면(.stage)이 이미 질감을 입힌 부분(영역 위쪽 경계 2085px 위까지)은 잘라 냄: 질감이 두 겹으로 겹쳐 검은 배경이 연해지지 않게 */
+  clip-path: inset(2085px 0 0 0);
 }
 
 /* About Me 제목 */
