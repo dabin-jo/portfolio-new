@@ -914,3 +914,12 @@ html.is-mobile .header {
 .m-item.is-dim .m-pill p::after {
   opacity: 1;
 }
+
+/* Skills 에서 강조한 항목: 글씨 뒤에 연두색 형광펜 (PC 의 .about-hl 과 같음. 종이 색과 곱한 색) */
+.m-hl {
+  padding: 1px 4px;
+  margin: 0 -4px;
+  background: var(--green-on-cream);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
