@@ -230,6 +230,41 @@ html.is-mobile .header {
   line-height: .9;
 }
 
+/*
+  마우스를 올리면 그 줄 뒤에 형광펜이 왼쪽에서 오른쪽으로 칠해짐 (PC 와 같은 효과, 블렌드 모드: 곱하기)
+  곱하기가 뒤쪽 글자와 배경에 먹히려면 형광펜이 필터가 걸린 요소 안에 있으면 안 되므로,
+  필터(grain)는 p 가 아니라 안쪽 span 에 걸어 둠
+*/
+.m-hero__main p {
+  position: relative;
+  width: fit-content;
+  margin-left: auto;
+}
+
+.m-hero__main p .grain {
+  position: relative;
+  display: inline-block;
+}
+
+.m-hero__main p::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  top: 3px;
+  bottom: 1px;
+  background: var(--green);
+  mix-blend-mode: multiply;
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform .45s cubic-bezier(.2, .7, .2, 1);
+  pointer-events: none;
+}
+
+.m-hero__main p:hover::before {
+  transform: scaleX(1);
+}
+
 .m-hero__punct {
   pointer-events: none;
 }
@@ -823,4 +858,59 @@ html.is-mobile .header {
   background: var(--art) center / 100% 100% no-repeat;
   opacity: .2;
   pointer-events: none;
+}
+
+/*
+  프로젝트 그림 호버 (PC 와 같은 효과, mobile.js 가 is-dim 을 붙임): 마우스를 올린 그림만 밝게 남고 나머지는 어두워짐
+  - 나머지 그림: 불투명도를 낮춤 / 나머지 번호표: 테두리·글자가 어두운 회색이 되고 숫자 대신 ··· 로 바뀜
+  - 그림 상자에는 빈 공간이 많아서 반응 범위를 안쪽으로 줄임(::after)
+*/
+.m-item {
+  transition: opacity .35s;
+}
+
+.m-b.is-open .m-item::after {
+  content: '';
+  position: absolute;
+  inset: 14%;
+  pointer-events: auto;
+}
+
+.m-item.is-dim .m-obj {
+  opacity: .28;
+}
+
+.m-item .m-obj {
+  transition: opacity .35s;
+}
+
+.m-pill {
+  transition: border-color .35s;
+}
+
+.m-pill p {
+  position: relative;
+  transition: color .35s;
+}
+
+.m-pill p::after {
+  content: '···';
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  color: #2f2f2f;
+  opacity: 0;
+  transition: opacity .35s;
+}
+
+.m-item.is-dim .m-pill {
+  border-color: #2f2f2f;
+}
+
+.m-item.is-dim .m-pill p {
+  color: transparent;
+}
+
+.m-item.is-dim .m-pill p::after {
+  opacity: 1;
 }

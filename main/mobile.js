@@ -454,6 +454,23 @@ if (window.IS_MOBILE) {
   initMobilePhilosophy();
   initFoldInteraction();
   initFooterStickers();
+  /* 프로젝트 그림에 마우스를 올리면 나머지 그림과 번호표가 어두워짐 (PC 와 같은 효과) */
+  (function initMobileProjectHover() {
+    const items = [...document.querySelectorAll('a.m-item')];
+    const LEAVE_DELAY = 140; /* 그림 사이 빈틈을 지나갈 때 반짝이지 않게 */
+    let leaveTimer = 0;
+    const clear = () => items.forEach((o) => o.classList.remove('is-dim'));
+    items.forEach((a) => {
+      a.addEventListener('mouseenter', () => {
+        clearTimeout(leaveTimer);
+        items.forEach((o) => o.classList.toggle('is-dim', o !== a));
+      });
+      a.addEventListener('mouseleave', () => {
+        clearTimeout(leaveTimer);
+        leaveTimer = setTimeout(clear, LEAVE_DELAY);
+      });
+    });
+  })();
   /* 마우스를 가져다 대면 About Me 종이 두 장과 푸터 종이가 각자 따로 살랑 흔들림 (PC 와 같은 효과, 값은 모바일 크기에 맞춤) */
   const lower = document.querySelector('.m-lower');
   initMobileSway({
@@ -464,6 +481,8 @@ if (window.IS_MOBILE) {
     baseY: 2300,
     radius: 1000,
     rotate: 1.4,
+    /* 두 종이가 겹쳐 있어서, 각자 눈에 보이는 부분 가운데를 기준으로 마우스가 있는 쪽만 흔들리게 함 (흰 종이: 위쪽 제목 자리, 크림색 종이: 표 자리) */
+    each: (paper) => (paper.classList.contains('m-paper-white') ? { x: 150, y: 2160, radius: 480 } : { x: 200, y: 2800, radius: 520 }),
   });
   const mFooter = document.getElementById('mFooter');
   initMobileSway({

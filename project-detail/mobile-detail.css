@@ -206,7 +206,7 @@ html.is-mobile .pd-details__art {
 /* --- 이전 / 다음 프로젝트 --- */
 html.is-mobile .pd-move {
   top: 1551.22px;
-  font-size: 20px;
+  font-size: 16px;
   filter: var(--grain-soft);
 }
 
@@ -428,4 +428,10 @@ html.is-mobile .pd-info dd {
 html.is-mobile .pd-move-next {
   left: auto;
   right: 20px;
+}
+
+/* Project Link 버튼은 칸을 꽉 채우지 않고 글자 길이만큼만 (위의 dd 가 칸을 채우도록 늘어나서 같이 늘어났음) */
+html.is-mobile .pd-link {
+  display: inline-flex;
+  width: fit-content;
 }

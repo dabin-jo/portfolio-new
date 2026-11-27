@@ -12,8 +12,10 @@
       baseY    : 마우스와의 거리를 재는 기준 높이 (frame 좌표)
       radius   : 이 거리(캔버스 px) 안으로 마우스가 들어오면 반응
       rotate   : 가장 세게 기울어질 때 각도(deg)
+      each     : (선택) 종이마다 반응 범위를 따로 줌. (종이 요소) => ({ x, y, radius }) (frame 좌표의 기준점과 반경).
+                 종이끼리 가깝게 겹쳐 있어도 마우스가 있는 쪽 종이만 흔들리게 할 때 씀
 */
-function initMobileSway({ frame, items, getScale, pivotY, baseY, radius, rotate }) {
+function initMobileSway({ frame, items, getScale, pivotY, baseY, radius, rotate, each }) {
   const papers = items.filter(Boolean);
   if (!papers.length) return;
   let raf = 0;
@@ -33,9 +35,11 @@ function initMobileSway({ frame, items, getScale, pivotY, baseY, radius, rotate 
     const mx = (mouse.x - r.left) / scale; /* 마우스의 캔버스 좌표 */
     const my = (mouse.y - r.top) / scale;
     papers.forEach((paper) => {
-      const vx = paper.offsetLeft + paper.offsetWidth / 2 - mx;
-      const vy = baseY - my;
-      const influence = Math.max(0, 1 - Math.hypot(vx, vy) / radius); /* 가까울수록 세게 */
+      const own = each ? each(paper) : null;
+      const rad = own ? own.radius : radius;
+      const vx = (own ? own.x : paper.offsetLeft + paper.offsetWidth / 2) - mx;
+      const vy = (own ? own.y : baseY) - my;
+      const influence = Math.max(0, 1 - Math.hypot(vx, vy) / rad); /* 가까울수록 세게 */
       if (influence <= 0) {
         if (paper._swayed) {
           paper._swayed = false;
@@ -44,7 +48,7 @@ function initMobileSway({ frame, items, getScale, pivotY, baseY, radius, rotate 
         return;
       }
       paper._swayed = true;
-      const side = Math.max(-1, Math.min(1, vx / (radius * 0.38)));
+      const side = Math.max(-1, Math.min(1, vx / (rad * 0.38)));
       gsap.to(paper, { rotation: side * rotate * influence, duration: 0.6, ease: 'power3.out', overwrite: true });
     });
   }
